@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AdvancedBudgetManager (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AdvancedBudgetManager (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
