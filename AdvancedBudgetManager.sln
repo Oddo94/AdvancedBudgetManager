@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerUI", "AdvancedBudgetManager\AdvancedBudgetManagerUI.csproj", "{DB60E929-F2E3-4C8A-8903-5D84A7877CF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerUI", "AdvancedBudgetManagerUI\AdvancedBudgetManagerUI.csproj", "{DB60E929-F2E3-4C8A-8903-5D84A7877CF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerCore", "AdvancedBudgetManagerCore\AdvancedBudgetManagerCore.csproj", "{7C4E4F99-CFC4-4FD5-B46F-84D8C10B45F8}"
 EndProject
