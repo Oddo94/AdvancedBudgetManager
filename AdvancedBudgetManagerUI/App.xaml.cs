@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using AdvancedBudgetManager.view.window;
+using AdvancedBudgetManagerCore.view_model;
+using AdvancedBudgetManagerUI.view.window;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,6 +16,10 @@ namespace AdvancedBudgetManager
     /// </summary>
     public partial class App : Application
     {
+        private Window? loginWindow;
+
+        public static IHost? AppHost { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -33,6 +27,14 @@ namespace AdvancedBudgetManager
         public App()
         {
             this.InitializeComponent();
+
+            AppHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((context, services) => {
+                    services.AddTransient<UserDashboard>();
+                    services.AddTransient<LoginViewModel>();
+                    services.AddTransient<LoginWindow>();
+                })
+                .Build();
         }
 
         /// <summary>
@@ -41,10 +43,22 @@ namespace AdvancedBudgetManager
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
+            //m_window = new UserDashboard();
+            //m_window.Activate();
+
+            if (AppHost == null) {
+                throw new InvalidOperationException("An error occurred when trying to setup the required objects.");
+            }
+
+            loginWindow = AppHost.Services.GetService<LoginWindow>();
+
+            if (loginWindow == null) {
+                throw new InvalidOperationException("Unable to initialize the login window!");
+            } else {
+                loginWindow.Activate();
+            }
         }
 
-        private Window? m_window;
+        //private Window? m_window;
     }
 }
