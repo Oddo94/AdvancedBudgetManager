@@ -1,10 +1,13 @@
 ﻿using AdvancedBudgetManager.view.window;
+using AdvancedBudgetManagerCore.repository;
+using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using System;
+using System.Data;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,6 +36,9 @@ namespace AdvancedBudgetManager
                     services.AddTransient<UserDashboard>();
                     services.AddTransient<LoginViewModel>();
                     services.AddTransient<LoginWindow>();
+                    services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
+                    services.AddSingleton<ICrudRepository, UserLoginRepository>();
+
                 })
                 .Build();
         }

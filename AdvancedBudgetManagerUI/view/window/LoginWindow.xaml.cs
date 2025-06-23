@@ -29,17 +29,30 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public async void LoginButton_Click(object sender, RoutedEventArgs args) {
-            loginViewModel.CheckCredentials();
+            ContentDialog loginErrorDialog;
 
-            //LoginResponse loginResponse = loginViewModel.LoginResponse;
-            LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!
-            if (loginResponse.ResultCode == ResultCode.OK) {
-                this.Close();
-                userDashboard.Activate();
-            } else {
-                ContentDialog loginErrorDialog = new ContentDialog {
+            try {
+                loginViewModel.CheckCredentials();
+
+                LoginResponse loginResponse = loginViewModel.LoginResponse;
+                //LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!
+                if (loginResponse.ResultCode == ResultCode.OK) {
+                    this.Close();
+                    userDashboard.Activate();
+                } else {
+                    loginErrorDialog = new ContentDialog {
+                        Title = "Login",
+                        Content = loginResponse.ResponseMessage,
+                        CloseButtonText = "OK"
+                    };
+
+                    loginErrorDialog.XamlRoot = this.Content.XamlRoot;
+                    await loginErrorDialog.ShowAsync();
+                }
+            } catch (SystemException ex) {
+                loginErrorDialog = new ContentDialog {
                     Title = "Login",
-                    Content = loginResponse.ResponseMessage,
+                    Content = ex.Message,
                     CloseButtonText = "OK"
                 };
 
