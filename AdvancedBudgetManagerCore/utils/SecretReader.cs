@@ -3,8 +3,17 @@ using Microsoft.Extensions.Configuration;
 using System;
 
 namespace AdvancedBudgetManagerCore.utils {
+    /// <summary>
+    /// Utility class for retrieving data from the user secrets folder of the application
+    /// </summary>
     public class SecretReader {
-        public string GetSecret(AppEnvironment appEnvironment) {
+
+        /// <summary>
+        /// Retrieves the database connection string based on the application environment.
+        /// </summary>
+        /// <param name="appEnvironment">The <see cref="AppEnvironment"/> enum value</param>
+        /// <returns>The database connection string assigned to the specified environment</returns>
+        public string GetDbConnectionString(AppEnvironment appEnvironment) {
             IConfiguration config = new ConfigurationBuilder()
                 .AddUserSecrets<SecretReader>()
                 .Build();

@@ -5,15 +5,24 @@ using System;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+   /// <summary>
+   /// Repository class for managing the user login operations that require database interaction.
+   /// </summary>
     public class UserLoginRepository : ICrudRepository {
         private IDatabaseConnection dbConnection;
         private String sqlStatementGetAuthenticationData = @"SELECT userID, username, salt, password FROM users WHERE username = @userName";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserLoginRepository"/> with the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public UserLoginRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc />
         public DataTable GetData(IDataRequest dataRequest) {
+
             string userName = dataRequest.GetSearchParameter();
 
             DataTable authenticationData = new DataTable();

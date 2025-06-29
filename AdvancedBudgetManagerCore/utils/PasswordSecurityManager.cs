@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace AdvancedBudgetManagerCore.utils {
+    /// <summary>
+    /// Utility class that provides methods for handling password data
+    /// </summary>
     public class PasswordSecurityManager {
+        /// <summary>
+        /// Creates the hash of a password based on the provided salt
+        /// </summary>
+        /// <param name="password">The password in plain text format</param>
+        /// <param name="salt">The salt byte array</param>
+        /// <returns>The computed hash in Base64 format</returns>
         public String createPasswordHash(String password, byte[] salt) {
             Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA512);
 
@@ -14,6 +22,11 @@ namespace AdvancedBudgetManagerCore.utils {
             return hashedPassword;
         }
 
+        /// <summary>
+        /// Creates a salt byte array of specified size 
+        /// </summary>
+        /// <param name="size">The size of the array</param>
+        /// <returns>A byte array containing the generated salt</returns>
         public byte[] getSalt(int size) {
             if (size < 16) {
                 return null;
@@ -25,36 +38,5 @@ namespace AdvancedBudgetManagerCore.utils {
 
             return salt;
         }
-
-        private String convertBinaryToHex(byte[] inputArray) {
-
-            StringBuilder resultArray = new StringBuilder(inputArray.Length * 2);
-
-            foreach (byte currentByte in inputArray) {
-                resultArray.AppendFormat("{0:x2}", currentByte);
-            }
-
-            return resultArray.ToString();
-        }
-
-        //private void writeAuthenticationDataToDB(byte[] salt, String hashedPassword, int userID) {
-        //    String sqlStatementInsertAuthenticationData = @"UPDATE users SET users.salt = @paramSalt, users.password = @paramPassword WHERE users.userID = @paramID";
-        //    MySqlCommand insertCommand = new MySqlCommand(sqlStatementInsertAuthenticationData);
-        //    insertCommand.Parameters.AddWithValue("@paramSalt", salt);
-        //    insertCommand.Parameters.AddWithValue("@paramPassword", hashedPassword);
-        //    insertCommand.Parameters.AddWithValue("@paramID", userID);
-
-        //    DBConnectionManager.insertData(insertCommand);
-
-        //}
-
-        //private DataTable getData(int userID) {
-        //    String sqlStatementGetAuthenticationData = @"SELECT username, salt, password FROM users WHERE userID = @paramID";
-        //    MySqlCommand command = new MySqlCommand(sqlStatementGetAuthenticationData);
-        //    command.Parameters.AddWithValue("@paramID", userID);
-
-        //    return DBConnectionManager.getData(command);
-
-        //}
     }
 }

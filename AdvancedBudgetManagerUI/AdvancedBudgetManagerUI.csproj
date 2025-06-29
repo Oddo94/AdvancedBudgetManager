@@ -11,6 +11,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>1570;1571</WarningsAsErrors><!--Setting for throwing compile time errors for malformed XML documentation-->
   </PropertyGroup>
   <ItemGroup>
     <None Remove="view\window\LoginWindow.xaml" />

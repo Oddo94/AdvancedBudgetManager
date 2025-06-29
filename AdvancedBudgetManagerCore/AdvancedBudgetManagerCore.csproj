@@ -5,7 +5,9 @@
     <RootNamespace>AdvancedBudgetManagerCore</RootNamespace>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-	<UserSecretsId>AdvancedBudgetManagerCore</UserSecretsId>
+    <UserSecretsId>AdvancedBudgetManagerCore</UserSecretsId>
+    <WarningsAsErrors>1570;1571</WarningsAsErrors><!--Setting for throwing compile time errors for malformed XML documentation-->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
