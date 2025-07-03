@@ -75,12 +75,12 @@ namespace AdvancedBudgetManagerCore.view_model {
         public int UserId {
             get { return this.userId; }
         }
-       
+
         /// <summary>
         /// Checks if the user exists based on the specified <see cref="DataTable"/>
         /// </summary>
         /// <param name="inputDataTable">The <see cref="DataTable"/> that contains the login credentials.</param>
-        /// <returns></returns>
+        /// <returns cref="bool"></returns>
         private bool UserExists(DataTable inputDataTable) {
             if (inputDataTable != null && inputDataTable.Rows.Count == 1) {
                 return true;
@@ -94,7 +94,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <param name="inputDataTable">The <see cref="DataTable"/> that contains the login credentials.</param>
         /// <param name="userInputPassword">The user supplied password as <see cref="string"/>.</param>
-        /// <returns></returns>
+        /// <returns cref="bool"></returns>
         private bool HasValidCredentials(DataTable inputDataTable, String userInputPassword) {
             if (inputDataTable != null && inputDataTable.Rows.Count == 1) {
                 //Extracts the stored salt and hashcode for the input password
@@ -104,7 +104,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 PasswordSecurityManager securityManager = new PasswordSecurityManager();
 
                 //Generates the hashcode for the input password using the stored salt 
-                String actualHash = securityManager.createPasswordHash(userInputPassword, salt);
+                String actualHash = securityManager.CreatePasswordHash(userInputPassword, salt);
 
                 //Checks if the two hashcodes are identical
                 return storedHash.Equals(actualHash);
@@ -117,7 +117,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// Retrives the user ID from the <see cref="DataTable"/> that contains the login credentials.
         /// </summary>
         /// <param name="inputDataTable">The <see cref="DataTable"/> that contains the login credentials.</param>
-        /// <returns></returns>
+        /// <returns cref="int"></returns>
         private int GetUserId(DataTable inputDataTable) {
             if (inputDataTable != null && inputDataTable.Rows.Count == 1) {
                 Object retrievedID = inputDataTable.Rows[0].ItemArray[0];
