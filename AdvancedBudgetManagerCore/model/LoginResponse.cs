@@ -28,7 +28,7 @@ namespace AdvancedBudgetManagerCore.model {
         }
 
         /// <summary>
-        /// Sets the result code of the <see cref="LoginResponse"/>.
+        /// Sets/retrieves the result code of the <see cref="LoginResponse"/>.
         /// </summary>
         public ResultCode ResultCode {
             get { return this.resultCode; }
@@ -36,7 +36,7 @@ namespace AdvancedBudgetManagerCore.model {
         }
 
         /// <summary>
-        /// Sets the response message of the <see cref="LoginResponse"/>.
+        /// Sets/retrieves the response message of the <see cref="LoginResponse"/>.
         /// </summary>
         public string ResponseMessage {
             get { return this.responseMessage; }

@@ -34,5 +34,19 @@ namespace AdvancedBudgetManagerCore.model.request {
         public string GetSearchParameter() {
             return this.userName;
         }
+
+        /// <summary>
+        /// Retrieves the username of the <see cref="UserLoginDataRequest"/>
+        /// </summary>
+        public string UserName {
+            get { return this.userName; }
+        }
+
+        /// <summary>
+        /// Retrieves the password of the <see cref="UserLoginDataRequest"/>
+        /// </summary>
+        public string Password {
+            get { return this.password; }
+        }
     }
 }

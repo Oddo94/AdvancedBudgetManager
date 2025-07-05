@@ -36,6 +36,11 @@ namespace AdvancedBudgetManagerCore.view_model {
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LoginViewModel"/> class with no arguments.
+        /// </summary>
+        public LoginViewModel() { }
+
+        /// <summary>
         /// Checks the user supplied credentials to see if they match the ones stored in the database
         /// </summary>
         /// <exception cref="SystemException"></exception>
@@ -57,7 +62,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 //Extracts the user ID
                 userId = GetUserId(authenticationData);
             } else {
-                loginResponse = new LoginResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again");
+                loginResponse = new LoginResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
             }
         }
 
