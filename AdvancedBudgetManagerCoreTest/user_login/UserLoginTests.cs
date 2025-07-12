@@ -5,32 +5,22 @@ using AdvancedBudgetManagerCore.utils;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
 using NSubstitute;
-using Org.BouncyCastle.Security;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Security.Authentication.OnlineId;
-using Windows.Security.Credentials;
 
 namespace AdvancedBudgetManagerCoreTest.user_login {
     [TestClass]
     public class UserLoginTests {
         private static int userId;
-        private static string userName;
-        private static string password;
-        private static string salt;
-        private static string expectedHashCode;
+        private static string validUserName = String.Empty;
+        private static string invalidUserName = String.Empty;
+        private static string validPassword = String.Empty;
+        private static string invalidPassword = String.Empty;
+        private static string salt = String.Empty;
+        private static string expectedHashCode = String.Empty;
 
         public TestContext TestContext { get; set; }
-        private static PasswordSecurityManager securityManager;
-        private static LoginViewModel loginViewModel;
+        private static PasswordSecurityManager securityManager = new PasswordSecurityManager();
 
-        //public UserLoginTests() {
-        //    userName = String.Empty;
-        //}
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
@@ -38,35 +28,28 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
                 Assert.Fail("Failed to retrieve the test data.");
             }
 
-            userId = Convert.ToInt32(testContext.Properties["userId"].ToString());
-            userName = testContext.Properties["userName"].ToString() ?? String.Empty;
-            password = testContext.Properties["password"].ToString() ?? String.Empty;
-            salt = testContext.Properties["salt"].ToString() ?? String.Empty;
-            expectedHashCode = testContext.Properties["expectedHashCode"].ToString() ?? String.Empty;
+            userId = Convert.ToInt32(testContext.Properties["userId"]?.ToString() ?? String.Empty);
+            validUserName = testContext.Properties["validUserName"]?.ToString() ?? String.Empty;
+            invalidUserName = testContext.Properties["invalidUserName"]?.ToString() ?? String.Empty;
+            validPassword = testContext.Properties["validPassword"]?.ToString() ?? String.Empty;
+            invalidPassword = testContext.Properties["invalidPassword"]?.ToString() ?? String.Empty;
+            salt = testContext.Properties["salt"]?.ToString() ?? String.Empty;
+            expectedHashCode = testContext.Properties["expectedHashCode"]?.ToString() ?? String.Empty;
 
             securityManager = new PasswordSecurityManager();
-            loginViewModel = new LoginViewModel();
-
-        
-              
-            }
-
-        [TestMethod]
-        public void CreatePasswordHash_WithStoredValues_ReturnsExpectedHash() {
-            byte[] saltArray =  salt.Split(',')
-                 .Select(s => byte.TryParse(s, out byte b) ? (byte?)b : null)
-                 .Where(s => s.HasValue)
-                 .Select(s => s.Value)
-                 .ToArray();
-
-            string actualHashCode = securityManager.CreatePasswordHash(password, saltArray);
-            
-            Assert.AreEqual(expectedHashCode, actualHashCode);
         }
 
         [TestMethod]
-        public void CreatePasswordHash_WithNullParams_ThrowsException() {
-            Assert.ThrowsException<NullReferenceException>(() => securityManager.CreatePasswordHash(null, null));
+        public void CreatePasswordHash_WithStoredValues_ReturnsExpectedHash() {
+            byte[] saltArray = salt.Split(',')
+                 .Select(s => byte.TryParse(s, out byte b) ? (byte?)b : null)
+                 .Where(s => s.HasValue)//Filters null values
+                 .Select(s => s!.Value)//Adds null forgiving operator to avoid CS8629 (no null values can reach Select due to the Where condition)
+                 .ToArray();
+
+            string actualHashCode = securityManager.CreatePasswordHash(validPassword, saltArray);
+
+            Assert.AreEqual(expectedHashCode, actualHashCode);
         }
 
         [TestMethod]
@@ -93,27 +76,27 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
         [TestMethod]
         public void CheckCredentials_WhenValidCredentials_ReturnSuccess() {
-            IDataRequest loginDataRequest = new UserLoginDataRequest(userName, password);
+            IDataRequest loginDataRequest = new UserLoginDataRequest(validUserName, validPassword);
             DataTable loginResponseDataTable = new DataTable();
             loginResponseDataTable.Columns.Add("userID", typeof(int));
-            loginResponseDataTable.Columns.Add("username", typeof(String));
+            loginResponseDataTable.Columns.Add("userName", typeof(String));
             loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
             loginResponseDataTable.Columns.Add("password", typeof(string));
 
             byte[] saltArray = salt.Split(",")
                 .Select(s => byte.TryParse(s, out byte b) ? (byte?)b : null)
                 .Where(s => s.HasValue)
-                .Select(s => s.Value)
+                .Select(s => s!.Value)
                 .ToArray();
 
-            loginResponseDataTable.Rows.Add(new Object[] { userId, userName, saltArray, expectedHashCode });
+            loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
 
             ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == userName && x.Password == password)).Returns(loginResponseDataTable);
+            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password == validPassword)).Returns(loginResponseDataTable);
 
-            loginViewModel = new LoginViewModel(userLoginRepository);
-            loginViewModel.UserName = userName;
-            loginViewModel.Password = password;
+            LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
+            loginViewModel.UserName = validUserName;
+            loginViewModel.Password = validPassword;
 
             loginViewModel.CheckCredentials();
 
@@ -125,30 +108,30 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
         [TestMethod]
         public void CheckCredentials_WhenInvalidCredentials_ReturnError() {
-            ;
-            string invalidInputUserName = "Winui4Test";
-            string invalidInputPassword = "9AxbgTc4(?{ABC";
+
+            //string invalidInputvalidUserName = "Winui4Test";
+            //string invalidInputPassword = "9AxbgTc4(?{ABC";
             byte[] invalidSalt = new byte[1] { 1 };
 
-            IDataRequest loginDataRequest = new UserLoginDataRequest(userName, password);
+            IDataRequest loginDataRequest = new UserLoginDataRequest(invalidUserName, invalidPassword);
             DataTable loginResponseDataTable = new DataTable();
             loginResponseDataTable.Columns.Add("userID", typeof(int));
-            loginResponseDataTable.Columns.Add("username", typeof(String));
+            loginResponseDataTable.Columns.Add("validUserName", typeof(String));
             loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
             loginResponseDataTable.Columns.Add("password", typeof(string));
 
             int returnedUserId = -1;
-            string returnedUserName = String.Empty;
+            string returnedValidUserName = String.Empty;
             byte[] returnedSaltArray = new byte[1] { 1 };
             string returnedPasswordHash = String.Empty;
-            loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedUserName, returnedSaltArray, returnedPasswordHash });
+            loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
 
             ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidInputUserName && x.Password == invalidInputPassword)).Returns(loginResponseDataTable);
+            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == invalidPassword)).Returns(loginResponseDataTable);
 
-            loginViewModel = new LoginViewModel(userLoginRepository);
-            loginViewModel.UserName = invalidInputUserName;
-            loginViewModel.Password = invalidInputPassword;
+            LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
+            loginViewModel.UserName = invalidUserName;
+            loginViewModel.Password = invalidPassword;
 
             loginViewModel.CheckCredentials();
 

@@ -3,8 +3,10 @@
   <TestRunParameters>
     <!--USER LOGIN TEST DATA-->
     <Parameter name="userId" value="20"/>
-    <Parameter name="userName" value="WinUI3Test"/>
-    <Parameter name="password" value="9AxbgTc4(?{|n*"/>
+    <Parameter name="validUserName" value="WinUI3Test"/>
+    <Parameter name="invalidUserName" value="Winui4Test"/>
+    <Parameter name="validPassword" value="9AxbgTc4(?{|n*"/>
+    <Parameter name="invalidPassword" value="9AxbgTc4(?{ABC"/>
     <Parameter name="salt" value="186, 141, 168, 253, 254, 205, 240, 237, 38, 162, 208, 33, 216, 59, 180, 196, 196, 135, 164, 238, 194, 205, 224, 153, 168, 106, 230, 101, 180, 136, 56, 104, 209, 135, 38, 30, 183, 23, 122, 199, 213, 235, 215, 69, 163, 96, 181, 80, 165, 62, 194, 15, 45, 33, 16, 21, 114, 165, 221, 153, 209, 251, 123, 58, 161, 76, 182, 113, 9, 133, 141, 160, 93, 225, 105, 14, 209, 185, 39, 86, 236, 133, 56, 103, 116, 61, 106, 164, 58, 92, 85, 100, 217, 109, 1, 220, 145, 112, 121, 210, 36, 37, 9, 205, 194, 138, 90, 12, 145, 90, 247, 130, 117, 103, 5, 81, 6, 49, 61, 148, 128, 98, 51, 188, 243, 144, 201, 30"/>
     <Parameter name="expectedHashCode" value="ZSyZslBqclRYGJZ2hrSmFNl19+8r/9l4VGNRxbnG3nU="/>
   </TestRunParameters>
