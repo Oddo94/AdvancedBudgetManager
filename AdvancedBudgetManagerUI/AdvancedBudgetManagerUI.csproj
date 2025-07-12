@@ -11,7 +11,11 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>1570;1571</WarningsAsErrors><!--Setting for throwing compile time errors for malformed XML documentation-->
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="view\window\LoginWindow.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -46,6 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AdvancedBudgetManagerCore\AdvancedBudgetManagerCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="model\" />
+    <Folder Include="view\page\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\window\LoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--
