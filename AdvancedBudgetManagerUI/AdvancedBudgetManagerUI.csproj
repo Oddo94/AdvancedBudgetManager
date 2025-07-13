@@ -14,7 +14,9 @@
     <WarningsAsErrors>1570;1571</WarningsAsErrors><!--Setting for throwing compile time errors for malformed XML documentation-->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="view\page\EmailInputPage.xaml" />
     <None Remove="view\window\LoginWindow.xaml" />
+    <None Remove="view\window\ResetPasswordWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +55,26 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="model\" />
-    <Folder Include="view\page\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\window\ResetPasswordWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\page\ResetPasswordInputPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\page\EmailInputPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\window\ConfirmEmailWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="view\window\LoginWindow.xaml">

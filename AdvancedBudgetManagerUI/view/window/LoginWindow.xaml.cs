@@ -6,6 +6,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,10 +26,18 @@ namespace AdvancedBudgetManager.view.window {
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(600, 600));
 
+            if (appWindow.Presenter is OverlappedPresenter appWindowPresenter) {
+                Debug.WriteLine($"isResizable state before change: {appWindowPresenter.IsResizable}");
+
+                appWindowPresenter.IsResizable = false;
+
+                Debug.WriteLine($"isResizable state after change: {appWindowPresenter.IsResizable}");
+            }
+
             this.InitializeComponent();
         }
 
-        public async void LoginButton_Click(object sender, RoutedEventArgs args) {
+        public async void LoginButton_Click(object sender, RoutedEventArgs e) {
             ContentDialog loginErrorDialog;
 
             try {
@@ -59,6 +68,11 @@ namespace AdvancedBudgetManager.view.window {
                 loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                 await loginErrorDialog.ShowAsync();
             }
+        }
+
+        public void ResetLink_Click(object sender, RoutedEventArgs e) {
+            ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
+            confirmEmailWindow.Activate();
         }
     }
 }

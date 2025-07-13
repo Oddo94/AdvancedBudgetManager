@@ -5,9 +5,11 @@ using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
 using System.Data;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -61,6 +63,19 @@ namespace AdvancedBudgetManager
             if (loginWindow == null) {
                 throw new InvalidOperationException("Unable to initialize the login window!");
             } else {
+                //AppWindow appWindow = loginWindow.AppWindow;
+
+                //Debug.WriteLine($"Presenter type: {appWindow.Presenter.GetType().FullName}");
+
+                //if(appWindow.Presenter is OverlappedPresenter appWindowPresenter) {
+                //    Debug.WriteLine($"isResizable state before change: {appWindowPresenter.IsResizable}");
+                    
+                //    appWindowPresenter.IsResizable = false;
+
+                //    Debug.WriteLine($"isResizable state after change: {appWindowPresenter.IsResizable}");
+
+                //}
+
                 loginWindow.Activate();
             }
         }
