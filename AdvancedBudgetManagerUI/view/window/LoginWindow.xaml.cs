@@ -1,4 +1,4 @@
-using AdvancedBudgetManagerCore.model;
+using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
@@ -18,10 +18,12 @@ namespace AdvancedBudgetManager.view.window {
     public sealed partial class LoginWindow : Window {
         private LoginViewModel loginViewModel;
         private UserDashboard userDashboard;
+        private ConfirmEmailWindow confirmEmailWindow;
 
-        public LoginWindow(LoginViewModel loginViewModel, UserDashboard userDashboard) {
+        public LoginWindow(LoginViewModel loginViewModel, UserDashboard userDashboard, ConfirmEmailWindow confirmEmailWindow) {
             this.loginViewModel = loginViewModel;
             this.userDashboard = userDashboard;
+            this.confirmEmailWindow = confirmEmailWindow;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(600, 600));
@@ -71,7 +73,7 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
-            ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
+            //ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
             confirmEmailWindow.Activate();
         }
     }

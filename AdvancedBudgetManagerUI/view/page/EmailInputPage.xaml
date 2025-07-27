@@ -12,8 +12,9 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Please enter the email address used for the account creation." Margin="10" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBox x:Name="EmailAddressTextBox" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-            <Button x:Name="SendResetPasswordEmailButton" Content="Reset password" Click="SendResetPasswordEmailButton_Click" IsEnabled="False" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox x:Name="EmailAddressTextBox" PlaceholderText="user@email.com" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <TextBlock Text="we'll send you a confirmation code" Margin="10" FontSize="12" TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="SendResetPasswordEmailButton" Content="Send code" Click="SendResetPasswordEmailButton_Click" IsEnabled="False" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Page>

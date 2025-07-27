@@ -1,4 +1,5 @@
-﻿using AdvancedBudgetManager.view.window;
+﻿using AdvancedBudgetManager.view.dialog;
+using AdvancedBudgetManager.view.window;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.view_model;
@@ -37,10 +38,13 @@ namespace AdvancedBudgetManager
                 .ConfigureServices((context, services) => {
                     services.AddTransient<UserDashboard>();
                     services.AddTransient<LoginViewModel>();
+                    services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
+                    services.AddSingleton<EmailConfirmationViewModel>();
+                    services.AddSingleton<ConfirmationCodeInputDialog>();
+                    services.AddSingleton<ConfirmEmailWindow>();
                     services.AddTransient<LoginWindow>();
                     services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
-                    services.AddSingleton<ICrudRepository, UserLoginRepository>();
-
+                    services.AddSingleton<ICrudRepository, UserLoginRepository>();                                     
                 })
                 .Build();
         }

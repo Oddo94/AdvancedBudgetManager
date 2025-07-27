@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
-namespace AdvancedBudgetManagerCore.utils {
+namespace AdvancedBudgetManagerCore.utils.security {
     /// <summary>
     /// Utility class that provides methods for handling password data
     /// </summary>
@@ -12,9 +12,9 @@ namespace AdvancedBudgetManagerCore.utils {
         /// </summary>
         /// <param name="password">The password in plain text format</param>
         /// <param name="salt">The salt byte array</param>
-        /// <returns cref="String">A <see cref="string"/> representing the computed hash in Base64 format</returns>
+        /// <returns cref="string">A <see cref="string"/> representing the computed hash in Base64 format</returns>
         /// <throws cref="ArgumentException"></throws>
-        public String CreatePasswordHash([DisallowNull] String password, [DisallowNull] byte[] salt) {
+        public string CreatePasswordHash([DisallowNull] string password, [DisallowNull] byte[] salt) {
             if (password.Length == 0 || salt.Length == 0) {
                 throw new ArgumentException("The salt and password cannot be empty");
             }
@@ -22,7 +22,7 @@ namespace AdvancedBudgetManagerCore.utils {
 
             byte[] hashBytes = pbkdf2.GetBytes(32);
 
-            String hashedPassword = Convert.ToBase64String(hashBytes);
+            string hashedPassword = Convert.ToBase64String(hashBytes);
 
             return hashedPassword;
         }
@@ -35,7 +35,7 @@ namespace AdvancedBudgetManagerCore.utils {
         /// <throws cref="ArgumentOutOfRangeException"></throws>
         public byte[] GetSalt(int size) {
             if (size < 1 || size > Array.MaxLength) {
-                throw new ArgumentOutOfRangeException(String.Format("Invalid array size. Must be between 1 and {0}.", Array.MaxLength));
+                throw new ArgumentOutOfRangeException(string.Format("Invalid array size. Must be between 1 and {0}.", Array.MaxLength));
             }
             byte[] salt = new byte[size];
 
