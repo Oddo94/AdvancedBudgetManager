@@ -1,19 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using AdvancedBudgetManagerCore.view_model;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using AdvancedBudgetManagerCore.view_model;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,24 +14,38 @@ namespace AdvancedBudgetManager.view.dialog
         
         
         private EmailConfirmationViewModel emailConfirmationViewModel;
+        private bool showErrorTipOnLoad;
         
         public ConfirmationCodeInputDialog([NotNull] EmailConfirmationViewModel emailConfirmationViewModel) {
             this.emailConfirmationViewModel = emailConfirmationViewModel;
+            this.Loaded += ConfirmationCodeInputDialog_Loaded;
             this.InitializeComponent();
         }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
+        private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
             bool confirmationCodesMatch = emailConfirmationViewModel.ConfirmationCodesMatch(emailConfirmationViewModel.InputConfirmationCode, emailConfirmationViewModel.GeneratedConfirmationCode);
             
             if(!confirmationCodesMatch) {
-                ContentDialog errorDialog = new ContentDialog() {
-                    Title = "Error",
-                    Content = "Invalid confirmation code. Please try again!",
-                    CloseButtonText = "OK"
+                await Task.Delay(50);
+                ConfirmationCodeInputDialog onFailedValidationDialog = new ConfirmationCodeInputDialog(this.emailConfirmationViewModel) {
+                    XamlRoot = this.XamlRoot,
+                    ShowErrorTipOnLoad = true
                 };
+                
+                await onFailedValidationDialog.ShowAsync();               
             }
-
             //Add success logic
+        }
+
+        private void ConfirmationCodeInputDialog_Loaded(object sender, RoutedEventArgs args) {
+            if (showErrorTipOnLoad) {
+                InvalidConfirmationCodeTip.IsOpen = true;
+            }
+        }
+
+        public bool ShowErrorTipOnLoad {
+            get { return this.showErrorTipOnLoad; }
+            set { this.showErrorTipOnLoad = value; }
         }
     }
 }
