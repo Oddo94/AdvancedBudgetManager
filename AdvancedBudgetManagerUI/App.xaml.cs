@@ -39,6 +39,7 @@ namespace AdvancedBudgetManager
                     services.AddTransient<UserDashboard>();
                     services.AddTransient<LoginViewModel>();
                     services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
+                    services.AddSingleton<ResetPasswordDialog>();
                     services.AddSingleton<EmailConfirmationViewModel>();
                     services.AddSingleton<ConfirmationCodeInputDialog>();
                     services.AddSingleton<ConfirmEmailWindow>();

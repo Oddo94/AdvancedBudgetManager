@@ -18,10 +18,12 @@ namespace AdvancedBudgetManager.view.window {
     public sealed partial class ConfirmEmailWindow : Window {
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;
+        private ResetPasswordDialog resetPasswordDialog;
 
-        public ConfirmEmailWindow([NotNull] EmailConfirmationViewModel emailConfirmationViewModel, [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog) {
+        public ConfirmEmailWindow([NotNull] EmailConfirmationViewModel emailConfirmationViewModel, [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog, [NotNull] ResetPasswordDialog resetPasswordDialog) {
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
+            this.resetPasswordDialog = resetPasswordDialog;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -30,34 +32,22 @@ namespace AdvancedBudgetManager.view.window {
                 appWindowPresenter.IsResizable = false;
             }
 
-            this.InitializeComponent();
-            //this.ResetPasswordContentFrame.Navigate(typeof(EmailInputPage));
+            this.InitializeComponent();;
         }
 
         public async void ConfirmEmailButton_Click(object sender, RoutedEventArgs e) {
-            //ContentDialog confirmationCodeDialog = new ConfirmationCodeInputDialog() {
-            //    XamlRoot = this.Content.XamlRoot
-            //};
-
             this.confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
 
             ContentDialogResult confirmationDialogResult = await confirmationCodeInputDialog.ShowAsync();
 
-            if (confirmationDialogResult == ContentDialogResult.Primary) {
-               //Add logic
+            if (confirmationDialogResult == ContentDialogResult.Primary && confirmationCodeInputDialog.IsValidConfirmationCode) {
+                await Task.Delay(50);
+                resetPasswordDialog.XamlRoot = this.Content.XamlRoot;
+
+                await resetPasswordDialog.ShowAsync();
             } else {
                 Debug.WriteLine("User closed the email confirmation dialog.");
             }
-
-            //string emailAddress = EmailAddressTextBox.Text;
-
-            //ResetPasswordWindow resetPasswordWindow = new ResetPasswordWindow();
-            //resetPasswordWindow.Activate();
-
-
-            //MailAddress mailAddress = new MailAddress(emailAddress);
-
-            //await confirmationCodeDialog.ShowAsync();
         }
     }
 }

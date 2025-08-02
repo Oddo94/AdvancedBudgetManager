@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<winui:ContentDialog
+<ContentDialog
     x:Class="AdvancedBudgetManager.view.dialog.ConfirmationCodeInputDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:local="clr-namespace:AdvancedBudgetManager.view.dialog"
@@ -11,10 +11,11 @@
     Title="Confirmation code"
     PrimaryButtonText="Check code"
     SecondaryButtonText="Cancel"
+    DefaultButton="Primary"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <StackPanel>
         <TextBox x:Name="ConfirmationCodeTextBox" Header="Enter the confirmation code" PlaceholderText="Confirmation code received on email" Text="{x:Bind emailConfirmationViewModel.InputConfirmationCode, Mode=TwoWay}" TextAlignment="Center" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TeachingTip x:Name="InvalidConfirmationCodeTip" Title="Invalid confirmation code" Subtitle="Please try again!" Target="{x:Bind ConfirmationCodeTextBox}" PreferredPlacement="LeftBottom" IsLightDismissEnabled="true" IsOpen="false"/>
     </StackPanel>
-</winui:ContentDialog>
+</ContentDialog>
