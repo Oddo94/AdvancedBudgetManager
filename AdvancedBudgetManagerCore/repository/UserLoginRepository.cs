@@ -53,5 +53,9 @@ namespace AdvancedBudgetManagerCore.repository {
 
             return authenticationData;
         }
+
+        public void UpdateData(IDataUpdateRequest dataUpdateRequest) {
+            return;
+        }
     }
 }

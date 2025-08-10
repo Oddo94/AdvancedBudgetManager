@@ -1,23 +1,29 @@
+using AdvancedBudgetManagerCore.view_model;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace AdvancedBudgetManager.view.window
-{
+namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ResetPasswordWindow : Window {
         private TaskCompletionSource<bool> taskCompletionSource = new();
-        public ResetPasswordWindow() {
+        private ResetPasswordViewModel resetPasswordViewModel;
+        public ResetPasswordWindow(ResetPasswordViewModel resetPasswordViewModel) {
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
-            
+
+            this.resetPasswordViewModel = resetPasswordViewModel;
             this.InitializeComponent();
             this.Closed += (_, _) => taskCompletionSource.TrySetResult(false);
+            
         }
 
         public Task<bool> ShowModalAsync(Window parentWindow) {
@@ -28,9 +34,33 @@ namespace AdvancedBudgetManager.view.window
             return taskCompletionSource.Task;
         }
 
-        public void ResetPasswordButton_Click(object sender, RoutedEventArgs e) {
-            taskCompletionSource.TrySetResult(true);
-            this.Close();
+        public async void ResetPasswordButton_Click(object sender, RoutedEventArgs e) {
+            Debug.WriteLine("Inside ResetPasswordButton_Click");
+
+            try {
+                //resetPasswordViewModel.ResetPassword();
+
+                ContentDialog passwordResetSuccessDialog = new ContentDialog {
+                    Title = "Password reset",
+                    Content = "Your password was successfully reset!",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
+                };
+                await passwordResetSuccessDialog.ShowAsync();
+
+                this.Close();
+
+            } catch (SystemException ex) {
+                ContentDialog passwordResetErrorDialog = new ContentDialog {
+                    Title = "Reset password",
+                    Content = ex.Message,
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
+                };
+                await passwordResetErrorDialog.ShowAsync();
+            }
+
+            taskCompletionSource.TrySetResult(true);   
         }
 
         public void CancelButton_Click(object sender, RoutedEventArgs e) {

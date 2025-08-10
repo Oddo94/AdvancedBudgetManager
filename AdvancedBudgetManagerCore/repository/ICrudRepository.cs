@@ -14,5 +14,7 @@ namespace AdvancedBudgetManagerCore.repository {
         /// <returns>A <see cref="DataTable"/> containing the retrieved data</returns>
         /// <exception cref="SystemException"></exception>
         public DataTable GetData(IDataRequest dataRequest);
+
+        public void UpdateData(IDataUpdateRequest dataUpdateRequest);
     }
 }

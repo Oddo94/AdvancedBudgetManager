@@ -34,12 +34,15 @@ namespace AdvancedBudgetManager
         {
             this.InitializeComponent();
 
+            //TO DO: change dependency injection container to Autofac before continuing the implementation of password reset feature
             AppHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) => {
                     services.AddTransient<UserDashboard>();
                     services.AddTransient<LoginViewModel>();
-                    services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
+                    //services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
+                    services.AddSingleton<ICrudRepository, ResetPasswordRepository>();
                     services.AddSingleton<ResetPasswordDialog>();
+                    services.AddSingleton<ResetPasswordViewModel>();
                     services.AddSingleton<EmailConfirmationViewModel>();
                     services.AddSingleton<ConfirmationCodeInputDialog>();
                     services.AddSingleton<ConfirmEmailWindow>();

@@ -54,20 +54,22 @@ namespace AdvancedBudgetManager.view.window {
                     loginErrorDialog = new ContentDialog {
                         Title = "Login",
                         Content = loginResponse.ResponseMessage,
-                        CloseButtonText = "OK"
+                        CloseButtonText = "OK",
+                        XamlRoot = this.Content.XamlRoot
                     };
 
-                    loginErrorDialog.XamlRoot = this.Content.XamlRoot;
+                    //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                     await loginErrorDialog.ShowAsync();
                 }
             } catch (SystemException ex) {
                 loginErrorDialog = new ContentDialog {
                     Title = "Login",
                     Content = ex.Message,
-                    CloseButtonText = "OK"
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
                 };
 
-                loginErrorDialog.XamlRoot = this.Content.XamlRoot;
+                //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                 await loginErrorDialog.ShowAsync();
             }
         }

@@ -11,5 +11,9 @@ namespace AdvancedBudgetManagerCore.repository {
         public DataTable GetData(IDataRequest dataRequest) {
             throw new NotImplementedException();
         }
+
+        public void UpdateData(IDataUpdateRequest dataUpdateRequest) {
+            throw new NotImplementedException();
+        }
     }
 }
