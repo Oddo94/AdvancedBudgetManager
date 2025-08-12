@@ -1,5 +1,6 @@
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManagerCore.view_model;
+using Autofac.Features.AttributeFilters;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

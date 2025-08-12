@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,7 +21,7 @@ namespace AdvancedBudgetManager.view.window {
         private UserDashboard userDashboard;
         private ConfirmEmailWindow confirmEmailWindow;
 
-        public LoginWindow(LoginViewModel loginViewModel, UserDashboard userDashboard, ConfirmEmailWindow confirmEmailWindow) {
+        public LoginWindow([NotNull] LoginViewModel loginViewModel, [NotNull] UserDashboard userDashboard, [NotNull] ConfirmEmailWindow confirmEmailWindow) {
             this.loginViewModel = loginViewModel;
             this.userDashboard = userDashboard;
             this.confirmEmailWindow = confirmEmailWindow;

@@ -2,6 +2,7 @@
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.security;
+using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -21,8 +22,8 @@ namespace AdvancedBudgetManagerCore.view_model {
         private string generatedConfirmationCode;
 
 
-        public EmailConfirmationViewModel([NotNull] ICrudRepository emailConfirmationRepository) {
-            this.emailConfirmationRepository = emailConfirmationRepository;
+        public EmailConfirmationViewModel() {
+            //this.emailConfirmationRepository = emailConfirmationRepository;
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
         }

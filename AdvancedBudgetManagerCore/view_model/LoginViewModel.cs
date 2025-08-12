@@ -3,9 +3,11 @@ using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
+using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.view_model {
     /// <summary>
@@ -28,7 +30,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
         /// <param name="userLoginRepository">The actual repository used to retrieve the user login details.</param>
-        public LoginViewModel(ICrudRepository userLoginRepository) {
+        public LoginViewModel([NotNull] [KeyFilter("UserLoginRepo")] ICrudRepository userLoginRepository) {
             this.userName = String.Empty;
             this.password = String.Empty;
             this.loginResponse = new LoginResponse();
