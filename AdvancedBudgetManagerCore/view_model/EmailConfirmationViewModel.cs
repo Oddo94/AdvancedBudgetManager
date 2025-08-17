@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace AdvancedBudgetManagerCore.view_model {
     public partial class EmailConfirmationViewModel : ObservableObject {
         [ObservableProperty]
-        private string recipientEmailAddress;
+        private string userEmail;
 
         [ObservableProperty]
         private string inputConfirmationCode;
@@ -37,7 +37,7 @@ namespace AdvancedBudgetManagerCore.view_model {
             int confirmationCodeSize = 32;
             generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
 
-            ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(RecipientEmailAddress, emailSubject, emailBody, generatedConfirmationCode);
+            ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(UserEmail, emailSubject, emailBody, generatedConfirmationCode);
 
             try {
                 emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);

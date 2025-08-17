@@ -10,6 +10,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private string newPassword;
 
+        [ObservableProperty]
         private string userEmail;
 
         private ICrudRepository resetPasswordRepository;

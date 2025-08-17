@@ -18,13 +18,20 @@ namespace AdvancedBudgetManager.view.window {
     /// </summary>
     public sealed partial class ConfirmEmailWindow : Window {
         private EmailConfirmationViewModel emailConfirmationViewModel;
-        private ConfirmationCodeInputDialog confirmationCodeInputDialog;
+        private ChangePasswordViewModelWrapper changePasswordViewModelWrapper;
+        private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
         private ResetPasswordDialog resetPasswordDialog;
+        private XamlRoot baseWindowXamlRoot;
 
-        public ConfirmEmailWindow([NotNull] EmailConfirmationViewModel emailConfirmationViewModel, [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog, [NotNull] ResetPasswordDialog resetPasswordDialog) {
+        public ConfirmEmailWindow( 
+            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog, 
+            [NotNull] ResetPasswordDialog resetPasswordDialog, 
+            [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper) {
+
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.resetPasswordDialog = resetPasswordDialog;
+            this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -33,7 +40,7 @@ namespace AdvancedBudgetManager.view.window {
                 appWindowPresenter.IsResizable = false;
             }
 
-            this.InitializeComponent();;
+            this.InitializeComponent();
         }
 
         public async void ConfirmEmailButton_Click(object sender, RoutedEventArgs e) {
@@ -41,14 +48,21 @@ namespace AdvancedBudgetManager.view.window {
 
             ContentDialogResult confirmationDialogResult = await confirmationCodeInputDialog.ShowAsync();
 
+            this.Close();
+
             if (confirmationDialogResult == ContentDialogResult.Primary && confirmationCodeInputDialog.IsValidConfirmationCode) {
                 await Task.Delay(50);
-                resetPasswordDialog.XamlRoot = this.Content.XamlRoot;
+                //resetPasswordDialog.XamlRoot = this.Content.XamlRoot;
+                resetPasswordDialog.XamlRoot = baseWindowXamlRoot;
 
                 await resetPasswordDialog.ShowAsync();
             } else {
                 Debug.WriteLine("User closed the email confirmation dialog.");
             }
+        }
+
+        public XamlRoot BaseWindowXamlRoot {
+            set { this.baseWindowXamlRoot = value; }
         }
     }
 }

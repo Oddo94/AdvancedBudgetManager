@@ -1,17 +1,10 @@
 ﻿using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.utils.security;
-using Autofac.Features.AttributeFilters;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.repository {
     public class ResetPasswordRepository : ICrudRepository {
@@ -30,7 +23,7 @@ namespace AdvancedBudgetManagerCore.repository {
         }
 
         public void UpdateData(IDataUpdateRequest updateDataRequest) {
-            PasswordDataUpdateRequest passwordDataUpdateRequest = (PasswordDataUpdateRequest)updateDataRequest;
+            PasswordDataUpdateRequest passwordDataUpdateRequest = (PasswordDataUpdateRequest) updateDataRequest;
             string newPassword = passwordDataUpdateRequest.NewPassword;
             string userEmail = passwordDataUpdateRequest.GetUpdateParameter();
 

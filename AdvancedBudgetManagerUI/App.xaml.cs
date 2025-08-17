@@ -14,6 +14,8 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using ZstdSharp.Unsafe;
 using AutofacContainer = Autofac.IContainer;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -69,47 +71,55 @@ namespace AdvancedBudgetManager {
 
             builder.ConfigureContainer<ContainerBuilder>(container => {
                 //Windows
-                container.RegisterType<LoginWindow>();
-                container.RegisterType<UserDashboard>();
-                container.RegisterType<ConfirmEmailWindow>();
+                container.RegisterType<LoginWindow>()
+                         .SingleInstance();
+                container.RegisterType<UserDashboard>()
+                         .SingleInstance();
+                container.RegisterType<ConfirmEmailWindow>()
+                         .SingleInstance();
 
                 //InputDialogs
-                container.RegisterType<ConfirmationCodeInputDialog>();
-                container.RegisterType<ResetPasswordDialog>();
+                container.RegisterType<ConfirmationCodeInputDialog>()
+                         .SingleInstance();
+                container.RegisterType<ResetPasswordDialog>()
+                         .SingleInstance();  
 
                 //ViewModels
                 container.RegisterType<LoginViewModel>()
- .WithParameter(
-     (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-     (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("UserLoginRepo")
- );
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("UserLoginRepo")
+                );
+
+                container.RegisterType<ChangePasswordViewModelWrapper>();
+
                 container.RegisterType<ResetPasswordViewModel>()
-         .WithParameter(
-             (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-             (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
-         );
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
+                );
 
-
-
-                container.RegisterType<EmailConfirmationViewModel>();
+                //Registers object with default constructor
+                container.RegisterType<EmailConfirmationViewModel>()
+                         .AsSelf()
+                         .SingleInstance();
 
                 //Repositories
                 container.RegisterType<UserLoginRepository>()
-    .WithParameter(
-    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-    .Keyed<ICrudRepository>("UserLoginRepo");
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                         .Keyed<ICrudRepository>("UserLoginRepo");
 
                 container.RegisterType<ResetPasswordRepository>()
-                     .WithParameter(
-(pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-(pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-.Keyed<ICrudRepository>("ResetPasswordRepo");
+                        .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                        .Keyed<ICrudRepository>("ResetPasswordRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()
                          .Keyed<IDatabaseConnection>("MySqlDbConnection");
-
             }
             );
 
@@ -120,19 +130,7 @@ namespace AdvancedBudgetManager {
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
-            //if (AppHost == null) {
-            //    throw new InvalidOperationException("An error occurred when trying to setup the required objects.");
-            //}
-
-            //loginWindow = AppHost.Services.GetService<LoginWindow>();
-
-            //if (loginWindow == null) {
-            //    throw new InvalidOperationException("Unable to initialize the login window!");
-            //} else {
-            //   loginWindow.Activate();
-            //}
-
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
             if (Container == null) {
                 throw new InvalidOperationException("An error occurred when trying to setup the required objects.");
             }
@@ -143,6 +141,31 @@ namespace AdvancedBudgetManager {
                 throw new InvalidOperationException("Unable to initialize the login window!");
             } else {
                 loginWindow.Activate();
+
+                FrameworkElement rootElement = (FrameworkElement) loginWindow.Content;
+
+                if (!rootElement.IsLoaded) {
+                    TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+                    rootElement.Loaded += (s, e) => tcs.SetResult(null);
+
+                    await tcs.Task;
+                }
+                
+                XamlRoot loginWindowRoot = loginWindow.Content.XamlRoot;
+
+                //Retrieves the ConfirmEmailWindow object from the DI container
+                ConfirmEmailWindow confirmEmailWindow = Container.Resolve<ConfirmEmailWindow>();
+
+                //Retrieves the ResetPasswordDialog object from the DI container
+                ResetPasswordDialog resetPasswordDialog = Container.Resolve<ResetPasswordDialog>();
+
+                /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
+                This allows the display of the password reset dialog on top of the login window*/
+                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
+
+                /*Sets the BaseWindowXamlRoot property of the ResetPasswordDialog to the XamlRoot of the LoginWindow
+                This allows the display of the password reset succes/error message on top of the login window*/
+                resetPasswordDialog.BaseWindowXamlRoot = loginWindowRoot;
             }
         }
     }
