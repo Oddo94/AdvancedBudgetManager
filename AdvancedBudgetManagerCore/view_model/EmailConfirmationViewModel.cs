@@ -1,20 +1,24 @@
 ﻿using AdvancedBudgetManagerCore.model;
+using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.security;
 using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.view_model {
-    public partial class EmailConfirmationViewModel : ObservableObject {
+    public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
         [ObservableProperty]
         private string userEmail;
 
-        [ObservableProperty]
-        private string inputConfirmationCode;
+        //[ObservableProperty]
+        //private string inputConfirmationCode;
 
         private ICrudRepository emailConfirmationRepository;
         private EmailConfirmationSender emailConfirmationSender;
@@ -26,6 +30,9 @@ namespace AdvancedBudgetManagerCore.view_model {
             //this.emailConfirmationRepository = emailConfirmationRepository;
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
+            //IsActive = true;
+            WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
+
         }
 
         [RelayCommand]
@@ -46,6 +53,28 @@ namespace AdvancedBudgetManagerCore.view_model {
             }
         }
 
+        [RelayCommand]
+        private void RequestUserConfirmationCode() {
+            //EmailConfirmationSubmittedMessage message = new EmailConfirmationMessage();
+
+            WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
+
+            //if (message.HasReceivedResponse) {
+            //    Task<EmailConfirmationResponse> response = message.Response;
+
+            //    this.inputConfirmationCode = response.Result.ConfirmationCode;
+
+                //if (ConfirmationCodesMatch(this.inputConfirmationCode, this.generatedConfirmationCode)) {
+
+                //}
+        }
+
+         public void Receive(EmailConfirmationSubmittedMessage message) {
+            String confirmationCode = message.ConfirmationCode;
+
+            Debug.WriteLine($"Received confirmation code: {confirmationCode}");
+        }
+
         //[RelayCommand]
         public bool ConfirmationCodesMatch([NotNull] string inputConfirmationCode, [NotNull] string generatedConfirmationCode) {
             return true;
@@ -55,5 +84,9 @@ namespace AdvancedBudgetManagerCore.view_model {
         public string GeneratedConfirmationCode {
             get { return this.generatedConfirmationCode; }
         }
+
+        //public string InputConfirmationCode {
+        //    get { return this.inputConfirmationCode; }
+        //}
     }
 }

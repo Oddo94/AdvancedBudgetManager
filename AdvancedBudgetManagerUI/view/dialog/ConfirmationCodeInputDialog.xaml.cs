@@ -14,30 +14,32 @@ namespace AdvancedBudgetManager.view.dialog {
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private bool showErrorTipOnLoad;
         private bool isValidConfirmationCode;
+        public string ConfirmationCode => ConfirmationCodeTextBox.Text;
 
         public ConfirmationCodeInputDialog([NotNull] EmailConfirmationViewModel emailConfirmationViewModel) {
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.Loaded += ConfirmationCodeInputDialog_Loaded;
+            //this.confirmationCode = ConfirmationCodeTextBox.Text;
             this.InitializeComponent();
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
-            bool confirmationCodesMatch = emailConfirmationViewModel.ConfirmationCodesMatch(emailConfirmationViewModel.InputConfirmationCode, emailConfirmationViewModel.GeneratedConfirmationCode);
+            //bool confirmationCodesMatch = emailConfirmationViewModel.ConfirmationCodesMatch(emailConfirmationViewModel.InputConfirmationCode, emailConfirmationViewModel.GeneratedConfirmationCode);
 
 
-            if (!confirmationCodesMatch) {
-                await Task.Delay(50);
-                ConfirmationCodeInputDialog onFailedValidationDialog = new ConfirmationCodeInputDialog(this.emailConfirmationViewModel) {
-                    XamlRoot = this.XamlRoot,
-                    ShowErrorTipOnLoad = true
-                };
+            //if (!confirmationCodesMatch) {
+            //    await Task.Delay(50);
+            //    ConfirmationCodeInputDialog onFailedValidationDialog = new ConfirmationCodeInputDialog(this.emailConfirmationViewModel) {
+            //        XamlRoot = this.XamlRoot,
+            //        ShowErrorTipOnLoad = true
+            //    };
 
-                isValidConfirmationCode = false;
+            //    isValidConfirmationCode = false;
 
-                await onFailedValidationDialog.ShowAsync();
-            } else {
-                isValidConfirmationCode = true;
-            }
+            //    await onFailedValidationDialog.ShowAsync();
+            //} else {
+            //    isValidConfirmationCode = true;
+            //}
 
                 
         }
@@ -57,5 +59,10 @@ namespace AdvancedBudgetManager.view.dialog {
             get { return this.isValidConfirmationCode; }
             set { this.isValidConfirmationCode = value; }
         }
+
+        //public string ConfirmationCode {
+        //    get { return this.ConfirmationCode; }
+        //    set { this.confirmationCode = value; }
+        //}
     }
 }
