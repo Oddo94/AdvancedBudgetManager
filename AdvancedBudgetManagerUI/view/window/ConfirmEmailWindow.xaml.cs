@@ -90,11 +90,33 @@ namespace AdvancedBudgetManager.view.window {
 
             ContentDialogResult displayResult = await confirmationCodeInputDialog.ShowAsync();
 
-            if (displayResult == ContentDialogResult.Primary) {
-                EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
+            //if (displayResult == ContentDialogResult.Primary) {
+            //    EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
 
-                WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse));
-            }
+            //    WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse));
+
+            //    if (!emailConfirmationViewModel.IsConfirmationCodeMatch) {
+            //        confirmationCodeInputDialog.ShowErrorTipOnLoad = true;
+
+            //        displayResult = await confirmationCodeInputDialog.ShowAsync();
+            //    }
+            //}
+
+                do {
+                if (displayResult == ContentDialogResult.Primary) {
+                    EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
+
+                    WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse));
+
+                    if (!emailConfirmationViewModel.IsConfirmationCodeMatch) {
+                        confirmationCodeInputDialog.ShowErrorTipOnLoad = true;
+
+                        displayResult = await confirmationCodeInputDialog.ShowAsync();
+                    } else {
+                        emailConfirmationViewModel.IsConfirmationCodeMatch = true;
+                    }
+                }
+            } while (!emailConfirmationViewModel.IsConfirmationCodeMatch);
 
             message.Reply(true);
         }

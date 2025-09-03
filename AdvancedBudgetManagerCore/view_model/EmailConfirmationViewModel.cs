@@ -24,6 +24,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         private EmailConfirmationSender emailConfirmationSender;
         private SecretReader secretReader;
         private string generatedConfirmationCode;
+        private bool isConfirmationCodeMatch;
 
 
         public EmailConfirmationViewModel() {
@@ -31,11 +32,13 @@ namespace AdvancedBudgetManagerCore.view_model {
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
             //IsActive = true;
+            isConfirmationCodeMatch = true;
+
             WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
 
         }
 
-        [RelayCommand]
+        //[RelayCommand]
         public void SendEmailConfirmationCode() {
             EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
 
@@ -57,6 +60,12 @@ namespace AdvancedBudgetManagerCore.view_model {
         private void RequestUserConfirmationCode() {
             //EmailConfirmationSubmittedMessage message = new EmailConfirmationMessage();
 
+
+            if (isConfirmationCodeMatch) {
+                //Sends the email confirmation code to the user's email address
+                SendEmailConfirmationCode();
+            }
+
             WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
 
             //if (message.HasReceivedResponse) {
@@ -70,15 +79,21 @@ namespace AdvancedBudgetManagerCore.view_model {
         }
 
          public void Receive(EmailConfirmationSubmittedMessage message) {
-            String confirmationCode = message.ConfirmationCode;
+            String inputConfirmationCode = message.ConfirmationCode;
 
-            Debug.WriteLine($"Received confirmation code: {confirmationCode}");
+            Debug.WriteLine($"Received confirmation code: {inputConfirmationCode}");
+
+            if (!ConfirmationCodesMatch(inputConfirmationCode, generatedConfirmationCode)) {
+                isConfirmationCodeMatch = false;
+            } else {
+                isConfirmationCodeMatch = true;
+            }
         }
 
         //[RelayCommand]
         public bool ConfirmationCodesMatch([NotNull] string inputConfirmationCode, [NotNull] string generatedConfirmationCode) {
-            return true;
-            //return inputConfirmationCode.Equals(generatedConfirmationCode);
+            //return true;
+            return inputConfirmationCode.Equals(generatedConfirmationCode);
         }
 
         public string GeneratedConfirmationCode {
@@ -88,5 +103,10 @@ namespace AdvancedBudgetManagerCore.view_model {
         //public string InputConfirmationCode {
         //    get { return this.inputConfirmationCode; }
         //}
+
+        public bool IsConfirmationCodeMatch {
+            get { return this.isConfirmationCodeMatch; }
+            set { this.isConfirmationCodeMatch = value; }
+        }
     }
 }
