@@ -1,4 +1,6 @@
+using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.view_model;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,7 +15,7 @@ namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ResetPasswordWindow : Window {
+    public sealed partial class ResetPasswordWindow : Window, IRecipient<GenericRequestMessage> {
         private TaskCompletionSource<bool> taskCompletionSource = new();
         private ResetPasswordViewModel resetPasswordViewModel;
         public ResetPasswordWindow(ResetPasswordViewModel resetPasswordViewModel) {
@@ -66,6 +68,27 @@ namespace AdvancedBudgetManager.view.window {
         public void CancelButton_Click(object sender, RoutedEventArgs e) {
             taskCompletionSource.TrySetResult(false);
             this.Close();
+        }
+
+        public async void Receive(GenericRequestMessage message) {
+            string title = "Password reset";
+            string content;
+
+            ContentDialog passwordResetContentDialog = new ContentDialog {
+                Title = "Password reset",
+                Content = message.AdditionalData,
+                XamlRoot = this.Content.XamlRoot
+            };
+
+            ContentDialogResult displayResult = await passwordResetContentDialog.ShowAsync();
+
+            if (displayResult == ContentDialogResult.Primary) {
+                Debug.WriteLine("Closing the password reset window...");
+                this.Close();
+            }
+
+            message.Reply(true);
+
         }
     }
 }

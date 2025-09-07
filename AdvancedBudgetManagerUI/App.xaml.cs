@@ -77,6 +77,8 @@ namespace AdvancedBudgetManager {
                          .SingleInstance();
                 container.RegisterType<ConfirmEmailWindow>()
                          .SingleInstance();
+                container.RegisterType<ResetPasswordWindow>()
+                         .SingleInstance();
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>()
@@ -94,9 +96,11 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<ChangePasswordViewModelWrapper>();
 
                 container.RegisterType<ResetPasswordViewModel>()
+                         .SingleInstance()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
                                (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
+                          
                 );
 
                 //Registers object with default constructor

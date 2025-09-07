@@ -1,32 +1,73 @@
-﻿using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.message;
+using AdvancedBudgetManagerCore.model.request;
+using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.view_model {
-    public partial class ResetPasswordViewModel : ObservableObject {
+    public partial class ResetPasswordViewModel : ObservableObject, IRecipient<ResetPasswordSubmittedMessage> {
         [ObservableProperty]
         private string newPassword;
+
+        [ObservableProperty]
+        private string confirmationPassword;
 
         [ObservableProperty]
         private string userEmail;
 
         private ICrudRepository resetPasswordRepository;
 
+        private ResetPasswordResponse resetPasswordResponse;
+
         public ResetPasswordViewModel([NotNull] ICrudRepository resetPasswordRepository) {
             this.resetPasswordRepository = resetPasswordRepository;
+            WeakReferenceMessenger.Default.Register<ResetPasswordSubmittedMessage>(this);
         }
 
-        public void ResetPassword([NotNull] string userEmail) {
-            IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
+        public void Receive(ResetPasswordSubmittedMessage message) {
+            //ResetPasswordResponse resetPasswordResponse = message.ResetPasswordResponse;
+            //string newPassword = resetPasswordResponse.NewPassword;
+            //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
 
-            try {
-                resetPasswordRepository.UpdateData(passwordUpdateRequest);
-            } catch(SystemException ex) {
-                throw new SystemException($"Password reset failed! Reason: {ex.Message}");
+            this.resetPasswordResponse = message.ResetPasswordResponse;
+        }
+
+        [RelayCommand]
+        public void ResetPassword([NotNull] string userEmail) {
+            //IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
+
+            //try {
+            //    resetPasswordRepository.UpdateData(passwordUpdateRequest);
+            //} catch(SystemException ex) {
+            //    throw new SystemException($"Password reset failed! Reason: {ex.Message}");
+            //}
+
+            //IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
+
+            //string newPassword = resetPasswordResponse.NewPassword;
+            //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
+
+            string resetPasswordResultMessage = String.Empty;
+            if ((NewPassword != null || ConfirmationPassword != null)) {
+                if (newPassword.Equals((confirmationPassword))) {
+                    IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
+                    
+                    try {
+                        resetPasswordRepository.UpdateData(passwordUpdateRequest);
+                        resetPasswordResultMessage = "Your password was successfully reset!";
+                    } catch (SystemException ex) {
+                        resetPasswordResultMessage = "Failed to reset your password. Please try again!";
+                        //throw new SystemException($"Password reset failed! Reason: {ex.Message}");
+                    }
+                }          
             }
+
+            WeakReferenceMessenger.Default.Send(new GenericRequestMessage(resetPasswordResultMessage));
         }
     }
 }

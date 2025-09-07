@@ -25,18 +25,21 @@ namespace AdvancedBudgetManager.view.window {
         private ChangePasswordViewModelWrapper changePasswordViewModelWrapper;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
         private ResetPasswordDialog resetPasswordDialog;
+        private ResetPasswordWindow resetPasswordWindow;
         private XamlRoot baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
             [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
             [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog, 
             [NotNull] ResetPasswordDialog resetPasswordDialog, 
-            [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper) {
+            [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper,
+            [NotNull] ResetPasswordWindow resetPasswordWindow) {
 
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.resetPasswordDialog = resetPasswordDialog;
             this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
+            this.resetPasswordWindow = resetPasswordWindow;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -114,6 +117,9 @@ namespace AdvancedBudgetManager.view.window {
                         displayResult = await confirmationCodeInputDialog.ShowAsync();
                     } else {
                         emailConfirmationViewModel.IsConfirmationCodeMatch = true;
+                        resetPasswordWindow.Activate();
+
+                        this.Close();
                     }
                 }
             } while (!emailConfirmationViewModel.IsConfirmationCodeMatch);
