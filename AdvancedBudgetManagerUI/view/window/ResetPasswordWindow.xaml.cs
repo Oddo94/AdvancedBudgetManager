@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
+using System.Security;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -15,9 +16,11 @@ namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ResetPasswordWindow : Window, IRecipient<GenericRequestMessage> {
+    public sealed partial class ResetPasswordWindow : Window, IRecipient<GenericResultMessage> {
         private TaskCompletionSource<bool> taskCompletionSource = new();
         private ResetPasswordViewModel resetPasswordViewModel;
+        private SecureString secureString;
+
         public ResetPasswordWindow(ResetPasswordViewModel resetPasswordViewModel) {
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -25,7 +28,8 @@ namespace AdvancedBudgetManager.view.window {
             this.resetPasswordViewModel = resetPasswordViewModel;
             this.InitializeComponent();
             this.Closed += (_, _) => taskCompletionSource.TrySetResult(false);
-            
+
+            WeakReferenceMessenger.Default.Register<GenericResultMessage>(this);      
         }
 
         public Task<bool> ShowModalAsync(Window parentWindow) {
@@ -70,13 +74,13 @@ namespace AdvancedBudgetManager.view.window {
             this.Close();
         }
 
-        public async void Receive(GenericRequestMessage message) {
+        public async void Receive(GenericResultMessage message) {
             string title = "Password reset";
-            string content;
 
             ContentDialog passwordResetContentDialog = new ContentDialog {
                 Title = "Password reset",
-                Content = message.AdditionalData,
+                Content = message.Message,
+                PrimaryButtonText = "OK",
                 XamlRoot = this.Content.XamlRoot
             };
 
@@ -87,7 +91,7 @@ namespace AdvancedBudgetManager.view.window {
                 this.Close();
             }
 
-            message.Reply(true);
+            //message.Reply(true);
 
         }
     }

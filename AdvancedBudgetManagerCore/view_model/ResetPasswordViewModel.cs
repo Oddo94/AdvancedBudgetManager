@@ -34,7 +34,7 @@ namespace AdvancedBudgetManagerCore.view_model {
             //string newPassword = resetPasswordResponse.NewPassword;
             //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
 
-            this.resetPasswordResponse = message.ResetPasswordResponse;
+            //this.resetPasswordResponse = message.ResetPasswordResponse;
         }
 
         [RelayCommand]
@@ -52,22 +52,29 @@ namespace AdvancedBudgetManagerCore.view_model {
             //string newPassword = resetPasswordResponse.NewPassword;
             //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
 
+            bool isSuccess = false;
             string resetPasswordResultMessage = String.Empty;
             if ((NewPassword != null || ConfirmationPassword != null)) {
                 if (newPassword.Equals((confirmationPassword))) {
-                    IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
+                    IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, UserEmail);
                     
                     try {
                         resetPasswordRepository.UpdateData(passwordUpdateRequest);
+
+                        isSuccess = true;
                         resetPasswordResultMessage = "Your password was successfully reset!";
                     } catch (SystemException ex) {
+                        isSuccess = false;
                         resetPasswordResultMessage = "Failed to reset your password. Please try again!";
                         //throw new SystemException($"Password reset failed! Reason: {ex.Message}");
                     }
-                }          
+                } else {
+                    isSuccess = false;
+                    resetPasswordResultMessage = "The input password and confirmation password don't match. Please try again!";
+                }
             }
 
-            WeakReferenceMessenger.Default.Send(new GenericRequestMessage(resetPasswordResultMessage));
+            WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, resetPasswordResultMessage));
         }
     }
 }

@@ -38,12 +38,15 @@ namespace AdvancedBudgetManagerCore.repository {
                 try {
                     MySqlCommand updatePasswordCommand = new MySqlCommand(sqlStatementUpdateUserPassword);
                     updatePasswordCommand.Parameters.AddWithValue("@newSalt", newSalt);
-                    updatePasswordCommand.Parameters.AddWithValue("@newPassword", newPassword);
+                    //updatePasswordCommand.Parameters.AddWithValue("@newPassword", newPassword);
+                    updatePasswordCommand.Parameters.AddWithValue("@newPassword", newPasswordHash);
                     updatePasswordCommand.Parameters.AddWithValue("@userEmail", userEmail);
 
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(updatePasswordCommand);
+                    //MySqlDataAdapter adapter = new MySqlDataAdapter(updatePasswordCommand);
 
+                    updatePasswordCommand.Connection = conn;
                     conn.Open();
+                    
                     updateResult = updatePasswordCommand.ExecuteNonQuery();
                 } catch (MySqlException ex) {
                     int errorCode = ex.Number;
