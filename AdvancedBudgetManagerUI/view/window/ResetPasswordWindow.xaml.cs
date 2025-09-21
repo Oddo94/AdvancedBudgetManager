@@ -1,4 +1,5 @@
 using AdvancedBudgetManagerCore.model.message;
+using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
@@ -29,7 +30,7 @@ namespace AdvancedBudgetManager.view.window {
             this.InitializeComponent();
             this.Closed += (_, _) => taskCompletionSource.TrySetResult(false);
 
-            WeakReferenceMessenger.Default.Register<GenericResultMessage>(this);      
+            WeakReferenceMessenger.Default.Register<GenericResultMessage>(this);
         }
 
         public Task<bool> ShowModalAsync(Window parentWindow) {
@@ -41,32 +42,35 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public async void ResetPasswordButton_Click(object sender, RoutedEventArgs e) {
-            Debug.WriteLine("Inside ResetPasswordButton_Click");
+            //Debug.WriteLine("Inside ResetPasswordButton_Click");
 
-            try {
-                //resetPasswordViewModel.ResetPassword();
+            //try {
+            //    //resetPasswordViewModel.ResetPassword();
 
-                ContentDialog passwordResetSuccessDialog = new ContentDialog {
-                    Title = "Password reset",
-                    Content = "Your password was successfully reset!",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.Content.XamlRoot
-                };
-                await passwordResetSuccessDialog.ShowAsync();
+            //    ContentDialog passwordResetSuccessDialog = new ContentDialog {
+            //        Title = "Password reset",
+            //        Content = "Your password was successfully reset!",
+            //        CloseButtonText = "OK",
+            //        XamlRoot = this.Content.XamlRoot
+            //    };
+            //    await passwordResetSuccessDialog.ShowAsync();
 
-                this.Close();
+            //    this.Close();
 
-            } catch (SystemException ex) {
-                ContentDialog passwordResetErrorDialog = new ContentDialog {
-                    Title = "Reset password",
-                    Content = ex.Message,
-                    CloseButtonText = "OK",
-                    XamlRoot = this.Content.XamlRoot
-                };
-                await passwordResetErrorDialog.ShowAsync();
-            }
+            //} catch (SystemException ex) {
+            //    ContentDialog passwordResetErrorDialog = new ContentDialog {
+            //        Title = "Reset password",
+            //        Content = ex.Message,
+            //        CloseButtonText = "OK",
+            //        XamlRoot = this.Content.XamlRoot
+            //    };
+            //    await passwordResetErrorDialog.ShowAsync();
+            //}
 
-            taskCompletionSource.TrySetResult(true);   
+            //taskCompletionSource.TrySetResult(true);   
+
+            PasswordSecurityManager passwordSecurityManager = new PasswordSecurityManager();
+            passwordSecurityManager.ToSecureString("sgdfasgfhgsjf");
         }
 
         public void CancelButton_Click(object sender, RoutedEventArgs e) {
@@ -86,7 +90,7 @@ namespace AdvancedBudgetManager.view.window {
 
             ContentDialogResult displayResult = await passwordResetContentDialog.ShowAsync();
 
-            if (displayResult == ContentDialogResult.Primary) {
+            if (displayResult == ContentDialogResult.Primary && message.IsSuccess) {
                 Debug.WriteLine("Closing the password reset window...");
                 this.Close();
             }
