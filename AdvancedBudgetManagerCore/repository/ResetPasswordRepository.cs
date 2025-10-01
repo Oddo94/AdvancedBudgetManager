@@ -5,11 +5,13 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Security;
 
 namespace AdvancedBudgetManagerCore.repository {
     public class ResetPasswordRepository : ICrudRepository {
         private IDatabaseConnection dbConnection;
         private PasswordSecurityManager passwordSecurityManager;
+        private const int MinimumSaltLength = 32;
 
         private readonly String sqlStatementUpdateUserPassword = "UPDATE users SET salt = @newSalt, password = @newPassword WHERE userID = (SELECT userID FROM users WHERE email = @userEmail)";
 
@@ -24,11 +26,12 @@ namespace AdvancedBudgetManagerCore.repository {
 
         public void UpdateData(IDataUpdateRequest updateDataRequest) {
             PasswordDataUpdateRequest passwordDataUpdateRequest = (PasswordDataUpdateRequest) updateDataRequest;
-            string newPassword = passwordDataUpdateRequest.NewPassword;
+            SecureString newPassword = passwordDataUpdateRequest.NewPassword;
             string userEmail = passwordDataUpdateRequest.GetUpdateParameter();
 
-            byte[] newSalt = passwordSecurityManager.GetSalt(16);
-            String newPasswordHash = passwordSecurityManager.CreatePasswordHash(newPassword, newSalt);
+            byte[] newSalt = passwordSecurityManager.GetSalt(MinimumSaltLength);
+            byte[] newPasswordBytes = passwordSecurityManager.HashSecureString(newPassword, newSalt);
+            string newPasswordHash = passwordSecurityManager.HashToBase64(newPasswordBytes);
 
 
 
