@@ -43,8 +43,9 @@ namespace AdvancedBudgetManager.view.window {
         public async void LoginButton_Click(object sender, RoutedEventArgs e) {
             ContentDialog loginErrorDialog;
 
-            try {
+            try {             
                 loginViewModel.CheckCredentials();
+                PasswordBox.Password = String.Empty;
 
                 LoginResponse loginResponse = loginViewModel.LoginResponse;
                 //LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!

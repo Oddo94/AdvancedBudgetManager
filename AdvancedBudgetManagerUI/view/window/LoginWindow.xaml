@@ -6,6 +6,7 @@
     xmlns:local="using:AdvancedBudgetManager.view.window"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:AdvancedBudgetManager.utils"
     mc:Ignorable="d"
     Title="LoginWindow">
 
@@ -16,7 +17,7 @@
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBox Header="Username" PlaceholderText="Enter your username" x:Name="UserNameTextBox" Text="{x:Bind loginViewModel.UserName, Mode=TwoWay}" Margin="4" Width="250" TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-                <PasswordBox Header="Password" x:Name="PasswordBox" Password="{x:Bind loginViewModel.Password, Mode=TwoWay}" PlaceholderText="Enter your password" PasswordChar="*" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <PasswordBox Header="Password" x:Name="PasswordBox" helpers:PasswordBoxHelper.BindPassword="true" helpers:PasswordBoxHelper.BoundPassword="{x:Bind loginViewModel.Password, Mode=TwoWay}" PlaceholderText="Enter your password" PasswordChar="*" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
                 <Button x:Name="LoginButton" Content="Login" Click="LoginButton_Click" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <HyperlinkButton x:Name="ResetPasswordLink" Content="Forgot password?" Click="ResetLink_Click" Foreground="DodgerBlue" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
                 <TextBlock Text="Don't have an account?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>

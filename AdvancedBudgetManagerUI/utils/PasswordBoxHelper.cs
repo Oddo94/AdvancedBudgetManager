@@ -53,13 +53,17 @@ namespace AdvancedBudgetManager.utils {
                 //    securePassword.AppendChar(c);
                 //}
                 //securePassword.MakeReadOnly();
-                PasswordSecurityManager securityManager = new PasswordSecurityManager();
-                SecureString securePassword = securityManager.ToSecureString(passwordBox.Password);
 
-                SetBoundPassword(passwordBox, securePassword);
+                //Check to avoid the password conversion to SecureString when the password box is reset for security reasons
+                if (passwordBox.Password != String.Empty) {
+                    PasswordSecurityManager securityManager = new PasswordSecurityManager();
+                    SecureString securePassword = securityManager.ToSecureString(passwordBox.Password);
+
+                    SetBoundPassword(passwordBox, securePassword);
+                }
 
                 // Validation hook: raise event or callback if needed
-                PasswordChanged?.Invoke(passwordBox, EventArgs.Empty);
+//                PasswordChanged?.Invoke(passwordBox, EventArgs.Empty);
             }
         }
 
