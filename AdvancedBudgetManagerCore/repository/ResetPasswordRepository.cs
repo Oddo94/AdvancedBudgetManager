@@ -8,6 +8,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class for managing the user reset password operations that require database interaction.
+    /// </summary>
     public class ResetPasswordRepository : ICrudRepository {
         private IDatabaseConnection dbConnection;
         private PasswordSecurityManager passwordSecurityManager;
@@ -15,17 +18,23 @@ namespace AdvancedBudgetManagerCore.repository {
 
         private readonly String sqlStatementUpdateUserPassword = "UPDATE users SET salt = @newSalt, password = @newPassword WHERE userID = (SELECT userID FROM users WHERE email = @userEmail)";
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResetPasswordRepository"/> with the provided database connection. 
+        /// </summary>
+        /// <param name="dbConnection"></param>
         public ResetPasswordRepository([NotNull] IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
             this.passwordSecurityManager = new PasswordSecurityManager();
         }
+
+        /// <inheritdoc />
         public DataTable GetData(IDataRequest dataRequest) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public void UpdateData(IDataUpdateRequest updateDataRequest) {
-            PasswordDataUpdateRequest passwordDataUpdateRequest = (PasswordDataUpdateRequest) updateDataRequest;
+            PasswordDataUpdateRequest passwordDataUpdateRequest = (PasswordDataUpdateRequest)updateDataRequest;
             SecureString newPassword = passwordDataUpdateRequest.NewPassword;
             string userEmail = passwordDataUpdateRequest.GetUpdateParameter();
 
@@ -49,7 +58,7 @@ namespace AdvancedBudgetManagerCore.repository {
 
                     updatePasswordCommand.Connection = conn;
                     conn.Open();
-                    
+
                     updateResult = updatePasswordCommand.ExecuteNonQuery();
                 } catch (MySqlException ex) {
                     int errorCode = ex.Number;

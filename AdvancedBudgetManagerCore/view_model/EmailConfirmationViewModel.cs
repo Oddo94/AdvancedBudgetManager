@@ -13,6 +13,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.view_model {
+    #pragma warning disable 1591
+    /// <summary>
+    /// Represents the view model for the email confirmation dialog.
+    /// </summary>
     public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
         [ObservableProperty]
         private string userEmail;
@@ -20,13 +24,15 @@ namespace AdvancedBudgetManagerCore.view_model {
         //[ObservableProperty]
         //private string inputConfirmationCode;
 
-        private ICrudRepository emailConfirmationRepository;
+        //private ICrudRepository emailConfirmationRepository;
         private EmailConfirmationSender emailConfirmationSender;
         private SecretReader secretReader;
         private string generatedConfirmationCode;
         private bool isConfirmationCodeMatch;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
+        /// </summary>
         public EmailConfirmationViewModel() {
             //this.emailConfirmationRepository = emailConfirmationRepository;
             this.emailConfirmationSender = new EmailConfirmationSender();
@@ -38,7 +44,10 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         }
 
-        //[RelayCommand]
+        /// <summary>
+        /// Sends the confirmation code to the user email address.
+        /// </summary>
+        /// <exception cref="SystemException"></exception>
         public void SendEmailConfirmationCode() {
             EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
 
@@ -78,6 +87,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 //}
         }
 
+        ///<inheritdoc/>
          public void Receive(EmailConfirmationSubmittedMessage message) {
             String inputConfirmationCode = message.ConfirmationCode;
 
@@ -90,7 +100,12 @@ namespace AdvancedBudgetManagerCore.view_model {
             }
         }
 
-        //[RelayCommand]
+        /// <summary>
+        /// Checks if the input confirmation code matches the one that was generated.
+        /// </summary>
+        /// <param name="inputConfirmationCode">The confirmation code provided by the user.</param>
+        /// <param name="generatedConfirmationCode">The actual confirmation code that was generated.</param>
+        /// <returns>A <see cref="bool"/> value indicating if the two confirmation codes match.</returns>
         public bool ConfirmationCodesMatch([NotNull] string inputConfirmationCode, [NotNull] string generatedConfirmationCode) {
             //return true;
             return inputConfirmationCode.Equals(generatedConfirmationCode);

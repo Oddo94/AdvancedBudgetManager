@@ -12,28 +12,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 
 namespace AdvancedBudgetManagerCore.view_model {
+    /// <summary>
+    /// Represents the view model class for the reset password window.
+    /// </summary>
     public partial class ResetPasswordViewModel : ObservableObject, IRecipient<ResetPasswordSubmittedMessage> {
-        //[ObservableProperty]
-        //private string newPassword;
-
         [ObservableProperty]
         private SecureString newPassword;
-
-        //[ObservableProperty]
-        //private string confirmationPassword;
 
         [ObservableProperty]
         private string userEmail;
 
         private ICrudRepository resetPasswordRepository;
 
-        private ResetPasswordResponse resetPasswordResponse;     
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResetPasswordViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
+        /// </summary>
+        /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
         public ResetPasswordViewModel([NotNull] ICrudRepository resetPasswordRepository) {
             this.resetPasswordRepository = resetPasswordRepository;
             WeakReferenceMessenger.Default.Register<ResetPasswordSubmittedMessage>(this);
         }
 
+        /// <inheritdoc />
         public void Receive(ResetPasswordSubmittedMessage message) {
             //ResetPasswordResponse resetPasswordResponse = message.ResetPasswordResponse;
             //string newPassword = resetPasswordResponse.NewPassword;
@@ -42,46 +42,10 @@ namespace AdvancedBudgetManagerCore.view_model {
             //this.resetPasswordResponse = message.ResetPasswordResponse;
         }
 
-        //[RelayCommand]
-        //public void ResetPassword([NotNull] string userEmail) {
-        //    IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
-
-        //    try {
-        //        resetPasswordRepository.UpdateData(passwordUpdateRequest);
-        //    } catch(SystemException ex) {
-        //        throw new SystemException($"Password reset failed! Reason: {ex.Message}");
-        //    }
-
-        //    IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, userEmail);
-
-        //    string newPassword = resetPasswordResponse.NewPassword;
-        //    string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
-
-        //    bool isSuccess = false;
-        //    string resetPasswordResultMessage = String.Empty;
-        //    if ((NewPassword != null || ConfirmationPassword != null)) {
-        //        if (newPassword.Equals((confirmationPassword))) {
-        //            IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, UserEmail);
-
-        //            try {
-        //                resetPasswordRepository.UpdateData(passwordUpdateRequest);
-
-        //                isSuccess = true;
-        //                resetPasswordResultMessage = "Your password was successfully reset!";
-        //            } catch (SystemException ex) {
-        //                isSuccess = false;
-        //                resetPasswordResultMessage = "Failed to reset your password. Please try again!";
-        //                //throw new SystemException($"Password reset failed! Reason: {ex.Message}");
-        //            }
-        //        } else {
-        //            isSuccess = false;
-        //            resetPasswordResultMessage = "The input password and confirmation password don't match. Please try again!";
-        //        }
-        //    }
-
-        //    WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, resetPasswordResultMessage));
-        //}
-
+        /// <summary>
+        /// Method that performs the password reset operation.
+        /// </summary>
+        /// <param name="userEmail">The user email for which the password reset was requested.</param>
         [RelayCommand]
         public void ResetPassword([NotNull] string userEmail) {
             bool isSuccess = false;

@@ -26,7 +26,7 @@ namespace AdvancedBudgetManager.view.window {
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
         private ResetPasswordDialog resetPasswordDialog;
         private ResetPasswordWindow resetPasswordWindow;
-        private XamlRoot baseWindowXamlRoot;
+        private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
             [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,

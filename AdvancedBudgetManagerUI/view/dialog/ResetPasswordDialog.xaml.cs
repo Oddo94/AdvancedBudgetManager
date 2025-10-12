@@ -14,7 +14,7 @@ namespace AdvancedBudgetManager.view.dialog;
 
 public sealed partial class ResetPasswordDialog : ContentDialog {
     private ResetPasswordViewModel resetPasswordViewModel;
-    private EmailConfirmationViewModel emailConfirmationViewModel;
+    //private EmailConfirmationViewModel emailConfirmationViewModel;
     //private ConfirmEmailWindow confirmEmailWindow;
     private XamlRoot baseWindowXamlRoot;
     private bool showErrorTipOnLoad;
@@ -29,50 +29,50 @@ public sealed partial class ResetPasswordDialog : ContentDialog {
     }
 
     public async void ResetPasswordButton_Click(ContentDialog sender, ContentDialogButtonClickEventArgs e) {
-        //Debug.WriteLine("Inside ResetPasswordButton_Click");
+    //    //Debug.WriteLine("Inside ResetPasswordButton_Click");
 
-        try {
-            string userEmail = emailConfirmationViewModel.UserEmail;
+    //    try {
+    //        string userEmail = emailConfirmationViewModel.UserEmail;
 
-            resetPasswordViewModel.ResetPassword(userEmail);
+    //        resetPasswordViewModel.ResetPassword(userEmail);
 
-            //confirmEmailWindow.Close();
+    //        //confirmEmailWindow.Close();
 
-            //ContentDialog passwordResetSuccessDialog = new ContentDialog {
-            //    Title = "Password reset",
-            //    Content = "Your password was successfully reset!",
-            //    CloseButtonText = "OK",
-            //    XamlRoot = baseWindowXamlRoot
-            //};
-            //await passwordResetSuccessDialog.ShowAsync();
+    //        //ContentDialog passwordResetSuccessDialog = new ContentDialog {
+    //        //    Title = "Password reset",
+    //        //    Content = "Your password was successfully reset!",
+    //        //    CloseButtonText = "OK",
+    //        //    XamlRoot = baseWindowXamlRoot
+    //        //};
+    //        //await passwordResetSuccessDialog.ShowAsync();
 
-                await Task.Delay(50);
-            ContentDialog passwordResetSuccessDialog = new ContentDialog {
-                Title = "Password reset",
-                Content = "Your password was successfully reset!",
-                CloseButtonText = "OK",
-                XamlRoot = baseWindowXamlRoot
-            };
+    //            await Task.Delay(50);
+    //        ContentDialog passwordResetSuccessDialog = new ContentDialog {
+    //            Title = "Password reset",
+    //            Content = "Your password was successfully reset!",
+    //            CloseButtonText = "OK",
+    //            XamlRoot = baseWindowXamlRoot
+    //        };
 
-            await passwordResetSuccessDialog.ShowAsync();
+    //        await passwordResetSuccessDialog.ShowAsync();
            
 
 
-        } catch (SystemException ex) {
-            Debug.WriteLine($"Password reset failed! Reason: {ex.Message}");
+    //    } catch (SystemException ex) {
+    //        Debug.WriteLine($"Password reset failed! Reason: {ex.Message}");
 
-            //confirmEmailWindow.Close();
+    //        //confirmEmailWindow.Close();
 
-            await Task.Delay(50);
-            ContentDialog passwordResetErrorDialog = new ContentDialog {
-                Title = "Reset password",
-                Content = ex.Message,
-                CloseButtonText = "OK",
-                XamlRoot = baseWindowXamlRoot
-            };
+    //        await Task.Delay(50);
+    //        ContentDialog passwordResetErrorDialog = new ContentDialog {
+    //            Title = "Reset password",
+    //            Content = ex.Message,
+    //            CloseButtonText = "OK",
+    //            XamlRoot = baseWindowXamlRoot
+    //        };
             
-            await passwordResetErrorDialog.ShowAsync();
-        }
+    //        await passwordResetErrorDialog.ShowAsync();
+    //    }
     }
 
     private void ResetPasswordDialog_Loaded(object sender, RoutedEventArgs e) {      

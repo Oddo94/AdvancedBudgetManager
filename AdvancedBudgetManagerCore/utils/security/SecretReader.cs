@@ -42,6 +42,10 @@ namespace AdvancedBudgetManagerCore.utils.security {
             return dbConnectionString;
         }
 
+        /// <summary>
+        /// Returns the email sender credentials from the local config file
+        /// </summary>
+        /// <returns>The <see cref="EmailSenderCredentials"/> object containing the extracted data.</returns>
         public EmailSenderCredentials GetEmailSenderCredentials() {
             IConfiguration config = new ConfigurationBuilder()
                 .AddUserSecrets<SecretReader>()

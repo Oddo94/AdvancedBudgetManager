@@ -26,7 +26,7 @@ namespace AdvancedBudgetManager {
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public partial class App : Application {
-        public static AutofacContainer Container { get; private set; }
+        public static AutofacContainer? Container { get; private set; }
 
         private Window? loginWindow;
 
@@ -61,7 +61,7 @@ namespace AdvancedBudgetManager {
 
 
             IHost serviceProvider = ConfigureServices();
-            Container = (AutofacContainer)serviceProvider.Services.GetAutofacRoot();
+            Container = (AutofacContainer) serviceProvider.Services.GetAutofacRoot();
 
         }
 

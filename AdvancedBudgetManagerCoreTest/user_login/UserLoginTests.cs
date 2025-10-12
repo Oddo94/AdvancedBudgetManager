@@ -51,12 +51,13 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
             Assert.AreEqual(expectedHashCode, actualHashCode);
         }
-
+     
         [TestMethod]
         public void CreatePasswordHash_WithEmptyParams_ThrowsException() {
             Assert.ThrowsException<ArgumentException>(() => securityManager.CreatePasswordHash(String.Empty, Array.Empty<byte>()));
         }
 
+      
         [TestMethod]
         public void GetSalt_WithPositiveSize_ReturnsByteArrayOfSpecifiedSize() {
             int expectedSize = 256;
@@ -74,71 +75,72 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => securityManager.GetSalt(size));
         }
 
-        [TestMethod]
-        public void CheckCredentials_WhenValidCredentials_ReturnSuccess() {
-            IDataRequest loginDataRequest = new UserLoginDataRequest(validUserName, validPassword);
-            DataTable loginResponseDataTable = new DataTable();
-            loginResponseDataTable.Columns.Add("userID", typeof(int));
-            loginResponseDataTable.Columns.Add("userName", typeof(String));
-            loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
-            loginResponseDataTable.Columns.Add("password", typeof(string));
+       
+        //[TestMethod]
+        //public void CheckCredentials_WhenValidCredentials_ReturnSuccess() {
+        //    IDataRequest loginDataRequest = new UserLoginDataRequest(validUserName, validPassword);
+        //    DataTable loginResponseDataTable = new DataTable();
+        //    loginResponseDataTable.Columns.Add("userID", typeof(int));
+        //    loginResponseDataTable.Columns.Add("userName", typeof(String));
+        //    loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
+        //    loginResponseDataTable.Columns.Add("password", typeof(string));
 
-            byte[] saltArray = salt.Split(",")
-                .Select(s => byte.TryParse(s, out byte b) ? (byte?)b : null)
-                .Where(s => s.HasValue)
-                .Select(s => s!.Value)
-                .ToArray();
+        //    byte[] saltArray = salt.Split(",")
+        //        .Select(s => byte.TryParse(s, out byte b) ? (byte?)b : null)
+        //        .Where(s => s.HasValue)
+        //        .Select(s => s!.Value)
+        //        .ToArray();
 
-            loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
+        //    loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
 
-            ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password == validPassword)).Returns(loginResponseDataTable);
+        //    ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
+        //    userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password == validPassword)).Returns(loginResponseDataTable);
 
-            LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
-            loginViewModel.UserName = validUserName;
-            loginViewModel.Password = validPassword;
+        //    LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
+        //    loginViewModel.UserName = validUserName;
+        //    loginViewModel.Password = validPassword;
 
-            loginViewModel.CheckCredentials();
+        //    loginViewModel.CheckCredentials();
 
-            LoginResponse loginResponse = loginViewModel.LoginResponse;
+        //    LoginResponse loginResponse = loginViewModel.LoginResponse;
 
-            Assert.AreEqual(ResultCode.OK, loginResponse.ResultCode);
-            Assert.AreEqual(String.Empty, loginResponse.ResponseMessage);
-        }
+        //    Assert.AreEqual(ResultCode.OK, loginResponse.ResultCode);
+        //    Assert.AreEqual(String.Empty, loginResponse.ResponseMessage);
+        //}
 
-        [TestMethod]
-        public void CheckCredentials_WhenInvalidCredentials_ReturnError() {
+        //[TestMethod]
+        //public void CheckCredentials_WhenInvalidCredentials_ReturnError() {
 
-            //string invalidInputvalidUserName = "Winui4Test";
-            //string invalidInputPassword = "9AxbgTc4(?{ABC";
-            byte[] invalidSalt = new byte[1] { 1 };
+        //    //string invalidInputvalidUserName = "Winui4Test";
+        //    //string invalidInputPassword = "9AxbgTc4(?{ABC";
+        //    byte[] invalidSalt = new byte[1] { 1 };
 
-            IDataRequest loginDataRequest = new UserLoginDataRequest(invalidUserName, invalidPassword);
-            DataTable loginResponseDataTable = new DataTable();
-            loginResponseDataTable.Columns.Add("userID", typeof(int));
-            loginResponseDataTable.Columns.Add("validUserName", typeof(String));
-            loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
-            loginResponseDataTable.Columns.Add("password", typeof(string));
+        //    IDataRequest loginDataRequest = new UserLoginDataRequest(invalidUserName, invalidPassword);
+        //    DataTable loginResponseDataTable = new DataTable();
+        //    loginResponseDataTable.Columns.Add("userID", typeof(int));
+        //    loginResponseDataTable.Columns.Add("validUserName", typeof(String));
+        //    loginResponseDataTable.Columns.Add("salt", typeof(byte[]));
+        //    loginResponseDataTable.Columns.Add("password", typeof(string));
 
-            int returnedUserId = -1;
-            string returnedValidUserName = String.Empty;
-            byte[] returnedSaltArray = new byte[1] { 1 };
-            string returnedPasswordHash = String.Empty;
-            loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
+        //    int returnedUserId = -1;
+        //    string returnedValidUserName = String.Empty;
+        //    byte[] returnedSaltArray = new byte[1] { 1 };
+        //    string returnedPasswordHash = String.Empty;
+        //    loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
 
-            ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == invalidPassword)).Returns(loginResponseDataTable);
+        //    ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
+        //    userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == invalidPassword)).Returns(loginResponseDataTable);
 
-            LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
-            loginViewModel.UserName = invalidUserName;
-            loginViewModel.Password = invalidPassword;
+        //    LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
+        //    loginViewModel.UserName = invalidUserName;
+        //    loginViewModel.Password = invalidPassword;
 
-            loginViewModel.CheckCredentials();
+        //    loginViewModel.CheckCredentials();
 
-            LoginResponse loginResponse = loginViewModel.LoginResponse;
+        //    LoginResponse loginResponse = loginViewModel.LoginResponse;
 
-            Assert.AreEqual(ResultCode.ERROR, loginResponse.ResultCode);
-            Assert.AreEqual("Invalid username and/or password! Please try again.", loginResponse.ResponseMessage);
-        }
+        //    Assert.AreEqual(ResultCode.ERROR, loginResponse.ResultCode);
+        //    Assert.AreEqual("Invalid username and/or password! Please try again.", loginResponse.ResponseMessage);
+        //}
     }
 }

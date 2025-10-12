@@ -7,8 +7,17 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace AdvancedBudgetManagerCore.utils.security {
+    /// <summary>
+    /// Utility class for performing email confirmation related operations.
+    /// </summary>
     public class EmailConfirmationSender {
 
+        /// <summary>
+        /// Sends the confirmation email to the specified email address.
+        /// </summary>
+        /// <param name="senderCredentials">Object that contains the details of the sender email address.</param>
+        /// <param name="confirmationEmailDetails">Object that contains the details related to the recipient.</param>
+        /// <exception cref="SystemException"></exception>
         public void SendConfirmationEmail(EmailSenderCredentials senderCredentials, ConfirmationEmailDetails confirmationEmailDetails) {
             try {
                 MailMessage mail = new MailMessage();
@@ -24,13 +33,19 @@ namespace AdvancedBudgetManagerCore.utils.security {
                 SmtpServer.Credentials = new System.Net.NetworkCredential(senderCredentials.EmailSenderUserName, senderCredentials.EmailSenderPassword);
                 SmtpServer.EnableSsl = true;
 
-                //SmtpServer.Send(mail);//ONLY FOR TESTING PURPOSES!
+                SmtpServer.Send(mail);//ONLY FOR TESTING PURPOSES!
             } catch (Exception ex) {
                 throw new SystemException($"An error occurred while sending the confirmation code by email. Reason: {ex.Message}");
             }
 
         }
 
+        /// <summary>
+        /// Generates a new confirmation code of specified size.
+        /// </summary>
+        /// <param name="codeSize">The size of the confirmation code.</param>
+        /// <returns>The confirmation code represented as a <see cref="String"/> object.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public String GenerateConfirmationCode(int codeSize) {
             if (codeSize <= 0) {
                 throw new ArgumentException("The specified confirmation code size must be greater than 0!");
@@ -45,6 +60,11 @@ namespace AdvancedBudgetManagerCore.utils.security {
             return confirmationCode;
         }
 
+        /// <summary>
+        /// Converts the specified <see cref="byte"/> array tot hexadecimal format.
+        /// </summary>
+        /// <param name="inputArray">The input represented as a <see cref="byte"/> array object.</param>
+        /// <returns>The <see cref="String"/> representation of the input.</returns>
         private String ConvertBinaryToHex([DisallowNull] byte[] inputArray) {
             StringBuilder resultArray = new StringBuilder(inputArray.Length * 2);
 
@@ -56,9 +76,9 @@ namespace AdvancedBudgetManagerCore.utils.security {
         }
 
 
-        public bool ConfirmationCodesMatch([DisallowNull] string generatedConfirmationCode, [DisallowNull] string userInputConfirmationCode) {
-            return true;
-            //return generatedConfirmationCode.Equals(userInputConfirmationCode);
-        }
+        //public bool ConfirmationCodesMatch([DisallowNull] string generatedConfirmationCode, [DisallowNull] string userInputConfirmationCode) {
+        //    return true;
+        //    //return generatedConfirmationCode.Equals(userInputConfirmationCode);
+        //}
     }
 }

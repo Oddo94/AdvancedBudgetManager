@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace AdvancedBudgetManager.view.dialog {
+    /// <summary>
+    /// Represents the input dialog for inserting the confirmation code received by the user on email.
+    /// </summary>
     public sealed partial class ConfirmationCodeInputDialog : ContentDialog {
 
         private EmailConfirmationViewModel emailConfirmationViewModel;
@@ -16,6 +19,10 @@ namespace AdvancedBudgetManager.view.dialog {
         private bool isValidConfirmationCode;
         public string ConfirmationCode => ConfirmationCodeTextBox.Text;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfirmationCodeInputDialog"/> based on the provided <see cref="EmailConfirmationViewModel"/> object.
+        /// </summary>
+        /// <param name="emailConfirmationViewModel">The <see cref="EmailConfirmationViewModel"/> object.</param>
         public ConfirmationCodeInputDialog([NotNull] EmailConfirmationViewModel emailConfirmationViewModel) {
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.Loaded += ConfirmationCodeInputDialog_Loaded;

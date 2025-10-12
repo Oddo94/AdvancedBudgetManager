@@ -22,7 +22,7 @@ namespace AdvancedBudgetManager.view.window {
         private TaskCompletionSource<bool> taskCompletionSource = new();
         private ResetPasswordViewModel resetPasswordViewModel;
         private InputDataValidator inputValidator;
-        private SecureString secureString;
+        //private SecureString secureString;
         private readonly int minimumPasswordLength;
 
         public ResetPasswordWindow(ResetPasswordViewModel resetPasswordViewModel) {
@@ -127,7 +127,7 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public async void Receive(GenericResultMessage message) {
-            string title = "Password reset";
+            //string title = "Password reset";
 
             ContentDialog passwordResetContentDialog = new ContentDialog {
                 Title = "Password reset",
