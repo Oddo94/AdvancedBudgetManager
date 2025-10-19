@@ -1,9 +1,6 @@
 ﻿using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.request;
-using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
-using AdvancedBudgetManagerCore.utils.security;
-using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -15,7 +12,7 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// <summary>
     /// Represents the view model class for the reset password window.
     /// </summary>
-    public partial class ResetPasswordViewModel : ObservableObject, IRecipient<ResetPasswordSubmittedMessage> {
+    public partial class ResetPasswordViewModel : ObservableObject {
         [ObservableProperty]
         private SecureString newPassword;
 
@@ -30,17 +27,17 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
         public ResetPasswordViewModel([NotNull] ICrudRepository resetPasswordRepository) {
             this.resetPasswordRepository = resetPasswordRepository;
-            WeakReferenceMessenger.Default.Register<ResetPasswordSubmittedMessage>(this);
+            //WeakReferenceMessenger.Default.Register<ResetPasswordSubmittedMessage>(this);
         }
 
-        /// <inheritdoc />
-        public void Receive(ResetPasswordSubmittedMessage message) {
+        ///// <inheritdoc />
+        //public void Receive(ResetPasswordSubmittedMessage message) {
             //ResetPasswordResponse resetPasswordResponse = message.ResetPasswordResponse;
             //string newPassword = resetPasswordResponse.NewPassword;
             //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
 
             //this.resetPasswordResponse = message.ResetPasswordResponse;
-        }
+        //}
 
         /// <summary>
         /// Method that performs the password reset operation.
@@ -58,7 +55,7 @@ namespace AdvancedBudgetManagerCore.view_model {
 
                 isSuccess = true;
                 resetPasswordResultMessage = "Your password was successfully reset!";
-            } catch (SystemException ex) {
+            } catch (SystemException) {
                 isSuccess = false;
                 resetPasswordResultMessage = "Failed to reset your password. Please try again!";
             }

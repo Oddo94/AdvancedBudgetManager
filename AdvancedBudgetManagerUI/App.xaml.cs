@@ -6,16 +6,10 @@ using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using ZstdSharp.Unsafe;
 using AutofacContainer = Autofac.IContainer;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -82,9 +76,7 @@ namespace AdvancedBudgetManager {
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>()
-                         .SingleInstance();
-                container.RegisterType<ResetPasswordDialog>()
-                         .SingleInstance();  
+                         .SingleInstance();           
 
                 //ViewModels
                 container.RegisterType<LoginViewModel>()
@@ -150,7 +142,7 @@ namespace AdvancedBudgetManager {
 
                 if (!rootElement.IsLoaded) {
                     TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
-                    rootElement.Loaded += (s, e) => tcs.SetResult(null);
+                    rootElement.Loaded += (s, e) => tcs.SetResult(null!);
 
                     await tcs.Task;
                 }
@@ -160,16 +152,9 @@ namespace AdvancedBudgetManager {
                 //Retrieves the ConfirmEmailWindow object from the DI container
                 ConfirmEmailWindow confirmEmailWindow = Container.Resolve<ConfirmEmailWindow>();
 
-                //Retrieves the ResetPasswordDialog object from the DI container
-                ResetPasswordDialog resetPasswordDialog = Container.Resolve<ResetPasswordDialog>();
-
                 /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
                 This allows the display of the password reset dialog on top of the login window*/
-                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
-
-                /*Sets the BaseWindowXamlRoot property of the ResetPasswordDialog to the XamlRoot of the LoginWindow
-                This allows the display of the password reset succes/error message on top of the login window*/
-                resetPasswordDialog.BaseWindowXamlRoot = loginWindowRoot;
+                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;            
             }
         }
     }

@@ -60,7 +60,7 @@ namespace AdvancedBudgetManagerCore.view_model {
 
             try {
                 emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw new SystemException("An error occurred while sending the confirmation code by email");
             }
         }

@@ -15,7 +15,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="view\dialog\ConfirmationCodeInputDialog.xaml" />
-    <None Remove="view\dialog\ResetPasswordDialog.xaml" />
     <None Remove="view\page\EmailInputPage.xaml" />
     <None Remove="view\window\LoginWindow.xaml" />
     <None Remove="view\window\ResetPasswordWindow.xaml" />
@@ -59,11 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="model\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="view\dialog\ResetPasswordDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="view\dialog\ConfirmationCodeInputDialog.xaml">

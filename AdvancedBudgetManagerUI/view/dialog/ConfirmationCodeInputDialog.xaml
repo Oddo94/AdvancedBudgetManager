@@ -11,11 +11,9 @@
     Title="Confirmation code"
     PrimaryButtonText="Check code"
     SecondaryButtonText="Cancel"
-    DefaultButton="Primary"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+    DefaultButton="Primary">
 
     <StackPanel>
-        <!--<TextBox x:Name="ConfirmationCodeTextBox" Header="Enter the confirmation code" PlaceholderText="Confirmation code received on email" Text="{x:Bind emailConfirmationViewModel.InputConfirmationCode, Mode=TwoWay}" TextAlignment="Center" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
         <TextBox x:Name="ConfirmationCodeTextBox" Header="Enter the confirmation code" PlaceholderText="Confirmation code received on email" TextAlignment="Center" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <TeachingTip x:Name="InvalidConfirmationCodeTip" Title="Invalid confirmation code" Subtitle="Please try again!" Target="{x:Bind ConfirmationCodeTextBox}" PreferredPlacement="LeftBottom" IsLightDismissEnabled="true" IsOpen="false"/>
     </StackPanel>

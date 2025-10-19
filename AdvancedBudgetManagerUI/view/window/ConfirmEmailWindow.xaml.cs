@@ -24,20 +24,17 @@ namespace AdvancedBudgetManager.view.window {
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private ChangePasswordViewModelWrapper changePasswordViewModelWrapper;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
-        private ResetPasswordDialog resetPasswordDialog;
         private ResetPasswordWindow resetPasswordWindow;
         private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
             [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
-            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog, 
-            [NotNull] ResetPasswordDialog resetPasswordDialog, 
+            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,          
             [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper,
             [NotNull] ResetPasswordWindow resetPasswordWindow) {
 
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
-            this.resetPasswordDialog = resetPasswordDialog;
             this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
             this.resetPasswordWindow = resetPasswordWindow;
 

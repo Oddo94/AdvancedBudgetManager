@@ -30,7 +30,7 @@ namespace AdvancedBudgetManager.view.dialog {
             this.InitializeComponent();
         }
 
-        private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
+        //private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
             //bool confirmationCodesMatch = emailConfirmationViewModel.ConfirmationCodesMatch(emailConfirmationViewModel.InputConfirmationCode, emailConfirmationViewModel.GeneratedConfirmationCode);
 
 
@@ -49,7 +49,7 @@ namespace AdvancedBudgetManager.view.dialog {
             //}
 
                 
-        }
+        //}
 
         private void ConfirmationCodeInputDialog_Loaded(object sender, RoutedEventArgs args) {
             if (showErrorTipOnLoad) {
