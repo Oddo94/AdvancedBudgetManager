@@ -15,12 +15,11 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
         private static string secondParameterForCompare = String.Empty;
         private static string invalidParameterForCompare = String.Empty;
         private static string nonEmptyParameter = String.Empty;
-
-
+        private static string nonNullInput = String.Empty;
         private static int requiredInputLength;
 
-        public TestContext testContext;
-        private static InputDataValidator dataValidator;
+        public TestContext TestContext { get; set; }
+        private static InputDataValidator dataValidator = null!;
 
 
         [ClassInitialize]
@@ -41,7 +40,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
             secondParameterForCompare = testContext.Properties["secondParameterForCompare"]?.ToString() ?? String.Empty;
             invalidParameterForCompare = testContext.Properties["invalidParameterForCompare"]?.ToString() ?? String.Empty;
             nonEmptyParameter = testContext.Properties["nonEmptyParameter"]?.ToString() ?? String.Empty;
-
+            nonNullInput = testContext.Properties["nonNullInput"]?.ToString() ?? String.Empty;
             requiredInputLength = Convert.ToInt32(testContext.Properties["requiredInputLength"]?.ToString() ?? String.Empty);
 
             dataValidator = new InputDataValidator();
@@ -119,17 +118,17 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckInputLength_WhenNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.HasRequiredLength(null, requiredInputLength, ComparisonMode.STRICT));
+            Assert.ThrowsException<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.STRICT));
         }
 
         [TestMethod]
         public void CheckNullArgument_WhenNull_ReturnTrue() {
-            Assert.IsTrue(dataValidator.IsNull(null));
+            Assert.IsTrue(dataValidator.IsNull(null!));
         }
 
         [TestMethod]
         public void CheckNullArgument_WhenNotNull_ReturnFalse() {
-            Assert.IsFalse(dataValidator.IsNull("TEST_INPUT"));
+            Assert.IsFalse(dataValidator.IsNull(nonNullInput));
         }
 
         [TestMethod]
@@ -144,7 +143,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckIsMatch_WhenFirstParamNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsMatch(null, secondParameterForCompare));
+            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsMatch(null!, secondParameterForCompare));
         }
 
         [TestMethod]
@@ -160,7 +159,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckIsEmpty_WhenNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsEmpty(null));
+            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsEmpty(null!));
         }
     }
 }

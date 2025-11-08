@@ -27,17 +27,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
         public ResetPasswordViewModel([NotNull] ICrudRepository resetPasswordRepository) {
             this.resetPasswordRepository = resetPasswordRepository;
-            //WeakReferenceMessenger.Default.Register<ResetPasswordSubmittedMessage>(this);
         }
-
-        ///// <inheritdoc />
-        //public void Receive(ResetPasswordSubmittedMessage message) {
-            //ResetPasswordResponse resetPasswordResponse = message.ResetPasswordResponse;
-            //string newPassword = resetPasswordResponse.NewPassword;
-            //string confirmationPassword = resetPasswordResponse.ConfirmationPassword;
-
-            //this.resetPasswordResponse = message.ResetPasswordResponse;
-        //}
 
         /// <summary>
         /// Method that performs the password reset operation.
