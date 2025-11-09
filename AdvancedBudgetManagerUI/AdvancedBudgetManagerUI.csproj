@@ -14,7 +14,10 @@
     <WarningsAsErrors>1570;1571</WarningsAsErrors><!--Setting for throwing compile time errors for malformed XML documentation-->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="view\dialog\ConfirmationCodeInputDialog.xaml" />
+    <None Remove="view\page\EmailInputPage.xaml" />
     <None Remove="view\window\LoginWindow.xaml" />
+    <None Remove="view\window\ResetPasswordWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +43,8 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.4.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WinUI" Version="2.0.0-rc5.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.5.25277.114" />
@@ -53,7 +58,31 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="model\" />
-    <Folder Include="view\page\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\dialog\ConfirmationCodeInputDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\window\ResetPasswordWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\page\ResetPasswordInputPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\page\EmailInputPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\window\ConfirmEmailWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="view\window\LoginWindow.xaml">
@@ -76,5 +105,6 @@
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 </Project>

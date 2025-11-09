@@ -31,7 +31,7 @@ namespace AdvancedBudgetManagerCore.repository {
                 try {
                     MySqlCommand authenticationDataCommand = new MySqlCommand(sqlStatementGetAuthenticationData);
                     authenticationDataCommand.Parameters.AddWithValue("@userName", userName);
-                    authenticationDataCommand.Connection = conn;
+                    authenticationDataCommand.Connection = conn;           
 
                     MySqlDataAdapter dataAdapter = new MySqlDataAdapter(authenticationDataCommand);
 
@@ -52,6 +52,11 @@ namespace AdvancedBudgetManagerCore.repository {
             }
 
             return authenticationData;
+        }
+
+        /// <inheritdoc />
+        public void UpdateData(IDataUpdateRequest dataUpdateRequest) {
+            return;
         }
     }
 }

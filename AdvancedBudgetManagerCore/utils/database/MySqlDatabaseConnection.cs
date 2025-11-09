@@ -1,4 +1,5 @@
 ﻿using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.security;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Data;

@@ -1,8 +1,9 @@
-﻿using AdvancedBudgetManagerCore.utils.enums;
+﻿using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.utils.enums;
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace AdvancedBudgetManagerCore.utils {
+namespace AdvancedBudgetManagerCore.utils.security {
     /// <summary>
     /// Utility class for retrieving data from the user secrets folder of the application
     /// </summary>
@@ -34,11 +35,27 @@ namespace AdvancedBudgetManagerCore.utils {
                     break;
 
                 default:
-                    dbConnectionString = String.Empty;
+                    dbConnectionString = string.Empty;
                     break;
             }
 
             return dbConnectionString;
+        }
+
+        /// <summary>
+        /// Returns the email sender credentials from the local config file
+        /// </summary>
+        /// <returns>The <see cref="EmailSenderCredentials"/> object containing the extracted data.</returns>
+        public EmailSenderCredentials GetEmailSenderCredentials() {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddUserSecrets<SecretReader>()
+                .Build();
+
+            string emailSenderAddress = config["EmailSenderAddress"];
+            string emailSenderUserName = config["EmailSenderUserName"];
+            string emailSenderPassword = config["EmailSenderPassword"];
+
+            return new EmailSenderCredentials(emailSenderAddress, emailSenderUserName, emailSenderPassword);
         }
     }
 }

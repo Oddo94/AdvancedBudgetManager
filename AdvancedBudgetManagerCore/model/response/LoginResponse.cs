@@ -1,7 +1,7 @@
 ﻿using AdvancedBudgetManagerCore.utils.enums;
 using System;
 
-namespace AdvancedBudgetManagerCore.model {
+namespace AdvancedBudgetManagerCore.model.response {
     /// <summary>
     /// Represents the object that contains the result of the login process.
     /// </summary>
@@ -13,8 +13,8 @@ namespace AdvancedBudgetManagerCore.model {
         /// Initializes a new instance of the <see cref="LoginResponse"/> class with no arguments.
         /// </summary>
         public LoginResponse() {
-            this.resultCode = ResultCode.UNDEFINED;
-            this.responseMessage = String.Empty;
+            resultCode = ResultCode.UNDEFINED;
+            responseMessage = string.Empty;
         }
 
         /// <summary>
@@ -31,16 +31,16 @@ namespace AdvancedBudgetManagerCore.model {
         /// Sets/retrieves the result code of the <see cref="LoginResponse"/>.
         /// </summary>
         public ResultCode ResultCode {
-            get { return this.resultCode; }
-            set { this.resultCode = value; }
+            get { return resultCode; }
+            set { resultCode = value; }
         }
 
         /// <summary>
         /// Sets/retrieves the response message of the <see cref="LoginResponse"/>.
         /// </summary>
         public string ResponseMessage {
-            get { return this.responseMessage; }
-            set { this.responseMessage = value; }
+            get { return responseMessage; }
+            set { responseMessage = value; }
         }
     }
 }
