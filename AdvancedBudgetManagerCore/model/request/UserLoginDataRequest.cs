@@ -1,4 +1,5 @@
 ﻿using AdvancedBudgetManagerCore.utils.enums;
+using System.Security;
 
 namespace AdvancedBudgetManagerCore.model.request {
     /// <summary>
@@ -7,14 +8,14 @@ namespace AdvancedBudgetManagerCore.model.request {
     public class UserLoginDataRequest : IDataRequest {
         private string userName;
 
-        private string password;
+        private SecureString password;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserLoginDataRequest"/> based on the username and password>
         /// </summary>
         /// <param name="userName">The username</param>
         /// <param name="password">The password</param>
-        public UserLoginDataRequest(string userName, string password) {
+        public UserLoginDataRequest(string userName, SecureString password) {
             this.userName = userName;
             this.password = password;
         }
@@ -45,7 +46,7 @@ namespace AdvancedBudgetManagerCore.model.request {
         /// <summary>
         /// Retrieves the password of the <see cref="UserLoginDataRequest"/>
         /// </summary>
-        public string Password {
+        public SecureString Password {
             get { return this.password; }
         }
     }

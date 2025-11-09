@@ -1,11 +1,12 @@
-﻿using AdvancedBudgetManagerCore.model;
-using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.request;
+using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
-using AdvancedBudgetManagerCore.utils;
 using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
 using NSubstitute;
 using System.Data;
+using System.Security;
 
 namespace AdvancedBudgetManagerCoreTest.user_login {
     [TestClass]
@@ -47,7 +48,10 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
                  .Select(s => s!.Value)//Adds null forgiving operator to avoid CS8629 (no null values can reach Select due to the Where condition)
                  .ToArray();
 
-            string actualHashCode = securityManager.CreatePasswordHash(validPassword, saltArray);
+            SecureString secureStringPassword = securityManager.ToSecureString(validPassword);
+
+            byte[] hashBytes = securityManager.HashSecureString(secureStringPassword, saltArray);
+            string actualHashCode = securityManager.HashToBase64(hashBytes);
 
             Assert.AreEqual(expectedHashCode, actualHashCode);
         }
@@ -57,6 +61,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             Assert.ThrowsException<ArgumentException>(() => securityManager.CreatePasswordHash(String.Empty, Array.Empty<byte>()));
         }
 
+      
         [TestMethod]
         public void GetSalt_WithPositiveSize_ReturnsByteArrayOfSpecifiedSize() {
             int expectedSize = 256;
@@ -74,9 +79,11 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => securityManager.GetSalt(size));
         }
 
+
         [TestMethod]
         public void CheckCredentials_WhenValidCredentials_ReturnSuccess() {
-            IDataRequest loginDataRequest = new UserLoginDataRequest(validUserName, validPassword);
+            SecureString secureStringValidPassword = securityManager.ToSecureString(validPassword);
+            IDataRequest loginDataRequest = new UserLoginDataRequest(validUserName, secureStringValidPassword);
             DataTable loginResponseDataTable = new DataTable();
             loginResponseDataTable.Columns.Add("userID", typeof(int));
             loginResponseDataTable.Columns.Add("userName", typeof(String));
@@ -92,11 +99,11 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
 
             ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password == validPassword)).Returns(loginResponseDataTable);
+            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password.Equals(secureStringValidPassword))).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
             loginViewModel.UserName = validUserName;
-            loginViewModel.Password = validPassword;
+            loginViewModel.Password = secureStringValidPassword;
 
             loginViewModel.CheckCredentials();
 
@@ -109,11 +116,9 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
         [TestMethod]
         public void CheckCredentials_WhenInvalidCredentials_ReturnError() {
 
-            //string invalidInputvalidUserName = "Winui4Test";
-            //string invalidInputPassword = "9AxbgTc4(?{ABC";
-            byte[] invalidSalt = new byte[1] { 1 };
+            SecureString secureStringInvalidPassword = securityManager.ToSecureString(invalidPassword);
 
-            IDataRequest loginDataRequest = new UserLoginDataRequest(invalidUserName, invalidPassword);
+            IDataRequest loginDataRequest = new UserLoginDataRequest(invalidUserName, secureStringInvalidPassword);
             DataTable loginResponseDataTable = new DataTable();
             loginResponseDataTable.Columns.Add("userID", typeof(int));
             loginResponseDataTable.Columns.Add("validUserName", typeof(String));
@@ -122,16 +127,16 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
             int returnedUserId = -1;
             string returnedValidUserName = String.Empty;
-            byte[] returnedSaltArray = new byte[1] { 1 };
+            byte[] returnedSaltArray = new byte[32];
             string returnedPasswordHash = String.Empty;
             loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
 
             ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == invalidPassword)).Returns(loginResponseDataTable);
+            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == secureStringInvalidPassword)).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
             loginViewModel.UserName = invalidUserName;
-            loginViewModel.Password = invalidPassword;
+            loginViewModel.Password = secureStringInvalidPassword;
 
             loginViewModel.CheckCredentials();
 

@@ -1,70 +1,161 @@
-﻿using AdvancedBudgetManager.view.window;
+﻿using AdvancedBudgetManager.view.dialog;
+using AdvancedBudgetManager.view.window;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using System;
-using System.Data;
+using System.Threading.Tasks;
+using AutofacContainer = Autofac.IContainer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace AdvancedBudgetManager
-{
+namespace AdvancedBudgetManager {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public partial class App : Application
-    {
+    public partial class App : Application {
+        public static AutofacContainer? Container { get; private set; }
+
         private Window? loginWindow;
 
-        public static IHost? AppHost { get; private set; }
+        //public static IHost? AppHost { get; private set; }
+
+
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App()
-        {
+        public App() {
             this.InitializeComponent();
 
-            AppHost = Host.CreateDefaultBuilder()
-                .ConfigureServices((context, services) => {
-                    services.AddTransient<UserDashboard>();
-                    services.AddTransient<LoginViewModel>();
-                    services.AddTransient<LoginWindow>();
-                    services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
-                    services.AddSingleton<ICrudRepository, UserLoginRepository>();
+            //TO DO: change dependency injection container to Autofac before continuing the implementation of password reset feature
+            //AppHost = Host.CreateDefaultBuilder()
+            //    .ConfigureServices((context, services) => {
+            //        services.AddTransient<UserDashboard>();
+            //        services.AddTransient<LoginViewModel>();
+            //        //services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
+            //        services.AddSingleton<ICrudRepository, ResetPasswordRepository>();
+            //        services.AddSingleton<ResetPasswordDialog>();
+            //        services.AddSingleton<ResetPasswordViewModel>();
+            //        services.AddSingleton<EmailConfirmationViewModel>();
+            //        services.AddSingleton<ConfirmationCodeInputDialog>();
+            //        services.AddSingleton<ConfirmEmailWindow>();
+            //        services.AddTransient<LoginWindow>();
+            //        services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
+            //        services.AddSingleton<ICrudRepository, UserLoginRepository>();                                     
+            //    })
+            //    .Build();
 
-                })
-                .Build();
+
+            IHost serviceProvider = ConfigureServices();
+            Container = (AutofacContainer) serviceProvider.Services.GetAutofacRoot();
+
+        }
+
+        private IHost ConfigureServices() {
+            IHostBuilder builder = Host.CreateDefaultBuilder();
+            builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+            builder.ConfigureContainer<ContainerBuilder>(container => {
+                //Windows
+                container.RegisterType<LoginWindow>()
+                         .SingleInstance();
+                container.RegisterType<UserDashboard>()
+                         .SingleInstance();
+                container.RegisterType<ConfirmEmailWindow>()
+                         .SingleInstance();
+                container.RegisterType<ResetPasswordWindow>()
+                         .SingleInstance();
+
+                //InputDialogs
+                container.RegisterType<ConfirmationCodeInputDialog>()
+                         .SingleInstance();           
+
+                //ViewModels
+                container.RegisterType<LoginViewModel>()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("UserLoginRepo")
+                );
+
+                container.RegisterType<ChangePasswordViewModelWrapper>();
+
+                container.RegisterType<ResetPasswordViewModel>()
+                         .SingleInstance()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
+                          
+                );
+
+                //Registers object with default constructor
+                container.RegisterType<EmailConfirmationViewModel>()
+                         .AsSelf()
+                         .SingleInstance();
+
+                //Repositories
+                container.RegisterType<UserLoginRepository>()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                         .Keyed<ICrudRepository>("UserLoginRepo");
+
+                container.RegisterType<ResetPasswordRepository>()
+                        .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                        .Keyed<ICrudRepository>("ResetPasswordRepo");
+
+                //Database
+                container.RegisterType<MySqlDatabaseConnection>()
+                         .Keyed<IDatabaseConnection>("MySqlDbConnection");
+            }
+            );
+
+            return builder.Build();
         }
 
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
-            //m_window = new UserDashboard();
-            //m_window.Activate();
-
-            if (AppHost == null) {
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
+            if (Container == null) {
                 throw new InvalidOperationException("An error occurred when trying to setup the required objects.");
             }
 
-            loginWindow = AppHost.Services.GetService<LoginWindow>();
+            loginWindow = App.Container.Resolve<LoginWindow>();
 
             if (loginWindow == null) {
                 throw new InvalidOperationException("Unable to initialize the login window!");
             } else {
                 loginWindow.Activate();
+
+                FrameworkElement rootElement = (FrameworkElement) loginWindow.Content;
+
+                if (!rootElement.IsLoaded) {
+                    TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+                    rootElement.Loaded += (s, e) => tcs.SetResult(null!);
+
+                    await tcs.Task;
+                }
+                
+                XamlRoot loginWindowRoot = loginWindow.Content.XamlRoot;
+
+                //Retrieves the ConfirmEmailWindow object from the DI container
+                ConfirmEmailWindow confirmEmailWindow = Container.Resolve<ConfirmEmailWindow>();
+
+                /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
+                This allows the display of the password reset dialog on top of the login window*/
+                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;            
             }
         }
-
-        //private Window? m_window;
     }
 }

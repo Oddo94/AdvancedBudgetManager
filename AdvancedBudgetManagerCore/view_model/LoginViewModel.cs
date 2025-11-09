@@ -1,11 +1,14 @@
-﻿using AdvancedBudgetManagerCore.model;
-using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.request;
+using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
-using AdvancedBudgetManagerCore.utils;
 using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.security;
+using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using System.Security;
 
 namespace AdvancedBudgetManagerCore.view_model {
     /// <summary>
@@ -16,7 +19,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         private String userName;
 
         [ObservableProperty]
-        private String password;
+        private SecureString password;
 
         private LoginResponse loginResponse;
 
@@ -28,9 +31,9 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
         /// <param name="userLoginRepository">The actual repository used to retrieve the user login details.</param>
-        public LoginViewModel(ICrudRepository userLoginRepository) {
-            this.userName = String.Empty;
-            this.password = String.Empty;
+        public LoginViewModel([NotNull] [KeyFilter("UserLoginRepo")] ICrudRepository userLoginRepository) {
+            //this.userName = String.Empty;
+            //this.password = String.Empty;
             this.loginResponse = new LoginResponse();
             this.userLoginRepository = userLoginRepository;
         }
@@ -100,7 +103,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <param name="inputDataTable">The <see cref="DataTable"/> that contains the login credentials.</param>
         /// <param name="userInputPassword">The user supplied password as <see cref="string"/>.</param>
         /// <returns cref="bool"></returns>
-        private bool HasValidCredentials(DataTable inputDataTable, String userInputPassword) {
+        private bool HasValidCredentials(DataTable inputDataTable, SecureString userInputPassword) {
             if (inputDataTable != null && inputDataTable.Rows.Count == 1) {
                 //Extracts the stored salt and hashcode for the input password
                 byte[] salt = (byte[])inputDataTable.Rows[0].ItemArray[2];
@@ -109,10 +112,19 @@ namespace AdvancedBudgetManagerCore.view_model {
                 PasswordSecurityManager securityManager = new PasswordSecurityManager();
 
                 //Generates the hashcode for the input password using the stored salt 
-                String actualHash = securityManager.CreatePasswordHash(userInputPassword, salt);
+                //String actualHash = securityManager.CreatePasswordHash(userInputPassword, salt);
+                byte[] storedHashBytes = securityManager.HashSecureString(userInputPassword, salt);
+                string actualHash = securityManager.HashToBase64(storedHashBytes);
+
+                bool isMatch = storedHash.Equals(actualHash);
+
+                salt = null;
+                storedHash = null;
+                storedHashBytes = null;
 
                 //Checks if the two hashcodes are identical
-                return storedHash.Equals(actualHash);
+                //return storedHash.Equals(actualHash);
+                return isMatch;
             }
 
             return false;
