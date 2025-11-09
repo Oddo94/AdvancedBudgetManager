@@ -7,7 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerUI", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerCore", "AdvancedBudgetManagerCore\AdvancedBudgetManagerCore.csproj", "{7C4E4F99-CFC4-4FD5-B46F-84D8C10B45F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerCoreTest", "AdvancedBudgetManagerCoreTest\AdvancedBudgetManagerCoreTest.csproj", "{6CA7D4AA-EAF8-4E60-9C04-C09F249FF019}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedBudgetManagerTest", "AdvancedBudgetManagerTest\AdvancedBudgetManagerTest.csproj", "{6CA7D4AA-EAF8-4E60-9C04-C09F249FF019}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
