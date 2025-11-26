@@ -1,5 +1,7 @@
 ﻿using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.window;
+using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.view_model;
@@ -76,22 +78,24 @@ namespace AdvancedBudgetManager {
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>()
-                         .SingleInstance();           
+                         .SingleInstance();
 
                 //ViewModels
+                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<LoginViewModel>()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("UserLoginRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserLoginRepo")
                 );
 
                 container.RegisterType<ChangePasswordViewModelWrapper>();
 
+                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<ResetPasswordViewModel>()
                          .SingleInstance()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo")
                           
                 );
 
@@ -101,17 +105,18 @@ namespace AdvancedBudgetManager {
                          .SingleInstance();
 
                 //Repositories
+                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<UserLoginRepository>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                         .Keyed<ICrudRepository>("UserLoginRepo");
+                         .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserLoginRepo");
 
                 container.RegisterType<ResetPasswordRepository>()
                         .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                        .Keyed<ICrudRepository>("ResetPasswordRepo");
+                        .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()

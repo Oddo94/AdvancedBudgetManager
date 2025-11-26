@@ -1,4 +1,6 @@
-﻿using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.enums;
@@ -25,13 +27,13 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private int userId;
 
-        private ICrudRepository userLoginRepository;
+        private ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
         /// <param name="userLoginRepository">The actual repository used to retrieve the user login details.</param>
-        public LoginViewModel([NotNull] [KeyFilter("UserLoginRepo")] ICrudRepository userLoginRepository) {
+        public LoginViewModel([NotNull] [KeyFilter("UserLoginRepo")] ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository) {
             //this.userName = String.Empty;
             //this.password = String.Empty;
             this.loginResponse = new LoginResponse();
@@ -50,23 +52,25 @@ namespace AdvancedBudgetManagerCore.view_model {
         public void CheckCredentials() {
             IDataRequest userLoginDataRequest = new UserLoginDataRequest(UserName, Password);
 
-            DataTable authenticationData = new DataTable();
+            User user;
             try {
-                authenticationData = userLoginRepository.GetData(userLoginDataRequest);
+                user = userLoginRepository.GetById(long.MinValue);
             } catch (SystemException ex) {
                 throw new SystemException(ex.Message);
             }
 
-            //Checks that the user exists and his credentials are correct
-            if (UserExists(authenticationData) && HasValidCredentials(authenticationData, Password)) {
-                //Sets the login response to success
-                loginResponse = new LoginResponse(ResultCode.OK, String.Empty);
+            //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!!
 
-                //Extracts the user ID
-                userId = GetUserId(authenticationData);
-            } else {
-                loginResponse = new LoginResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
-            }
+            ////Checks that the user exists and his credentials are correct
+            //if (UserExists(user) && HasValidCredentials(user, Password)) {
+            //    //Sets the login response to success
+            //    loginResponse = new LoginResponse(ResultCode.OK, String.Empty);
+
+            //    //Extracts the user ID
+            //    userId = GetUserId(user);
+            //} else {
+            //    loginResponse = new LoginResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
+            //}
         }
 
         /// <summary>

@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace AdvancedBudgetManagerCore.model.dto {
     public class UserInsertDto {
         private String userName;
-        private byte[] salt;
-        private String passwordHash;
+        //private byte[] salt;
+        private SecureString password;
         private String emailAddress;
 
         public UserInsertDto() { }
 
-        public UserInsertDto(String userName, byte[] salt, String passwordHash, String emailAddress) {
+        public UserInsertDto(String userName, SecureString password, String emailAddress) {
             this.userName = userName;
-            this.salt = salt;
-            this.passwordHash = passwordHash;
+            //this.salt = salt;
+            this.password = password;
             this.emailAddress = emailAddress;
         }
 
@@ -26,14 +26,14 @@ namespace AdvancedBudgetManagerCore.model.dto {
             set { this.userName = value; }
         }
 
-        public byte[] Salt {
-            get { return this.salt; }
-            set { this.salt = value; }
-        }
+        //public byte[] Salt {
+        //    get { return this.salt; }
+        //    set { this.salt = value; }
+        //}
 
-        public String PasswordHash {
-            get { return this.passwordHash; }
-            set { this.passwordHash = value; }
+        public SecureString Password{
+            get { return this.password; }
+            set { this.password = value; }
         }
 
         public String EmailAddress {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdvancedBudgetManagerCore.model.dto {
+﻿namespace AdvancedBudgetManagerCore.model.dto {
     public class UserReadDto {
         private string userName;
         private string emailAddress;

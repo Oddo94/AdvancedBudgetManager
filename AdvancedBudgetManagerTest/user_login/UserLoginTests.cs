@@ -1,4 +1,6 @@
-﻿using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.enums;
@@ -98,8 +100,8 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
             loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
 
-            ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password.Equals(secureStringValidPassword))).Returns(loginResponseDataTable);
+            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            //userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password.Equals(secureStringValidPassword))).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
             loginViewModel.UserName = validUserName;
@@ -131,8 +133,8 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             string returnedPasswordHash = String.Empty;
             loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
 
-            ICrudRepository userLoginRepository = Substitute.For<ICrudRepository>();
-            userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == secureStringInvalidPassword)).Returns(loginResponseDataTable);
+            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            //userLoginRepository.GetById(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == secureStringInvalidPassword)).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
             loginViewModel.UserName = invalidUserName;

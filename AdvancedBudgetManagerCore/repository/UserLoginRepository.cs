@@ -1,14 +1,17 @@
-﻿using AdvancedBudgetManagerCore.model.request;
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.utils.database;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
    /// <summary>
    /// Repository class for managing the user login operations that require database interaction.
    /// </summary>
-    public class UserLoginRepository : ICrudRepository {
+    public class UserLoginRepository : ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> {
         private IDatabaseConnection dbConnection;
         private String sqlStatementGetAuthenticationData = @"SELECT userID, username, salt, password FROM users WHERE username = @userName";
 
@@ -18,6 +21,18 @@ namespace AdvancedBudgetManagerCore.repository {
         /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public UserLoginRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
+        }
+
+        public void DeleteById(long id) {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<User> GetAllByCriteria(UserReadDto getRequest) {
+            throw new NotImplementedException();
+        }
+
+        public User GetById(long id) {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -54,9 +69,17 @@ namespace AdvancedBudgetManagerCore.repository {
             return authenticationData;
         }
 
+        public long InsertData(UserInsertDto insertRequest) {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public void UpdateData(IDataUpdateRequest dataUpdateRequest) {
             return;
+        }
+
+        public void UpdateData(UserUpdateDto updateRequest) {
+            throw new NotImplementedException();
         }
     }
 }

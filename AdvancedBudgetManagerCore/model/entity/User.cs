@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.model.entity {
     public class User {
-        private long userId;
+        private long? userId;
         private String userName;
         private byte[] salt;
         private String passwordHash;
@@ -14,7 +14,7 @@ namespace AdvancedBudgetManagerCore.model.entity {
 
         public User() { }
 
-        public User(long userId, String userName, byte[] salt, String passwordHash, String emailAddress) {
+        public User(long? userId, String userName, byte[] salt, String passwordHash, String emailAddress) {
             this.userId = userId;
             this.userName = userName;
             this.salt = salt;
@@ -22,7 +22,7 @@ namespace AdvancedBudgetManagerCore.model.entity {
             this.emailAddress = emailAddress;
         }
 
-        public long UserId {
+        public long? UserId {
             get { return this.userId; }
             set { this.userId = value; }
         }
