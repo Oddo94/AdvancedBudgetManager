@@ -64,14 +64,19 @@ namespace AdvancedBudgetManagerCore.repository {
 
                     dataAdapter.Fill(userInfo);
 
-                    long userId;
-                    bool result2 = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
-                    string userName = userInfo.Rows[0].ItemArray[1].ToString();
-                    byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
-                    string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
-                    string email = userInfo.Rows[0].ItemArray[4].ToString();
+                    User user = new User();
+                    if (userInfo.Rows.Count > 0) {
+                        long userId = -1;
+                        bool parseResult = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
+                        string name = userInfo.Rows[0].ItemArray[1].ToString();
+                        byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
+                        string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
+                        string email = userInfo.Rows[0].ItemArray[4].ToString();
 
-                    User user = new User(userId, userName, salt, storedHash, email);
+                        user = new User(userId, name, salt, storedHash, email);
+                    } else {
+                        user = null;
+                    }
 
                     return user;
 
@@ -102,14 +107,20 @@ namespace AdvancedBudgetManagerCore.repository {
 
                     dataAdapter.Fill(userInfo);
 
-                    long userId = -1;
-                    bool parseResult = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
-                    string name = userInfo.Rows[0].ItemArray[1].ToString();
-                    byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
-                    string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
-                    string email = userInfo.Rows[0].ItemArray[4].ToString();
+                    User user = new User();
 
-                    User user = new User(userId, name, salt, storedHash, email);
+                    if (userInfo.Rows.Count > 0) {
+                        long userId = -1;
+                        bool parseResult = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
+                        string name = userInfo.Rows[0].ItemArray[1].ToString();
+                        byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
+                        string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
+                        string email = userInfo.Rows[0].ItemArray[4].ToString();
+
+                        user = new User(userId, name, salt, storedHash, email);
+                    } else {
+                        user = null;
+                    }
 
                     return user;
 

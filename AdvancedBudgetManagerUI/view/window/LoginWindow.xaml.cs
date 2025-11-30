@@ -20,11 +20,16 @@ namespace AdvancedBudgetManager.view.window {
         private LoginViewModel loginViewModel;
         private UserDashboard userDashboard;
         private ConfirmEmailWindow confirmEmailWindow;
+        private RegisterUserWindow registerUserWindow;
 
-        public LoginWindow([NotNull] LoginViewModel loginViewModel, [NotNull] UserDashboard userDashboard, [NotNull] ConfirmEmailWindow confirmEmailWindow) {
+        public LoginWindow([NotNull] LoginViewModel loginViewModel,
+            [NotNull] UserDashboard userDashboard,
+            [NotNull] ConfirmEmailWindow confirmEmailWindow,
+            [NotNull] RegisterUserWindow registerUserWindow) {
             this.loginViewModel = loginViewModel;
             this.userDashboard = userDashboard;
             this.confirmEmailWindow = confirmEmailWindow;
+            this.registerUserWindow = registerUserWindow;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(600, 600));
@@ -43,7 +48,7 @@ namespace AdvancedBudgetManager.view.window {
         public async void LoginButton_Click(object sender, RoutedEventArgs e) {
             ContentDialog loginErrorDialog;
 
-            try {             
+            try {
                 loginViewModel.CheckCredentials();
                 PasswordBox.Password = String.Empty;
 
@@ -79,6 +84,10 @@ namespace AdvancedBudgetManager.view.window {
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
             //ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
             confirmEmailWindow.Activate();
+        }
+
+        public void RegisterUser_Click(object sender, RoutedEventArgs e) {
+            registerUserWindow.Activate();
         }
     }
 }

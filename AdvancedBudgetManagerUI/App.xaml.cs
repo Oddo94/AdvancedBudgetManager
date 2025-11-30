@@ -3,6 +3,7 @@ using AdvancedBudgetManager.view.window;
 using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.repository;
+using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
@@ -57,7 +58,7 @@ namespace AdvancedBudgetManager {
 
 
             IHost serviceProvider = ConfigureServices();
-            Container = (AutofacContainer) serviceProvider.Services.GetAutofacRoot();
+            Container = (AutofacContainer)serviceProvider.Services.GetAutofacRoot();
 
         }
 
@@ -74,6 +75,8 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<ConfirmEmailWindow>()
                          .SingleInstance();
                 container.RegisterType<ResetPasswordWindow>()
+                         .SingleInstance();
+                container.RegisterType<RegisterUserWindow>()
                          .SingleInstance();
 
                 //InputDialogs
@@ -96,13 +99,27 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
                                (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo")
-                          
+
                 );
+
+                container.RegisterType<RegisterUserViewModel>()
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
+                                (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserSevice")
+                    );
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
                          .AsSelf()
                          .SingleInstance();
+
+                //Services
+                container.RegisterType<RegisterUserService>()
+                         .WithParameter(
+                                 (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
+                                 (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserRepo"))
+                         .Keyed<RegisterUserService>("RegisterUserSevice");
+
 
                 //Repositories
                 //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
@@ -117,6 +134,12 @@ namespace AdvancedBudgetManager {
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
                         .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo");
+
+                container.RegisterType<UserRepository>()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                         .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()
@@ -143,7 +166,7 @@ namespace AdvancedBudgetManager {
             } else {
                 loginWindow.Activate();
 
-                FrameworkElement rootElement = (FrameworkElement) loginWindow.Content;
+                FrameworkElement rootElement = (FrameworkElement)loginWindow.Content;
 
                 if (!rootElement.IsLoaded) {
                     TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
@@ -151,7 +174,7 @@ namespace AdvancedBudgetManager {
 
                     await tcs.Task;
                 }
-                
+
                 XamlRoot loginWindowRoot = loginWindow.Content.XamlRoot;
 
                 //Retrieves the ConfirmEmailWindow object from the DI container
@@ -159,7 +182,7 @@ namespace AdvancedBudgetManager {
 
                 /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
                 This allows the display of the password reset dialog on top of the login window*/
-                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;            
+                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
             }
         }
     }
