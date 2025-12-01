@@ -103,6 +103,7 @@ namespace AdvancedBudgetManager {
                 );
 
                 container.RegisterType<RegisterUserViewModel>()
+                         .SingleInstance()
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
                                 (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserSevice")

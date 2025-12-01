@@ -16,9 +16,8 @@
             </StackPanel>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Enter the email address used for the account creation" Margin="10" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBox x:Name="EmailAddressTextBox" PlaceholderText="user@email.com" Text="{x:Bind changePasswordViewModelWrapper.UserEmail, Mode=TwoWay}"  Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <TextBox x:Name="EmailAddressTextBox" PlaceholderText="user@email.com" Text="{x:Bind changePasswordViewModelWrapper.EmailAddress, Mode=TwoWay}"  Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
                 <TextBlock Text="we will send you a confirmation code" Margin="10" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <!--<Button x:Name="SendEmailButton" Content="Send code" Click="ConfirmEmailButton_Click" Command="{x:Bind emailConfirmationViewModel.SendEmailConfirmationCodeCommand, Mode=OneWay}" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
                 <Button x:Name="SendEmailButton" Content="Send code" Command="{x:Bind emailConfirmationViewModel.RequestUserConfirmationCodeCommand, Mode=OneWay}" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>

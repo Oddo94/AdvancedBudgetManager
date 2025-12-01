@@ -8,7 +8,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
-using System.Security;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,7 +47,6 @@ namespace AdvancedBudgetManager.view.window {
 
         public async void ResetPasswordButton_Click(object sender, RoutedEventArgs e) {
             PasswordSecurityManager passwordSecurityManager = new PasswordSecurityManager();
-            passwordSecurityManager.ToSecureString("sgdfasgfhgsjf");
 
             ContentDialog passwordResetErrorDialog = new ContentDialog {
                 Title = "Reset password",

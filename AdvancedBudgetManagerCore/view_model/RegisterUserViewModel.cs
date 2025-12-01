@@ -36,11 +36,11 @@ namespace AdvancedBudgetManagerCore.view_model {
             bool isSuccess = false;
 
             try {
-                bool isValidUserData = IsValidUserData(this.UserName, this.EmailAddress);
+                //bool isValidUserData = IsValidUserData(this.UserName, this.EmailAddress);
 
-                if (!isValidUserData) {
-                    throw new AdvancedBudgetManagerException("Invalid username and/or email address!");
-                }
+                //if (!isValidUserData) {
+                //    throw new AdvancedBudgetManagerException("Invalid username and/or email address!");
+                //}
 
                 UserInsertDto userInsertDto = new UserInsertDto(this.UserName, this.Password, this.EmailAddress);
                 registerUserService.RegisterUser(userInsertDto);
@@ -54,6 +54,15 @@ namespace AdvancedBudgetManagerCore.view_model {
             }
 
             WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, registerUserResultMessage));
+        }
+
+        [RelayCommand]
+        public void ValidateUserData() {
+            bool isValidUserData = IsValidUserData(this.UserName, this.EmailAddress);
+
+            if (!isValidUserData) {
+                throw new AdvancedBudgetManagerException("Invalid username and/or email address!");
+            }
         }
 
 

@@ -1,7 +1,6 @@
 ﻿using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.message;
-using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.security;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,7 +19,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         private SecureString newPassword;
 
         [ObservableProperty]
-        private string userEmail;
+        private string emailAddress;
 
         private ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> resetPasswordRepository;
 

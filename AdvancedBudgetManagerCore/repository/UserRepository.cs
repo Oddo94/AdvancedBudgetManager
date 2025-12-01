@@ -14,6 +14,10 @@ namespace AdvancedBudgetManagerCore.repository {
         private String sqlStatementGetUserByUserName = "SELECT userID, username, salt, password, email from users where username = @userName";
         private String sqlStatementGetUserById = "SELECT userID, username, salt, password, email from users where userId = @userId";
 
+        public UserRepository(IDatabaseConnection dbConnection) {
+            this.dbConnection = dbConnection;
+        }
+
         public User GetById(long id) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {

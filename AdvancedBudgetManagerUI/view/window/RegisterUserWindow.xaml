@@ -15,10 +15,10 @@
             <TextBlock Text="User registration" FontSize="36" Margin="50" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
         </StackPanel>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox Header="Username" PlaceholderText="Enter your username" x:Name="UsernameTextBox"  Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-            <PasswordBox Header="Password" PlaceholderText="Enter your password" PasswordChar="*" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-            <TextBox Header="Email address" PlaceholderText="Enter your email" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-            <Button Content="Register user" x:Name="RegisterUserButton" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Header="Username" PlaceholderText="Enter your username" x:Name="UserNameTextBox" Text="{x:Bind registerUserViewModel.UserName, Mode=TwoWay}"  Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <PasswordBox Header="Password" PlaceholderText="Enter your password" PasswordChar="*" x:Name="PasswordBox" helpers:PasswordBoxHelper.BindPassword="true" helpers:PasswordBoxHelper.BoundPassword="{x:Bind registerUserViewModel.Password, Mode=TwoWay}"  Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <TextBox Header="Email address" PlaceholderText="Enter your email" x:Name="EmailAddressTextBox" Text="{x:Bind sharedPropertyViewModelWrapper.EmailAddress, Mode=TwoWay}" Margin="4" Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+            <Button Content="Register user" x:Name="RegisterUserButton" Click="RegisterUserButton_Click" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -1,25 +1,22 @@
 ﻿using AdvancedBudgetManagerCore.model;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
-using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.security;
-using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.view_model {
-    #pragma warning disable 1591
+#pragma warning disable 1591
     /// <summary>
     /// Represents the view model for the email confirmation dialog.
     /// </summary>
     public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
         [ObservableProperty]
-        private string userEmail;
+        private string emailAddress;
 
         //[ObservableProperty]
         //private string inputConfirmationCode;
@@ -56,7 +53,7 @@ namespace AdvancedBudgetManagerCore.view_model {
             int confirmationCodeSize = 32;
             generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
 
-            ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(UserEmail, emailSubject, emailBody, generatedConfirmationCode);
+            ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
 
             try {
                 emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
@@ -82,13 +79,13 @@ namespace AdvancedBudgetManagerCore.view_model {
 
             //    this.inputConfirmationCode = response.Result.ConfirmationCode;
 
-                //if (ConfirmationCodesMatch(this.inputConfirmationCode, this.generatedConfirmationCode)) {
+            //if (ConfirmationCodesMatch(this.inputConfirmationCode, this.generatedConfirmationCode)) {
 
-                //}
+            //}
         }
 
         ///<inheritdoc/>
-         public void Receive(EmailConfirmationSubmittedMessage message) {
+        public void Receive(EmailConfirmationSubmittedMessage message) {
             String inputConfirmationCode = message.ConfirmationCode;
 
             Debug.WriteLine($"Received confirmation code: {inputConfirmationCode}");
