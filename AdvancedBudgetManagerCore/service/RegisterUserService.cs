@@ -8,12 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace AdvancedBudgetManagerCore.service {
     public class RegisterUserService {
         /* Add the logic for handling salt generation, password generation and repository interaction here*/
-        private UserRepository userRepository;
+        private IUserRepository userRepository;
 
         private PasswordSecurityManager securityManager;
 
-        public RegisterUserService(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userRepository) {
-            this.userRepository = (UserRepository)userRepository;
+        public RegisterUserService(IUserRepository userRepository) {
+            this.userRepository = userRepository;
             this.securityManager = new PasswordSecurityManager();
         }
 
@@ -30,7 +30,7 @@ namespace AdvancedBudgetManagerCore.service {
 
                 User user = new User(null, userInsertDto.UserName, salt, passwordHash, userInsertDto.EmailAddress);
 
-                userRepository.InsertData(userInsertDto);
+                userRepository.Insert(user);
 
             } catch (SystemException ex) {
                 throw new SystemException(ex.Message, ex);

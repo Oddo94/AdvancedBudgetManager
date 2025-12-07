@@ -1,7 +1,7 @@
 ﻿using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.window;
-using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.database;
@@ -67,6 +67,11 @@ namespace AdvancedBudgetManager {
             builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
             builder.ConfigureContainer<ContainerBuilder>(container => {
+                //Single instances
+                container.RegisterType<UserRegistrationEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("UserRegistrationNotifier");
+
                 //Windows
                 container.RegisterType<LoginWindow>()
                          .SingleInstance();
@@ -77,7 +82,11 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<ResetPasswordWindow>()
                          .SingleInstance();
                 container.RegisterType<RegisterUserWindow>()
-                         .SingleInstance();
+                         .SingleInstance()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
+                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM")
+                );
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>()
@@ -87,18 +96,18 @@ namespace AdvancedBudgetManager {
                 //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<LoginViewModel>()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserLoginRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<User, long>),
+                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<User, long>>("UserLoginRepo")
                 );
 
-                container.RegisterType<ChangePasswordViewModelWrapper>();
+                container.RegisterType<SharedPropertiesViewModelWrapper>();
 
                 //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<ResetPasswordViewModel>()
                          .SingleInstance()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("ResetPasswordRepo")
 
                 );
 
@@ -106,20 +115,25 @@ namespace AdvancedBudgetManager {
                          .SingleInstance()
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
-                                (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserSevice")
+                                (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserService")
                     );
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
                          .AsSelf()
-                         .SingleInstance();
+                         .SingleInstance()
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
+                                (pi, ctx) => ctx.ResolveKeyed<IConfirmationNotifier>("UserRegistrationNotifier"))
+                         .Keyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM");
+
 
                 //Services
                 container.RegisterType<RegisterUserService>()
                          .WithParameter(
-                                 (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>),
-                                 (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserRepo"))
-                         .Keyed<RegisterUserService>("RegisterUserSevice");
+                                 (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                                 (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                         .Keyed<RegisterUserService>("RegisterUserService");
 
 
                 //Repositories
@@ -128,19 +142,19 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                         .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserLoginRepo");
+                         .Keyed<ICrudRepository<User, long>>("UserLoginRepo");
 
                 container.RegisterType<ResetPasswordRepository>()
                         .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                        .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("ResetPasswordRepo");
+                        .Keyed<IUserRepository>("ResetPasswordRepo");
 
                 container.RegisterType<UserRepository>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                         .Keyed<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>("UserRepo");
+                         .Keyed<IUserRepository>("UserRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()

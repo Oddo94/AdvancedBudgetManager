@@ -1,9 +1,7 @@
-﻿using AdvancedBudgetManagerCore.model.dto;
-using AdvancedBudgetManagerCore.model.entity;
+﻿using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
-using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
 using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,13 +25,13 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private int userId;
 
-        private ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository;
+        private ICrudRepository<User, long> userLoginRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
         /// <param name="userLoginRepository">The actual repository used to retrieve the user login details.</param>
-        public LoginViewModel([NotNull] [KeyFilter("UserLoginRepo")] ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository) {
+        public LoginViewModel([NotNull][KeyFilter("UserLoginRepo")] ICrudRepository<User, long> userLoginRepository) {
             //this.userName = String.Empty;
             //this.password = String.Empty;
             this.loginResponse = new LoginResponse();

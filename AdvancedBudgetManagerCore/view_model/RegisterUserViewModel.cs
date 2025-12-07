@@ -25,9 +25,12 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private PasswordSecurityManager securityManager;
 
+        private IMessenger messenger;
+
         public RegisterUserViewModel([NotNull] RegisterUserService registerUserService) {
             this.registerUserService = registerUserService;
             this.securityManager = new PasswordSecurityManager();
+            this.messenger = new WeakReferenceMessenger();
         }
 
         [RelayCommand]

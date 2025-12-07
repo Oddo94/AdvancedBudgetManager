@@ -8,13 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
 
 namespace AdvancedBudgetManagerCore.repository {
     /// <summary>
     /// Repository class for managing the user reset password operations that require database interaction.
     /// </summary>
-    public class ResetPasswordRepository : ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> {
+    public class ResetPasswordRepository : IUserRepository {
         private IDatabaseConnection dbConnection;
         private PasswordSecurityManager passwordSecurityManager;
         private const int MinimumSaltLength = 32;
@@ -141,6 +140,30 @@ namespace AdvancedBudgetManagerCore.repository {
         }
 
         public void DeleteById(long id) {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<User> GetAll() {
+            throw new NotImplementedException();
+        }
+
+        public User Insert(User entity) {
+            throw new NotImplementedException();
+        }
+
+        public User Update(User entity) {
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(long id) {
+            throw new NotImplementedException();
+        }
+
+        public User GetByEmail(string email) {
+            throw new NotImplementedException();
+        }
+
+        public User GetByUserName(string userName) {
             throw new NotImplementedException();
         }
     }

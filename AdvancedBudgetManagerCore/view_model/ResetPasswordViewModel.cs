@@ -1,5 +1,4 @@
 ﻿using AdvancedBudgetManagerCore.model.dto;
-using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.security;
@@ -21,7 +20,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private string emailAddress;
 
-        private ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> resetPasswordRepository;
+        private IUserRepository userRepository;
 
         private PasswordSecurityManager passwordSecurityManager;
         private const int MinimumSaltLength = 32;
@@ -30,8 +29,8 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// Initializes a new instance of the <see cref="ResetPasswordViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
         /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
-        public ResetPasswordViewModel([NotNull] ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> resetPasswordRepository) {
-            this.resetPasswordRepository = resetPasswordRepository;
+        public ResetPasswordViewModel([NotNull] IUserRepository userRepository) {
+            this.userRepository = userRepository;
             this.passwordSecurityManager = new PasswordSecurityManager();
         }
 
@@ -61,7 +60,8 @@ namespace AdvancedBudgetManagerCore.view_model {
             UserUpdateDto userUpdateDto = new UserUpdateDto();
 
             try {
-                resetPasswordRepository.UpdateData(userUpdateDto);
+                //RETRIVE THE CORRECT ENTITY BASED ON THE EMAIL ADDRESS BEFORE PERFORMING THE UPDATE!!
+                userRepository.Update(null);
 
                 isSuccess = true;
                 resetPasswordResultMessage = "Your password was successfully reset!";

@@ -6,7 +6,7 @@ namespace AdvancedBudgetManagerCore.view_model {
     ///  This class acts as a wrapper that contains the view model objects which have to get acces to the user email address.
     ///  Once the email address is inserted in the UI the shared property is updated and, as a result, both models with also be updated accordingly.
     /// </summary>
-    public partial class ChangePasswordViewModelWrapper : ObservableObject {
+    public partial class SharedPropertiesViewModelWrapper : ObservableObject {
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private ResetPasswordViewModel resetPasswordViewModel;
         private RegisterUserViewModel registerUserViewModel;
@@ -15,11 +15,11 @@ namespace AdvancedBudgetManagerCore.view_model {
         private string emailAddress;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChangePasswordViewModelWrapper"/> based on the provided <see cref="EmailConfirmationViewModel"/> and <see cref="ResetPasswordViewModel"/> objects.
+        /// Initializes a new instance of the <see cref="SharedPropertiesViewModelWrapper"/> based on the provided <see cref="EmailConfirmationViewModel"/> and <see cref="ResetPasswordViewModel"/> objects.
         /// </summary>
         /// <param name="emailConfirmationViewModel">The <see cref="EmailConfirmationViewModel"/> object.</param>
         /// <param name="resetPasswordViewModel">The <see cref="ResetPasswordViewModel"/> object.</param>
-        public ChangePasswordViewModelWrapper([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
+        public SharedPropertiesViewModelWrapper([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
             [NotNull] ResetPasswordViewModel resetPasswordViewModel,
             [NotNull] RegisterUserViewModel registerUserViewModel) {
             this.emailConfirmationViewModel = emailConfirmationViewModel;

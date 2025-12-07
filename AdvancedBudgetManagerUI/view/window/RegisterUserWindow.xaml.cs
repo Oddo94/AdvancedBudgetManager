@@ -19,22 +19,22 @@ namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class RegisterUserWindow : Window, IRecipient<RequestEmailConfirmationMessage> {
+    public sealed partial class RegisterUserWindow : Window, IRecipient<RequestUserRegistrationEmailConfirmationMessage> {
         private RegisterUserViewModel registerUserViewModel;
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;
-        private ChangePasswordViewModelWrapper sharedPropertyViewModelWrapper;
+        private SharedPropertiesViewModelWrapper sharedPropertiesViewModelWrapper;
         private InputDataValidator inputValidator;
 
         public RegisterUserWindow([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
             [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
             [NotNull] RegisterUserViewModel registerUserViewModel,
-            [NotNull] ChangePasswordViewModelWrapper sharedPropertyViewModelWrapper) {
+            [NotNull] SharedPropertiesViewModelWrapper sharedPropertiesViewModelWrapper) {
 
             this.registerUserViewModel = registerUserViewModel;
             this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
-            this.sharedPropertyViewModelWrapper = sharedPropertyViewModelWrapper;
+            this.sharedPropertiesViewModelWrapper = sharedPropertiesViewModelWrapper;
             this.inputValidator = new InputDataValidator();
 
             AppWindow appWindow = this.AppWindow;
@@ -42,6 +42,9 @@ namespace AdvancedBudgetManager.view.window {
 
             OverlappedPresenter appWindowPresenter = (OverlappedPresenter)appWindow.Presenter;
             appWindowPresenter.IsResizable = false;
+
+            //Registers the window so that the MVVM Toolkit messaging system can work properly
+            WeakReferenceMessenger.Default.Register(this);
 
             InitializeComponent();
         }
@@ -82,7 +85,7 @@ namespace AdvancedBudgetManager.view.window {
                 registerUserViewModel.ValidateUserDataCommand.Execute(null);
 
                 //Send the confirmation code to the specified email address for confirming the identity of the new user
-                confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
+                //confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
                 emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(null);
             } catch (AdvancedBudgetManagerException ex) {
                 registerUserErrorDialog.Content = ex.Message;
@@ -90,8 +93,8 @@ namespace AdvancedBudgetManager.view.window {
             }
         }
 
-        public async void Receive(RequestEmailConfirmationMessage message) {
-            //confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
+        public async void Receive(RequestUserRegistrationEmailConfirmationMessage message) {
+            confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
 
             ContentDialogResult displayResult = await confirmationCodeInputDialog.ShowAsync();
 

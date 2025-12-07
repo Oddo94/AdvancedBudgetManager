@@ -1,13 +1,13 @@
-﻿using AdvancedBudgetManagerCore.model.dto;
-using AdvancedBudgetManagerCore.model.entity;
+﻿using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.utils.database;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+//using Windows.System;
 
 namespace AdvancedBudgetManagerCore.repository {
-    public class UserRepository : ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> {
+    public class UserRepository : IUserRepository {
         private IDatabaseConnection dbConnection;
         private String sqlStatementCreateNewUser = @"INSERT INTO users(username, salt, password, email) VALUES(@userName, @salt, @hashCode, @emailAddress)";
         private String sqlStatementGetUserByEmail = "SELECT userID, username, salt, password, email from users where email = @emailAddress";
@@ -143,7 +143,7 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
-        public long InsertData(User user) {
+        public User Insert(User user) {
             long generatedUserId;
 
             try {
@@ -161,7 +161,9 @@ namespace AdvancedBudgetManagerCore.repository {
                     insertUserCommand.ExecuteNonQuery();
                     generatedUserId = insertUserCommand.LastInsertedId;//Check if it returns the correct ID
 
-                    return generatedUserId;
+                    User insertedUser = GetById(generatedUserId);
+
+                    return insertedUser;
                 }
             } catch (MySqlException ex) {
                 int errorCode = ex.ErrorCode;
@@ -177,19 +179,15 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
-        public IEnumerable<User> GetAllByCriteria(UserReadDto getRequest) {
+        public IEnumerable<User> GetAll() {
             throw new NotImplementedException();
         }
 
-        public void UpdateData(UserUpdateDto updateRequest) {
+        public User Update(User user) {
             throw new NotImplementedException();
         }
 
-        public void DeleteById(long id) {
-            throw new NotImplementedException();
-        }
-
-        public long InsertData(UserInsertDto insertRequest) {
+        public bool Delete(long id) {
             throw new NotImplementedException();
         }
     }

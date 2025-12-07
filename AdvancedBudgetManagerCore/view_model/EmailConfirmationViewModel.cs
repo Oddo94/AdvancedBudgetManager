@@ -23,6 +23,7 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         //private ICrudRepository emailConfirmationRepository;
         private EmailConfirmationSender emailConfirmationSender;
+        private IConfirmationNotifier emailConfirmationNotifier;
         private SecretReader secretReader;
         private string generatedConfirmationCode;
         private bool isConfirmationCodeMatch;
@@ -30,9 +31,10 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
         /// </summary>
-        public EmailConfirmationViewModel() {
+        public EmailConfirmationViewModel(IConfirmationNotifier emailConfirmationNotifier) {
             //this.emailConfirmationRepository = emailConfirmationRepository;
             this.emailConfirmationSender = new EmailConfirmationSender();
+            this.emailConfirmationNotifier = emailConfirmationNotifier;
             this.secretReader = new SecretReader();
             //IsActive = true;
             isConfirmationCodeMatch = true;
@@ -72,7 +74,8 @@ namespace AdvancedBudgetManagerCore.view_model {
                 SendEmailConfirmationCode();
             }
 
-            WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
+            //WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
+            emailConfirmationNotifier.Notify();
 
             //if (message.HasReceivedResponse) {
             //    Task<EmailConfirmationResponse> response = message.Response;

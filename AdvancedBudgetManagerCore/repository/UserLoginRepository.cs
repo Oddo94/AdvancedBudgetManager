@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
-   /// <summary>
-   /// Repository class for managing the user login operations that require database interaction.
-   /// </summary>
-    public class UserLoginRepository : ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> {
+    /// <summary>
+    /// Repository class for managing the user login operations that require database interaction.
+    /// </summary>
+    public class UserLoginRepository : ICrudRepository<User, long> {
         private IDatabaseConnection dbConnection;
         private String sqlStatementGetAuthenticationData = @"SELECT userID, username, salt, password FROM users WHERE username = @userName";
 
@@ -23,7 +23,15 @@ namespace AdvancedBudgetManagerCore.repository {
             this.dbConnection = dbConnection;
         }
 
+        public bool Delete(long id) {
+            throw new NotImplementedException();
+        }
+
         public void DeleteById(long id) {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<User> GetAll() {
             throw new NotImplementedException();
         }
 
@@ -42,11 +50,11 @@ namespace AdvancedBudgetManagerCore.repository {
 
             DataTable authenticationData = new DataTable();
 
-            using (MySqlConnection conn = (MySqlConnection) dbConnection.GetConnection()) {
+            using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
                     MySqlCommand authenticationDataCommand = new MySqlCommand(sqlStatementGetAuthenticationData);
                     authenticationDataCommand.Parameters.AddWithValue("@userName", userName);
-                    authenticationDataCommand.Connection = conn;           
+                    authenticationDataCommand.Connection = conn;
 
                     MySqlDataAdapter dataAdapter = new MySqlDataAdapter(authenticationDataCommand);
 
@@ -69,7 +77,15 @@ namespace AdvancedBudgetManagerCore.repository {
             return authenticationData;
         }
 
+        public User Insert(User entity) {
+            throw new NotImplementedException();
+        }
+
         public long InsertData(UserInsertDto insertRequest) {
+            throw new NotImplementedException();
+        }
+
+        public User Update(User entity) {
             throw new NotImplementedException();
         }
 

@@ -2,16 +2,12 @@ using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.view_model;
-using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using MySqlX.XDevAPI.Common;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -22,15 +18,15 @@ namespace AdvancedBudgetManager.view.window {
     /// </summary>
     public sealed partial class ConfirmEmailWindow : Window, IRecipient<RequestEmailConfirmationMessage> {
         private EmailConfirmationViewModel emailConfirmationViewModel;
-        private ChangePasswordViewModelWrapper changePasswordViewModelWrapper;
-        private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
+        private SharedPropertiesViewModelWrapper changePasswordViewModelWrapper;
+        private ConfirmationCodeInputDialog confirmationCodeInputDialog;
         private ResetPasswordWindow resetPasswordWindow;
         private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
             [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
-            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,          
-            [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper,
+            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
+            [NotNull] SharedPropertiesViewModelWrapper changePasswordViewModelWrapper,
             [NotNull] ResetPasswordWindow resetPasswordWindow) {
 
             this.emailConfirmationViewModel = emailConfirmationViewModel;
@@ -45,7 +41,7 @@ namespace AdvancedBudgetManager.view.window {
                 appWindowPresenter.IsResizable = false;
             }
 
-            WeakReferenceMessenger.Default.Register<RequestEmailConfirmationMessage>(this);
+            //WeakReferenceMessenger.Default.Register<RequestEmailConfirmationMessage>(this);
             this.InitializeComponent();
         }
 
@@ -85,6 +81,7 @@ namespace AdvancedBudgetManager.view.window {
         //    return result == ContentDialogResult.Primary ? this.confirmationCodeInputDialog.
         //}
 
+        //Check if the message type is correct after testing!!
         public async void Receive(RequestEmailConfirmationMessage message) {
             confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
 
@@ -102,7 +99,7 @@ namespace AdvancedBudgetManager.view.window {
             //    }
             //}
 
-                do {
+            do {
                 if (displayResult == ContentDialogResult.Primary) {
                     EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
 
