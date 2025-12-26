@@ -7,6 +7,9 @@ using System.Data;
 //using Windows.System;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class for managing the user operations that require database interaction.
+    /// </summary>
     public class UserRepository : IUserRepository {
         private IDatabaseConnection dbConnection;
         private String sqlStatementCreateNewUser = @"INSERT INTO users(username, salt, password, email) VALUES(@userName, @salt, @hashCode, @emailAddress)";
@@ -14,10 +17,16 @@ namespace AdvancedBudgetManagerCore.repository {
         private String sqlStatementGetUserByUserName = "SELECT userID, username, salt, password, email from users where username = @userName";
         private String sqlStatementGetUserById = "SELECT userID, username, salt, password, email from users where userId = @userId";
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> with the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public UserRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inherithdoc/>
         public User GetById(long id) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -56,7 +65,8 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
-        public User GetByEmail(String emailAddress) {
+        /// <inheritdoc/>
+        public User GetByEmail(string emailAddress) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
                     MySqlCommand getUserByEmailCommand = new MySqlCommand(sqlStatementGetUserByEmail, conn);
@@ -99,7 +109,8 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
-        public User GetByUserName(String userName) {
+        /// <inheritdoc/>
+        public User GetByUserName(string userName) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
                     MySqlCommand getUserByUserNameCommand = new MySqlCommand(sqlStatementGetUserByUserName, conn);
@@ -143,6 +154,7 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public User Insert(User user) {
             long generatedUserId;
 
@@ -179,14 +191,17 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<User> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public User Update(User user) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }

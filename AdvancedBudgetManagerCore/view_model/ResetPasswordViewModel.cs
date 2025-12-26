@@ -28,7 +28,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <summary>
         /// Initializes a new instance of the <see cref="ResetPasswordViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
         /// </summary>
-        /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
+        /// <param name="userRepository">The actual repository used to reset the user password.</param>
         public ResetPasswordViewModel([NotNull] IUserRepository userRepository) {
             this.userRepository = userRepository;
             this.passwordSecurityManager = new PasswordSecurityManager();

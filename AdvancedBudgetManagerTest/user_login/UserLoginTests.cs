@@ -1,5 +1,4 @@
-﻿using AdvancedBudgetManagerCore.model.dto;
-using AdvancedBudgetManagerCore.model.entity;
+﻿using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
@@ -63,7 +62,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             Assert.ThrowsException<ArgumentException>(() => securityManager.CreatePasswordHash(String.Empty, Array.Empty<byte>()));
         }
 
-      
+
         [TestMethod]
         public void GetSalt_WithPositiveSize_ReturnsByteArrayOfSpecifiedSize() {
             int expectedSize = 256;
@@ -100,7 +99,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
             loginResponseDataTable.Rows.Add(new Object[] { userId, validUserName, saltArray, expectedHashCode });
 
-            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            ICrudRepository<User, long> userLoginRepository = Substitute.For<ICrudRepository<User, long>>();
             //userLoginRepository.GetData(Arg.Is<UserLoginDataRequest>(x => x.UserName == validUserName && x.Password.Equals(secureStringValidPassword))).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);
@@ -133,7 +132,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
             string returnedPasswordHash = String.Empty;
             loginResponseDataTable.Rows.Add(new Object[] { returnedUserId, returnedValidUserName, returnedSaltArray, returnedPasswordHash });
 
-            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> userLoginRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            ICrudRepository<User, long> userLoginRepository = Substitute.For<ICrudRepository<User, long>>();
             //userLoginRepository.GetById(Arg.Is<UserLoginDataRequest>(x => x.UserName == invalidUserName && x.Password == secureStringInvalidPassword)).Returns(loginResponseDataTable);
 
             LoginViewModel loginViewModel = new LoginViewModel(userLoginRepository);

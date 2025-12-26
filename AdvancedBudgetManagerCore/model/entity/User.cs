@@ -1,19 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.model.entity {
+#pragma warning disable CS1591
+    /// <summary>
+    /// Represents the user entity.
+    /// </summary>
     public class User {
+        /// <summary>
+        /// The user id.
+        /// </summary>
         private long? userId;
+
+        /// <summary>
+        /// The user name.
+        /// </summary>
         private String userName;
+
+        /// <summary>
+        /// The salt.
+        /// </summary>
         private byte[] salt;
+
+        /// <summary>
+        /// The passsword hash.
+        /// </summary>
         private String passwordHash;
+
+        /// <summary>
+        /// The users's email address.
+        /// </summary>
         private String emailAddress;
 
+        /// <summary>
+        /// Default no-args constructor.
+        /// </summary>
         public User() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="User"/> entity based on the provided parameters.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="salt">The salt.</param>
+        /// <param name="passwordHash">The password hash.</param>
+        /// <param name="emailAddress">The user's email address.</param>
         public User(long? userId, String userName, byte[] salt, String passwordHash, String emailAddress) {
             this.userId = userId;
             this.userName = userName;

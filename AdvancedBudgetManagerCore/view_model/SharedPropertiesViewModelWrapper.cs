@@ -19,6 +19,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <param name="emailConfirmationViewModel">The <see cref="EmailConfirmationViewModel"/> object.</param>
         /// <param name="resetPasswordViewModel">The <see cref="ResetPasswordViewModel"/> object.</param>
+        /// <param name="registerUserViewModel">The <see cref="RegisterUserViewModel"/> object.</param>
         public SharedPropertiesViewModelWrapper([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
             [NotNull] ResetPasswordViewModel resetPasswordViewModel,
             [NotNull] RegisterUserViewModel registerUserViewModel) {

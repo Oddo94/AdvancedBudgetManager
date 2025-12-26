@@ -11,6 +11,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security;
 
 namespace AdvancedBudgetManagerCore.view_model {
+    /// <summary>
+    /// Represents the view model class for the user registration window.
+    /// </summary>
     public partial class RegisterUserViewModel : ObservableObject {
         [ObservableProperty]
         private string userName;
@@ -27,12 +30,19 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private IMessenger messenger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegisterUserViewModel"/> based on the provided parameters.
+        /// </summary>
+        /// <param name="registerUserService">The user registration service.</param>
         public RegisterUserViewModel([NotNull] RegisterUserService registerUserService) {
             this.registerUserService = registerUserService;
             this.securityManager = new PasswordSecurityManager();
             this.messenger = new WeakReferenceMessenger();
         }
 
+        /// <summary>
+        /// Registers a new user based on the data sent from the UI (through the observable properties).
+        /// </summary>
         [RelayCommand]
         public void RegisterUser() {
             string registerUserResultMessage = string.Empty;
@@ -59,6 +69,10 @@ namespace AdvancedBudgetManagerCore.view_model {
             WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, registerUserResultMessage));
         }
 
+        /// <summary>
+        /// Validates the provided user data.
+        /// </summary>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
         [RelayCommand]
         public void ValidateUserData() {
             bool isValidUserData = IsValidUserData(this.UserName, this.EmailAddress);
@@ -68,7 +82,12 @@ namespace AdvancedBudgetManagerCore.view_model {
             }
         }
 
-
+        /// <summary>
+        /// Checks if the specified user data is valid.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        /// <param name="emailAddress">The user's email address.</param>
+        /// <returns></returns>
         private bool IsValidUserData(string userName, string emailAddress) {
             bool isValidUserData = true;
             bool userExists = false;
@@ -81,7 +100,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 if (userExists || isEmailUsed) {
                     isValidUserData = false;
                 }
-            } catch (SystemException ex) {
+            } catch (SystemException) {
                 throw;
             }
 

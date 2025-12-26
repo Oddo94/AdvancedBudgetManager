@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdvancedBudgetManagerCore.model.request {
+﻿namespace AdvancedBudgetManagerCore.model.request {
     public interface IDataInsertRequest {
 
     }

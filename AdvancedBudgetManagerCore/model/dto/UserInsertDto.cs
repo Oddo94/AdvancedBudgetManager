@@ -1,19 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.model.dto {
+#pragma warning disable CS1591
+    /// <summary>
+    /// Represents the data transfer object used for sending the information related to user insertion.
+    /// </summary>
     public class UserInsertDto {
+        /// <summary>
+        /// The user name.
+        /// </summary>
         private String userName;
-        //private byte[] salt;
+
+        /// <summary>
+        /// The password.
+        /// </summary>
         private SecureString password;
+
+        /// <summary>
+        /// The users's email address.
+        /// </summary>
         private String emailAddress;
 
+        /// <summary>
+        /// Default no-args constructor
+        /// </summary>
         public UserInsertDto() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserInsertDto"/> based on the provided parameters.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="emailAddress">The users's email address.</param>
         public UserInsertDto(String userName, SecureString password, String emailAddress) {
             this.userName = userName;
             //this.salt = salt;
@@ -26,12 +45,8 @@ namespace AdvancedBudgetManagerCore.model.dto {
             set { this.userName = value; }
         }
 
-        //public byte[] Salt {
-        //    get { return this.salt; }
-        //    set { this.salt = value; }
-        //}
 
-        public SecureString Password{
+        public SecureString Password {
             get { return this.password; }
             set { this.password = value; }
         }
@@ -41,5 +56,5 @@ namespace AdvancedBudgetManagerCore.model.dto {
             set { this.emailAddress = value; }
         }
     }
-   
+
 }

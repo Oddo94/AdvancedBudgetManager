@@ -1,15 +1,42 @@
 ﻿using System;
 
 namespace AdvancedBudgetManagerCore.model.dto {
+#pragma warning disable CS1591
+    /// <summary>
+    /// Represents the data transfer object used for sending the information related to user update.
+    /// </summary>
     public class UserUpdateDto {
+        /// <summary>
+        /// The user id.
+        /// </summary>
         private long userId;
+
+        /// <summary>
+        /// The user name.
+        /// </summary>
         private String userName;
+
         private byte[] salt;
         private String passwordHash;
+
+        /// <summary>
+        /// The users's email address.
+        /// </summary>
         private String emailAddress;
 
+        /// <summary>
+        /// Default no-args constructor.
+        /// </summary>
         public UserUpdateDto() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserUpdateDto"/> based on the provided parameters.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="salt">The <see cref="byte"/> array containing the salt.</param>
+        /// <param name="passwordHash">The password hash.</param>
+        /// <param name="emailAddress">The user's email address.</param>
         public UserUpdateDto(long userId, String userName, byte[] salt, String passwordHash, String emailAddress) {
             this.userId = userId;
             this.userName = userName;

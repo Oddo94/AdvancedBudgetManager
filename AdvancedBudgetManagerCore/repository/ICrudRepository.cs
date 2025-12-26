@@ -31,7 +31,7 @@ namespace AdvancedBudgetManagerCore.repository {
         /// <summary>
         /// Updates the specified entity from the database.
         /// </summary>
-        /// <param name="updateRequest">The entity that needs to be updated.</param>
+        /// <param name="entity">The entity that needs to be updated.</param>
         public TEntity Update(TEntity entity);
 
         /// <summary>

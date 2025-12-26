@@ -1,6 +1,4 @@
-﻿using AdvancedBudgetManagerCore.model.dto;
-using AdvancedBudgetManagerCore.model.entity;
-using AdvancedBudgetManagerCore.model.message;
+﻿using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.request;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.view_model;
@@ -24,7 +22,7 @@ namespace AdvancedBudgetManagerCoreTest.password_reset {
         [TestMethod]
         public void ResetPassword_WhenException_SendFailureMessage() {
             IDataUpdateRequest resetPasswordRequest = Substitute.For<IDataUpdateRequest>();
-            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> resetPasswordRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            IUserRepository resetPasswordRepository = Substitute.For<IUserRepository>();
             string expectedMessage = "Failed to reset your password. Please try again!";
 
             //Argument matchers are required so that the exception will be thrown regardless of the IDataUpdateRequest instance passed to the UpdateData method
@@ -45,7 +43,7 @@ namespace AdvancedBudgetManagerCoreTest.password_reset {
         [TestMethod]
         public void ResetPassword_WhenSuccessfulReset_SendSuccessMessage() {
             IDataUpdateRequest resetPasswordRequest = Substitute.For<IDataUpdateRequest>();
-            ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long> resetPasswordRepository = Substitute.For<ICrudRepository<UserInsertDto, UserReadDto, UserUpdateDto, User, long>>();
+            IUserRepository resetPasswordRepository = Substitute.For<IUserRepository>();
             string expectedMessage = "Your password was successfully reset!";
 
             //resetPasswordRepository
