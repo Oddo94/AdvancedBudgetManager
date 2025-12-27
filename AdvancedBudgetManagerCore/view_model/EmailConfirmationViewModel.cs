@@ -51,6 +51,7 @@ namespace AdvancedBudgetManagerCore.view_model {
             EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
 
             string emailSubject = "BudgetManager-password reset";
+            //INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
             string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
             int confirmationCodeSize = 32;
             generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);

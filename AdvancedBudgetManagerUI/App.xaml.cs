@@ -96,8 +96,8 @@ namespace AdvancedBudgetManager {
                 //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<LoginViewModel>()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository<User, long>),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository<User, long>>("UserLoginRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(LoginUserService),
+                               (pi, ctx) => ctx.ResolveKeyed<LoginUserService>("LoginUserService")
                 );
 
                 container.RegisterType<SharedPropertiesViewModelWrapper>();
@@ -129,6 +129,12 @@ namespace AdvancedBudgetManager {
 
 
                 //Services
+                container.RegisterType<LoginUserService>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                    (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                .Keyed<LoginUserService>("LoginUserService");
+
                 container.RegisterType<RegisterUserService>()
                          .WithParameter(
                                  (pi, ctx) => pi.ParameterType == typeof(IUserRepository),

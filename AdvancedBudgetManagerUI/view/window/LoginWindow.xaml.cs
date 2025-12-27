@@ -49,10 +49,10 @@ namespace AdvancedBudgetManager.view.window {
             ContentDialog loginErrorDialog;
 
             try {
-                loginViewModel.CheckCredentials();
+                loginViewModel.LoginUser();
                 PasswordBox.Password = String.Empty;
 
-                LoginResponse loginResponse = loginViewModel.LoginResponse;
+                LoginResponse loginResponse = loginViewModel.loginResponse;
                 //LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!
                 if (loginResponse.ResultCode == ResultCode.OK) {
                     this.Close();
