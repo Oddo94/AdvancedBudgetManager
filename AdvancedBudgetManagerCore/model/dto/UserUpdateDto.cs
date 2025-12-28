@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace AdvancedBudgetManagerCore.model.dto {
 #pragma warning disable CS1591
@@ -9,15 +10,22 @@ namespace AdvancedBudgetManagerCore.model.dto {
         /// <summary>
         /// The user id.
         /// </summary>
-        private long userId;
+        private long? userId;
 
         /// <summary>
         /// The user name.
         /// </summary>
         private String userName;
 
+        /// <summary>
+        /// The salt byte array.
+        /// </summary>
         private byte[] salt;
-        private String passwordHash;
+
+        /// <summary>
+        /// The password.
+        /// </summary>
+        private SecureString password;
 
         /// <summary>
         /// The users's email address.
@@ -37,15 +45,15 @@ namespace AdvancedBudgetManagerCore.model.dto {
         /// <param name="salt">The <see cref="byte"/> array containing the salt.</param>
         /// <param name="passwordHash">The password hash.</param>
         /// <param name="emailAddress">The user's email address.</param>
-        public UserUpdateDto(long userId, String userName, byte[] salt, String passwordHash, String emailAddress) {
+        public UserUpdateDto(long? userId, String userName, byte[] salt, SecureString password, String emailAddress) {
             this.userId = userId;
             this.userName = userName;
             this.salt = salt;
-            this.passwordHash = passwordHash;
+            this.password = password;
             this.emailAddress = emailAddress;
         }
 
-        public long UserId {
+        public long? UserId {
             get { return this.userId; }
             set { this.userId = value; }
         }
@@ -60,9 +68,9 @@ namespace AdvancedBudgetManagerCore.model.dto {
             set { this.salt = value; }
         }
 
-        public String PasswordHash {
-            get { return this.passwordHash; }
-            set { this.passwordHash = value; }
+        public SecureString Password {
+            get { return this.password; }
+            set { this.password = value; }
         }
 
         public String EmailAddress {

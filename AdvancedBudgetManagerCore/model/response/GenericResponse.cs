@@ -1,34 +1,33 @@
 ﻿using AdvancedBudgetManagerCore.utils.enums;
-using System;
 
 namespace AdvancedBudgetManagerCore.model.response {
     /// <summary>
     /// Represents the object that contains the result of the login process.
     /// </summary>
-    public class LoginResponse {
+    public class GenericResponse {
         private ResultCode resultCode;
         private string responseMessage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoginResponse"/> class with no arguments.
+        /// Initializes a new instance of the <see cref="GenericResponse"/> class with no arguments.
         /// </summary>
-        public LoginResponse() {
+        public GenericResponse() {
             resultCode = ResultCode.UNDEFINED;
             responseMessage = string.Empty;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoginResponse"/> class based on a <see cref="ResultCode"/> and <see cref="string"/> response message.
+        /// Initializes a new instance of the <see cref="GenericResponse"/> class based on a <see cref="ResultCode"/> and <see cref="string"/> response message.
         /// </summary>
         /// <param name="resultCode">The result code of the login operation.</param>
         /// <param name="responseMessage">The response message of the login operation.</param>
-        public LoginResponse(ResultCode resultCode, string responseMessage) {
+        public GenericResponse(ResultCode resultCode, string responseMessage) {
             this.resultCode = resultCode;
             this.responseMessage = responseMessage;
         }
 
         /// <summary>
-        /// Sets/retrieves the result code of the <see cref="LoginResponse"/>.
+        /// Sets/retrieves the result code of the <see cref="GenericResponse"/>.
         /// </summary>
         public ResultCode ResultCode {
             get { return resultCode; }
@@ -36,7 +35,7 @@ namespace AdvancedBudgetManagerCore.model.response {
         }
 
         /// <summary>
-        /// Sets/retrieves the response message of the <see cref="LoginResponse"/>.
+        /// Sets/retrieves the response message of the <see cref="GenericResponse"/>.
         /// </summary>
         public string ResponseMessage {
             get { return responseMessage; }

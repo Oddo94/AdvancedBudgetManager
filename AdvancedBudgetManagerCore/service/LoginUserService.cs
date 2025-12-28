@@ -26,7 +26,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <summary>
         /// The object that contains user credentials check result.
         /// </summary>
-        private LoginResponse loginResponse;
+        private GenericResponse loginResponse;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginUserService"/> based on the provided user repository.
@@ -43,7 +43,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <param name = "userReadDto">The DTO that contains the login credentials.</param>
         /// <returns>A <see cref="LoginResponse"/> object containing the result of the user credentials check.</returns>
         /// <exception cref="SystemException"></exception>
-        public LoginResponse CheckCredentials([NotNull] UserReadDto userReadDto) {
+        public GenericResponse CheckCredentials([NotNull] UserReadDto userReadDto) {
             if (userReadDto == null) {
                 throw new ArgumentException("The searched user cannot be null!");
             }
@@ -58,9 +58,9 @@ namespace AdvancedBudgetManagerCore.service {
             ////Checks that the user exists and his credentials are correct
             if (user != null && HasValidCredentials(userReadDto, user)) {
                 //Sets the login response to success
-                loginResponse = new LoginResponse(ResultCode.OK, String.Empty);
+                loginResponse = new GenericResponse(ResultCode.OK, String.Empty);
             } else {
-                loginResponse = new LoginResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
+                loginResponse = new GenericResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
             }
 
             return loginResponse;
@@ -101,7 +101,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <summary>
         /// Sets the <see cref="LoginResponse"/> of the <see cref="LoginViewModel"/>.
         /// </summary>
-        public LoginResponse LoginResponse {
+        public GenericResponse LoginResponse {
             get { return this.loginResponse; }
             set { this.loginResponse = value; }
         }

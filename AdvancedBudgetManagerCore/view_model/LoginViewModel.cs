@@ -21,7 +21,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <summary>
         /// The object that contains user credentials check result.
         /// </summary>
-        public LoginResponse loginResponse;
+        public GenericResponse loginResponse;
 
         /// <summary>
         /// The service that provides the user login operations.
@@ -33,7 +33,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <param name="loginUserService">The actual repository used to retrieve the user login details.</param>
         public LoginViewModel([NotNull] LoginUserService loginUserService) {
-            this.loginResponse = new LoginResponse();
+            this.loginResponse = new GenericResponse();
             this.loginUserService = loginUserService;
         }
 
@@ -54,7 +54,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 this.loginResponse = loginUserService.CheckCredentials(userReadDto);
 
             } catch (SystemException ex) {
-                this.loginResponse = new LoginResponse(utils.enums.ResultCode.ERROR, $"Failed to login user! Reason: {ex.Message}");
+                this.loginResponse = new GenericResponse(utils.enums.ResultCode.ERROR, $"Failed to login user! Reason: {ex.Message}");
             }
         }
     }

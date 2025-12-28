@@ -93,7 +93,6 @@ namespace AdvancedBudgetManager {
                          .SingleInstance();
 
                 //ViewModels
-                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<LoginViewModel>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(LoginUserService),
@@ -102,21 +101,20 @@ namespace AdvancedBudgetManager {
 
                 container.RegisterType<SharedPropertiesViewModelWrapper>();
 
-                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
-                container.RegisterType<ResetPasswordViewModel>()
-                         .SingleInstance()
-                         .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
-                               (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("ResetPasswordRepo")
-
-                );
-
                 container.RegisterType<RegisterUserViewModel>()
                          .SingleInstance()
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
                                 (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserService")
                     );
+
+                container.RegisterType<ResetPasswordViewModel>()
+                     .SingleInstance()
+                     .WithParameter(
+                           (pi, ctx) => pi.ParameterType == typeof(ResetPasswordService),
+                           (pi, ctx) => ctx.ResolveKeyed<ResetPasswordService>("ResetPasswordService")
+
+            );
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -140,6 +138,13 @@ namespace AdvancedBudgetManager {
                                  (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
                                  (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
                          .Keyed<RegisterUserService>("RegisterUserService");
+
+                container.RegisterType<ResetPasswordService>()
+                        .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                                (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                        .Keyed<ResetPasswordService>("ResetPasswordService");
+
 
 
                 //Repositories

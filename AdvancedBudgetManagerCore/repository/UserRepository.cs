@@ -15,7 +15,7 @@ namespace AdvancedBudgetManagerCore.repository {
         private String sqlStatementGetUserByEmail = "SELECT userID, username, salt, password, email from users where email = @emailAddress";
         private String sqlStatementGetUserByUserName = "SELECT userID, username, salt, password, email from users where username = @userName";
         private String sqlStatementGetUserById = "SELECT userID, username, salt, password, email from users where userId = @userId";
-
+        private String sqlStatementUpdateUser = "UPDATE users SET username = @userName, salt = @salt, password = @hashCode, email = @emailAddress WHERE userID = @userId";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> with the provided database connection.
@@ -197,7 +197,36 @@ namespace AdvancedBudgetManagerCore.repository {
 
         /// <inheritdoc/>
         public User Update(User user) {
-            throw new NotImplementedException();
+            try {
+                using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
+                    MySqlCommand updateUserCommand = new MySqlCommand(sqlStatementUpdateUser);
+                    updateUserCommand.Parameters.AddWithValue("@userName", user.UserName);
+                    updateUserCommand.Parameters.AddWithValue("@salt", user.Salt);
+                    updateUserCommand.Parameters.AddWithValue("@hashCode", user.PasswordHash);
+                    updateUserCommand.Parameters.AddWithValue("@emailAddress", user.EmailAddress);
+                    updateUserCommand.Parameters.AddWithValue("@userId", user.UserId);
+
+                    updateUserCommand.Connection = conn;
+                    conn.Open();
+
+                    updateUserCommand.ExecuteNonQuery();
+
+                    User updatedUser = GetById(user.UserId.GetValueOrDefault());
+
+                    return updatedUser;
+                }
+            } catch (MySqlException ex) {
+                int errorCode = ex.ErrorCode;
+                String message;
+
+                if (errorCode == 1042) {
+                    message = "Unable to connect to the database! Please check the connection and try again.";
+                } else {
+                    message = "An error occurred during password reset! Please try again.";
+                }
+
+                throw new SystemException(message);
+            }
         }
 
         /// <inheritdoc/>

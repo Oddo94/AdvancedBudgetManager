@@ -52,7 +52,7 @@ namespace AdvancedBudgetManager.view.window {
                 loginViewModel.LoginUser();
                 PasswordBox.Password = String.Empty;
 
-                LoginResponse loginResponse = loginViewModel.loginResponse;
+                GenericResponse loginResponse = loginViewModel.loginResponse;
                 if (loginResponse.ResultCode == ResultCode.OK) {
                     this.Close();
                     userDashboard.Activate();
