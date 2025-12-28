@@ -14,7 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManager.view.window {
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// The user login window.
     /// </summary>
     public sealed partial class LoginWindow : Window {
         private LoginViewModel loginViewModel;
@@ -53,7 +53,6 @@ namespace AdvancedBudgetManager.view.window {
                 PasswordBox.Password = String.Empty;
 
                 LoginResponse loginResponse = loginViewModel.loginResponse;
-                //LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!
                 if (loginResponse.ResultCode == ResultCode.OK) {
                     this.Close();
                     userDashboard.Activate();
@@ -76,13 +75,11 @@ namespace AdvancedBudgetManager.view.window {
                     XamlRoot = this.Content.XamlRoot
                 };
 
-                //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                 await loginErrorDialog.ShowAsync();
             }
         }
 
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
-            //ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
             confirmEmailWindow.Activate();
         }
 

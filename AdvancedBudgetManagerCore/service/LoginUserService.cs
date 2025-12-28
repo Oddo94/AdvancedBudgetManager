@@ -6,10 +6,12 @@ using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
 using System;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service {
+    /// <summary>
+    /// Service class used for performing the repository related operations required during the user login process.
+    /// </summary>
     public class LoginUserService {
         /// <summary>
         /// The user repository
@@ -21,9 +23,15 @@ namespace AdvancedBudgetManagerCore.service {
         /// </summary>
         private PasswordSecurityManager securityManager;
 
+        /// <summary>
+        /// The object that contains user credentials check result.
+        /// </summary>
         private LoginResponse loginResponse;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginUserService"/> based on the provided user repository.
+        /// </summary>
+        /// <param name="userRepository">The repository used for retrieving user details</param>
         public LoginUserService(IUserRepository userRepository) {
             this.userRepository = userRepository;
             this.securityManager = new PasswordSecurityManager();
@@ -32,6 +40,8 @@ namespace AdvancedBudgetManagerCore.service {
         /// <summary>
         /// Checks the user supplied credentials to see if they match the ones stored in the database
         /// </summary>
+        /// <param name = "userReadDto">The DTO that contains the login credentials.</param>
+        /// <returns>A <see cref="LoginResponse"/> object containing the result of the user credentials check.</returns>
         /// <exception cref="SystemException"></exception>
         public LoginResponse CheckCredentials([NotNull] UserReadDto userReadDto) {
             if (userReadDto == null) {
@@ -44,8 +54,6 @@ namespace AdvancedBudgetManagerCore.service {
             } catch (SystemException ex) {
                 throw new SystemException(ex.Message);
             }
-
-            //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!!
 
             ////Checks that the user exists and his credentials are correct
             if (user != null && HasValidCredentials(userReadDto, user)) {
@@ -61,8 +69,8 @@ namespace AdvancedBudgetManagerCore.service {
         /// <summary>
         /// Checks if the user supplied credentials match the ones stored in the database.
         /// </summary>
-        /// <param name="inputDataTable">The <see cref="DataTable"/> that contains the login credentials.</param>
-        /// <param name="userInputPassword">The user supplied password as <see cref="string"/>.</param>
+        /// <param name="providedUser">The <see cref="UserReadDto"/> that contains the login credentials.</param>
+        /// <param name="actualUser">The <see cref="User"/> entity retrieved from the database.</param>
         /// <returns cref="bool"></returns>
         private bool HasValidCredentials([NotNull] UserReadDto providedUser, User actualUser) {
             if (providedUser != null && actualUser != null) {
@@ -83,7 +91,6 @@ namespace AdvancedBudgetManagerCore.service {
                 actualHashBytes = null;
 
                 //Checks if the two hashcodes are identical
-                //return storedHash.Equals(actualHash);
                 return isMatch;
             }
 

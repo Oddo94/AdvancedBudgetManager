@@ -18,14 +18,20 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private SecureString password;
 
+        /// <summary>
+        /// The object that contains user credentials check result.
+        /// </summary>
         public LoginResponse loginResponse;
 
+        /// <summary>
+        /// The service that provides the user login operations.
+        /// </summary>
         private LoginUserService loginUserService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
+        /// Initializes a new instance of the <see cref="LoginViewModel"/> based on the provided <see cref="LoginUserService"/>.
         /// </summary>
-        /// <param name="userLoginRepository">The actual repository used to retrieve the user login details.</param>
+        /// <param name="loginUserService">The actual repository used to retrieve the user login details.</param>
         public LoginViewModel([NotNull] LoginUserService loginUserService) {
             this.loginResponse = new LoginResponse();
             this.loginUserService = loginUserService;
@@ -36,6 +42,9 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         public LoginViewModel() { }
 
+        /// <summary>
+        /// Logs in a new user based on the provided credentials.
+        /// </summary>
         [RelayCommand]
         public void LoginUser() {
             string loginUserResultMessage = string.Empty;

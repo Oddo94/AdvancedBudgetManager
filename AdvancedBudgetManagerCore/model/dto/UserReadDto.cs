@@ -22,22 +22,16 @@ namespace AdvancedBudgetManagerCore.model.dto {
         /// Initializes a new instance of the see <see cref="UserReadDto"/> based on the provided parameters.
         /// </summary>
         /// <param name="userName">The user name.</param>
-        ///// <param name="emailAddress">The user's email address.</param>
+        /// <param name="password">The user's password.</param>
         public UserReadDto(string userName, SecureString password) {
             this.userName = userName;
             this.password = password;
-            //this.emailAddress = emailAddress;
         }
 
         public string UserName {
             get { return this.userName; }
             set { this.userName = value; }
         }
-
-        //public string EmailAddress {
-        //    get { return this.emailAddress; }
-        //    set { this.emailAddress = value; }
-        //}
 
         public SecureString Password {
             get { return this.password; }

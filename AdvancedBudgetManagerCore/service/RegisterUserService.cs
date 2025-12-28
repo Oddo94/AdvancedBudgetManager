@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service {
     /// <summary>
-    /// Service class used for performing the repository related operations needed during the user registration process.
+    /// Service class used for performing the repository related operations required during the user registration process.
     /// </summary>
     public class RegisterUserService {
         /// <summary>
