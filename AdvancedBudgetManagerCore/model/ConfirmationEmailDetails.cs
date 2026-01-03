@@ -1,5 +1,5 @@
 ﻿namespace AdvancedBudgetManagerCore.model {
-    #pragma warning disable CS1591
+#pragma warning disable CS1591
     /// <summary>
     /// Represents the object that is used to store the confirmation email details.
     /// </summary>
@@ -7,7 +7,7 @@
         private string recipientEmailAddress;
         private string emailSubject;
         private string emailBody;
-        private string confirmationCode;
+        //private string confirmationCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfirmationEmailDetails"/> based on the recipient email address, email subject, email body and confirmation code>
@@ -15,12 +15,12 @@
         /// <param name="recipientEmailAddress">The email address of the recipient</param>
         /// <param name="emailSubject">The email subject</param>
         /// <param name="emailBody">The email body</param>
-        /// <param name="confirmationCode">The confirmation code</param>
-        public ConfirmationEmailDetails(string recipientEmailAddress, string emailSubject, string emailBody, string confirmationCode) {
+        ///// <param name="confirmationCode">The confirmation code</param>
+        public ConfirmationEmailDetails(string recipientEmailAddress, string emailSubject, string emailBody) {
             this.recipientEmailAddress = recipientEmailAddress;
             this.emailSubject = emailSubject;
             this.emailBody = emailBody;
-            this.confirmationCode = confirmationCode;
+            //this.confirmationCode = confirmationCode;
         }
 
         public string RecipientEmailAddress {
@@ -38,9 +38,9 @@
             set { this.emailBody = value; }
         }
 
-        public string ConfirmationCode {
-            get { return this.confirmationCode; }
-            set { this.confirmationCode = value; }
-        }
+        //public string ConfirmationCode {
+        //    get { return this.confirmationCode; }
+        //    set { this.confirmationCode = value; }
+        //}
     }
 }

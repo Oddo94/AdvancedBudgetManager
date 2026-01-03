@@ -16,23 +16,27 @@ namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ConfirmEmailWindow : Window, IRecipient<RequestEmailConfirmationMessage> {
-        private EmailConfirmationViewModel emailConfirmationViewModel;
+    public sealed partial class ConfirmEmailWindow : Window, IRecipient<RequestPasswordResetEmailConfirmationMessage> {
         private SharedPropertiesViewModelWrapper changePasswordViewModelWrapper;
+        private EmailConfirmationViewModel emailConfirmationViewModel;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;
         private ResetPasswordWindow resetPasswordWindow;
         private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
-            [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
+            //[NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
             [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
             [NotNull] SharedPropertiesViewModelWrapper changePasswordViewModelWrapper,
             [NotNull] ResetPasswordWindow resetPasswordWindow) {
 
-            this.emailConfirmationViewModel = emailConfirmationViewModel;
+            //this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
             this.resetPasswordWindow = resetPasswordWindow;
+
+            //TEST CHANGE!!
+            emailConfirmationViewModel = this.changePasswordViewModelWrapper.PasswordResetEmailConfirmationVM;
+
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -82,7 +86,33 @@ namespace AdvancedBudgetManager.view.window {
         //}
 
         //Check if the message type is correct after testing!!
-        public async void Receive(RequestEmailConfirmationMessage message) {
+        //public async void Receive(RequestPasswordResetEmailConfirmationMessage message) {
+        //    confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
+
+        //    ContentDialogResult displayResult = await confirmationCodeInputDialog.ShowAsync();
+        //    do {
+        //        if (displayResult == ContentDialogResult.Primary) {
+        //            EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
+
+        //            WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse));
+
+        //            if (!emailConfirmationViewModel.IsConfirmationCodeMatch) {
+        //                confirmationCodeInputDialog.ShowErrorTipOnLoad = true;
+
+        //                displayResult = await confirmationCodeInputDialog.ShowAsync();
+        //            } else {
+        //                emailConfirmationViewModel.IsConfirmationCodeMatch = true;
+        //                resetPasswordWindow.Activate();
+
+        //                this.Close();
+        //            }
+        //        }
+        //    } while (!emailConfirmationViewModel.IsConfirmationCodeMatch);
+
+        //    message.Reply(true);
+        //}
+
+        public async void Receive(RequestPasswordResetEmailConfirmationMessage message) {
             confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
 
             ContentDialogResult displayResult = await confirmationCodeInputDialog.ShowAsync();
@@ -111,6 +141,8 @@ namespace AdvancedBudgetManager.view.window {
                         displayResult = await confirmationCodeInputDialog.ShowAsync();
                     } else {
                         emailConfirmationViewModel.IsConfirmationCodeMatch = true;
+
+                        //TO DO-check for an alternative approach to injecting the reset password window
                         resetPasswordWindow.Activate();
 
                         this.Close();

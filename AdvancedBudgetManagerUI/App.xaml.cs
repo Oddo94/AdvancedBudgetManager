@@ -68,21 +68,29 @@ namespace AdvancedBudgetManager {
 
             builder.ConfigureContainer<ContainerBuilder>(container => {
                 //Single instances
+                //1.Notifiers
                 container.RegisterType<UserRegistrationEmailConfirmationNotifier>()
                        .SingleInstance()
                        .Keyed<IConfirmationNotifier>("UserRegistrationNotifier");
 
+                container.RegisterType<PasswordResetEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("PasswordResetNotifier");
+
                 //Windows
-                container.RegisterType<LoginWindow>()
-                         .SingleInstance();
-                container.RegisterType<UserDashboard>()
-                         .SingleInstance();
+                container.RegisterType<LoginWindow>();
+
+                container.RegisterType<UserDashboard>();
+
                 container.RegisterType<ConfirmEmailWindow>()
-                         .SingleInstance();
-                container.RegisterType<ResetPasswordWindow>()
-                         .SingleInstance();
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
+                            (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM")
+                          );
+
+                container.RegisterType<ResetPasswordWindow>();
+
                 container.RegisterType<RegisterUserWindow>()
-                         .SingleInstance()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
                                (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM")
@@ -99,7 +107,16 @@ namespace AdvancedBudgetManager {
                                (pi, ctx) => ctx.ResolveKeyed<LoginUserService>("LoginUserService")
                 );
 
-                container.RegisterType<SharedPropertiesViewModelWrapper>();
+                /*Since the constructor of SharedPropertiesViewModelWrapper needs two EmailConfirmationViewModel the way in which they
+                they are injected will be determined by their parameter name*/
+                container.RegisterType<SharedPropertiesViewModelWrapper>()
+                        .WithParameter(
+                               (pi, ctx) => pi.Name == "userRegistrationEmailConfirmationVM",
+                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM"))
+                        .WithParameter(
+                              (pi, ctx) => pi.Name == "passwordResetEmailConfirmationVM",
+                              (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM")
+                 );
 
                 container.RegisterType<RegisterUserViewModel>()
                          .SingleInstance()
@@ -117,13 +134,24 @@ namespace AdvancedBudgetManager {
             );
 
                 //Registers object with default constructor
+                //CHECK IF AN ADDITIONAL EmailConfirmationViewModel INSTANCE NEEDS TO BE CREATED (for password reset confirmation emails)!!!
                 container.RegisterType<EmailConfirmationViewModel>()
-                         .AsSelf()
-                         .SingleInstance()
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
                                 (pi, ctx) => ctx.ResolveKeyed<IConfirmationNotifier>("UserRegistrationNotifier"))
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(EmailService),
+                                (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
                          .Keyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM");
+
+                container.RegisterType<EmailConfirmationViewModel>()
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
+                                (pi, ctx) => ctx.ResolveKeyed<IConfirmationNotifier>("PasswordResetNotifier"))
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(EmailService),
+                                (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
+                         .Keyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM");
 
 
                 //Services
@@ -145,7 +173,10 @@ namespace AdvancedBudgetManager {
                                 (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
                         .Keyed<ResetPasswordService>("ResetPasswordService");
 
-
+                container.RegisterType<EmailService>()
+                         .AsSelf()
+                         .SingleInstance()
+                         .Keyed<EmailService>("EmailService");
 
                 //Repositories
                 //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!

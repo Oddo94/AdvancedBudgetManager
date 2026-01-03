@@ -7,7 +7,8 @@ namespace AdvancedBudgetManagerCore.view_model {
     ///  Once the email address is inserted in the UI the shared property is updated and, as a result, both models with also be updated accordingly.
     /// </summary>
     public partial class SharedPropertiesViewModelWrapper : ObservableObject {
-        private EmailConfirmationViewModel emailConfirmationViewModel;
+        private EmailConfirmationViewModel userRegistrationEmailConfirmationVM;
+        private EmailConfirmationViewModel passwordResetEmailConfirmationVM;
         private ResetPasswordViewModel resetPasswordViewModel;
         private RegisterUserViewModel registerUserViewModel;
 
@@ -20,10 +21,12 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <param name="emailConfirmationViewModel">The <see cref="EmailConfirmationViewModel"/> object.</param>
         /// <param name="resetPasswordViewModel">The <see cref="ResetPasswordViewModel"/> object.</param>
         /// <param name="registerUserViewModel">The <see cref="RegisterUserViewModel"/> object.</param>
-        public SharedPropertiesViewModelWrapper([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
+        public SharedPropertiesViewModelWrapper([NotNull] EmailConfirmationViewModel userRegistrationEmailConfirmationVM,
+            [NotNull] EmailConfirmationViewModel passwordResetEmailConfirmationVM,
             [NotNull] ResetPasswordViewModel resetPasswordViewModel,
             [NotNull] RegisterUserViewModel registerUserViewModel) {
-            this.emailConfirmationViewModel = emailConfirmationViewModel;
+            this.userRegistrationEmailConfirmationVM = userRegistrationEmailConfirmationVM;
+            this.passwordResetEmailConfirmationVM = passwordResetEmailConfirmationVM;
             this.resetPasswordViewModel = resetPasswordViewModel;
             this.registerUserViewModel = registerUserViewModel;
         }
@@ -33,10 +36,22 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <param name="value">The user email.</param>
         partial void OnEmailAddressChanged(string value) {
-            //Sets the user email address value to both view models
-            this.emailConfirmationViewModel.EmailAddress = value;
+            //Sets the user email address value to all the provided view models who share this property
+            this.userRegistrationEmailConfirmationVM.EmailAddress = value;
+            this.passwordResetEmailConfirmationVM.EmailAddress = value;
+            this.passwordResetEmailConfirmationVM.TestMessage = "This is the updated value";
             this.resetPasswordViewModel.EmailAddress = value;
             this.registerUserViewModel.EmailAddress = value;
+        }
+
+        public EmailConfirmationViewModel PasswordResetEmailConfirmationVM {
+            get { return this.passwordResetEmailConfirmationVM; }
+            set { this.passwordResetEmailConfirmationVM = value; }
+        }
+
+        public EmailConfirmationViewModel UserRegistrationEmailConfirmationVM {
+            get { return this.userRegistrationEmailConfirmationVM; }
+            set { this.userRegistrationEmailConfirmationVM = value; }
         }
     }
 }

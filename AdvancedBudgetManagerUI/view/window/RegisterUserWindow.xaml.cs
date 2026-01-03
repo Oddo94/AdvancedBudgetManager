@@ -2,6 +2,7 @@ using AdvancedBudgetManager.utils;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.exception;
 using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
@@ -21,20 +22,20 @@ namespace AdvancedBudgetManager.view.window {
     /// </summary>
     public sealed partial class RegisterUserWindow : Window, IRecipient<RequestUserRegistrationEmailConfirmationMessage> {
         private RegisterUserViewModel registerUserViewModel;
-        private EmailConfirmationViewModel emailConfirmationViewModel;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;
         private SharedPropertiesViewModelWrapper sharedPropertiesViewModelWrapper;
+        private EmailConfirmationViewModel emailConfirmationViewModel;
         private InputDataValidator inputValidator;
 
-        public RegisterUserWindow([NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
+        public RegisterUserWindow(
             [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
             [NotNull] RegisterUserViewModel registerUserViewModel,
             [NotNull] SharedPropertiesViewModelWrapper sharedPropertiesViewModelWrapper) {
 
             this.registerUserViewModel = registerUserViewModel;
-            this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.sharedPropertiesViewModelWrapper = sharedPropertiesViewModelWrapper;
+            this.emailConfirmationViewModel = sharedPropertiesViewModelWrapper.UserRegistrationEmailConfirmationVM;
             this.inputValidator = new InputDataValidator();
 
             AppWindow appWindow = this.AppWindow;
@@ -86,7 +87,7 @@ namespace AdvancedBudgetManager.view.window {
 
                 //Send the confirmation code to the specified email address for confirming the identity of the new user
                 //confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
-                emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(null);
+                emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(EmailPurpose.REGISTER_USER_EMAIL);
             } catch (AdvancedBudgetManagerException ex) {
                 registerUserErrorDialog.Content = ex.Message;
                 await registerUserErrorDialog.ShowAsync();
@@ -131,6 +132,12 @@ namespace AdvancedBudgetManager.view.window {
             };
 
             await registerUserContentDialog.ShowAsync();
+
+            //Closes the window if the user creation was succesfull
+            if (emailConfirmationViewModel.IsConfirmationCodeMatch) {
+                this.Close();
+            }
+
 
             //message.Reply(true);
         }

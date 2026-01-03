@@ -1,6 +1,7 @@
-﻿using AdvancedBudgetManagerCore.model;
-using AdvancedBudgetManagerCore.model.message;
+﻿using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.service;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,6 +16,7 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// Represents the view model for the email confirmation dialog.
     /// </summary>
     public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
+        //THIS PROPERTY IS NOT UPDATED DURING THE PASSWORD RESET PROCESS!!
         [ObservableProperty]
         private string emailAddress;
 
@@ -22,57 +24,102 @@ namespace AdvancedBudgetManagerCore.view_model {
         //private string inputConfirmationCode;
 
         //private ICrudRepository emailConfirmationRepository;
+        private EmailService emailService;
         private EmailConfirmationSender emailConfirmationSender;
         private IConfirmationNotifier emailConfirmationNotifier;
         private SecretReader secretReader;
-        private string generatedConfirmationCode;
         private bool isConfirmationCodeMatch;
+        private string testMessage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
         /// </summary>
-        public EmailConfirmationViewModel(IConfirmationNotifier emailConfirmationNotifier) {
+        //public EmailConfirmationViewModel(IConfirmationNotifier emailConfirmationNotifier) {
+        //    //this.emailConfirmationRepository = emailConfirmationRepository;
+        //    this.emailConfirmationSender = new EmailConfirmationSender();
+        //    this.emailConfirmationNotifier = emailConfirmationNotifier;
+        //    this.secretReader = new SecretReader();
+        //    //IsActive = true;
+        //    isConfirmationCodeMatch = true;
+
+        //    WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
+
+        //}
+
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
+        /// </summary>
+        public EmailConfirmationViewModel(EmailService emailService, IConfirmationNotifier emailConfirmationNotifier) {
             //this.emailConfirmationRepository = emailConfirmationRepository;
-            this.emailConfirmationSender = new EmailConfirmationSender();
+            this.emailService = emailService;
             this.emailConfirmationNotifier = emailConfirmationNotifier;
+            this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
+
             //IsActive = true;
             isConfirmationCodeMatch = true;
 
             WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
-
         }
 
         /// <summary>
         /// Sends the confirmation code to the user email address.
         /// </summary>
         /// <exception cref="SystemException"></exception>
-        public void SendEmailConfirmationCode() {
-            EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
+        //public void SendEmailConfirmationCode() {
+        //    EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
 
-            string emailSubject = "BudgetManager-password reset";
-            //INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
-            string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
-            int confirmationCodeSize = 32;
-            generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
+        //    string emailSubject = "BudgetManager-password reset";
+        //    //INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
+        //    string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
+        //    int confirmationCodeSize = 32;
+        //    generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
 
-            ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
+        //    ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
 
-            try {
-                emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
-            } catch (Exception) {
-                throw new SystemException("An error occurred while sending the confirmation code by email");
-            }
+        //    try {
+        //        emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
+        //    } catch (Exception) {
+        //        throw new SystemException("An error occurred while sending the confirmation code by email");
+        //    }
+        //}
+
+
+        /// <summary>
+        /// Sends the confirmation code to the user email address.
+        /// </summary>
+        /// <exception cref="SystemException"></exception>
+        public void SendEmail(EmailPurpose emailPurpose) {
+            //EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
+
+            //string emailSubject = "BudgetManager-password reset";
+            ////INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
+            //string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
+            //int confirmationCodeSize = 32;
+            //generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
+
+            //ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
+
+            //try {
+            //    emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
+            //} catch (Exception) {
+            //    throw new SystemException("An error occurred while sending the confirmation code by email");
+            //}
+
+            GenericResponse emailSendingResult = emailService.SendEmail(EmailAddress, emailPurpose);
         }
 
         [RelayCommand]
-        private void RequestUserConfirmationCode() {
+        private void RequestUserConfirmationCode(EmailPurpose emailPurpose) {
             //EmailConfirmationSubmittedMessage message = new EmailConfirmationMessage();
 
-
+            //CHECK CONDITION TO SEE IF IT CAN BE IMPROVED!!
             if (isConfirmationCodeMatch) {
+                //CHECK METHOD BEHAVIOR ON EMAIL SENDING ERROR!!! 
                 //Sends the email confirmation code to the user's email address
-                SendEmailConfirmationCode();
+                SendEmail(emailPurpose);
             }
 
             //WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
@@ -94,6 +141,7 @@ namespace AdvancedBudgetManagerCore.view_model {
 
             Debug.WriteLine($"Received confirmation code: {inputConfirmationCode}");
 
+            string generatedConfirmationCode = emailService.GeneratedConfirmationCode;
             if (!ConfirmationCodesMatch(inputConfirmationCode, generatedConfirmationCode)) {
                 isConfirmationCodeMatch = false;
             } else {
@@ -112,9 +160,9 @@ namespace AdvancedBudgetManagerCore.view_model {
             return inputConfirmationCode.Equals(generatedConfirmationCode);
         }
 
-        public string GeneratedConfirmationCode {
-            get { return this.generatedConfirmationCode; }
-        }
+        //public string GeneratedConfirmationCode {
+        //    get { return this.generatedConfirmationCode; }
+        //}
 
         //public string InputConfirmationCode {
         //    get { return this.inputConfirmationCode; }
@@ -124,5 +172,15 @@ namespace AdvancedBudgetManagerCore.view_model {
             get { return this.isConfirmationCodeMatch; }
             set { this.isConfirmationCodeMatch = value; }
         }
+
+        public string TestMessage {
+            get { return this.testMessage; }
+            set { this.testMessage = value; }
+        }
+
+        //public string EmailAddress {
+        //    get { return this.emailAddress; }
+        //    set { this.emailAddress = value; }
+        //}
     }
 }
