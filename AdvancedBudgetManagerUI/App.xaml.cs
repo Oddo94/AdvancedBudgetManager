@@ -37,26 +37,6 @@ namespace AdvancedBudgetManager {
         /// </summary>
         public App() {
             this.InitializeComponent();
-
-            //TO DO: change dependency injection container to Autofac before continuing the implementation of password reset feature
-            //AppHost = Host.CreateDefaultBuilder()
-            //    .ConfigureServices((context, services) => {
-            //        services.AddTransient<UserDashboard>();
-            //        services.AddTransient<LoginViewModel>();
-            //        //services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
-            //        services.AddSingleton<ICrudRepository, ResetPasswordRepository>();
-            //        services.AddSingleton<ResetPasswordDialog>();
-            //        services.AddSingleton<ResetPasswordViewModel>();
-            //        services.AddSingleton<EmailConfirmationViewModel>();
-            //        services.AddSingleton<ConfirmationCodeInputDialog>();
-            //        services.AddSingleton<ConfirmEmailWindow>();
-            //        services.AddTransient<LoginWindow>();
-            //        services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
-            //        services.AddSingleton<ICrudRepository, UserLoginRepository>();                                     
-            //    })
-            //    .Build();
-
-
             IHost serviceProvider = ConfigureServices();
             Container = (AutofacContainer)serviceProvider.Services.GetAutofacRoot();
 
@@ -97,8 +77,7 @@ namespace AdvancedBudgetManager {
                 );
 
                 //InputDialogs
-                container.RegisterType<ConfirmationCodeInputDialog>()
-                         .SingleInstance();
+                container.RegisterType<ConfirmationCodeInputDialog>();
 
                 //ViewModels
                 container.RegisterType<LoginViewModel>()
@@ -134,7 +113,6 @@ namespace AdvancedBudgetManager {
             );
 
                 //Registers object with default constructor
-                //CHECK IF AN ADDITIONAL EmailConfirmationViewModel INSTANCE NEEDS TO BE CREATED (for password reset confirmation emails)!!!
                 container.RegisterType<EmailConfirmationViewModel>()
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
@@ -179,7 +157,6 @@ namespace AdvancedBudgetManager {
                          .Keyed<EmailService>("EmailService");
 
                 //Repositories
-                //FIX AFTER IMPLEMENTING THE USER REGISTRATION SYSTEM!!
                 container.RegisterType<UserLoginRepository>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),

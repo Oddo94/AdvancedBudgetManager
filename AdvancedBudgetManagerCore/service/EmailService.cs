@@ -8,18 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace AdvancedBudgetManagerCore.service {
     public class EmailService {
         private EmailConfirmationSender emailConfirmationSender;
-        //private IConfirmationNotifier emailConfirmationNotifier;
         private SecretReader secretReader;
         private string generatedConfirmationCode;
-        //private bool isConfirmationCodeMatch;
 
         public EmailService() {
-            //this.emailConfirmationNotifier = emailConfirmationNotifier;
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
-
-            //isConfirmationCodeMatch = true;
-            //WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
         }
 
         /// <summary>
@@ -48,7 +42,6 @@ namespace AdvancedBudgetManagerCore.service {
                 emailSendingResult = new GenericResponse(ResultCode.OK, $"The {emailAction} email was succesfully sent.");
             } catch (Exception) {
                 emailSendingResult = new GenericResponse(ResultCode.ERROR, $"An error occurred while sending the {emailAction} email");
-                //throw new SystemException("An error occurred while sending the confirmation code by email");
             }
 
             return emailSendingResult;

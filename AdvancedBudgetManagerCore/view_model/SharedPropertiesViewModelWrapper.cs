@@ -39,7 +39,6 @@ namespace AdvancedBudgetManagerCore.view_model {
             //Sets the user email address value to all the provided view models who share this property
             this.userRegistrationEmailConfirmationVM.EmailAddress = value;
             this.passwordResetEmailConfirmationVM.EmailAddress = value;
-            this.passwordResetEmailConfirmationVM.TestMessage = "This is the updated value";
             this.resetPasswordViewModel.EmailAddress = value;
             this.registerUserViewModel.EmailAddress = value;
         }

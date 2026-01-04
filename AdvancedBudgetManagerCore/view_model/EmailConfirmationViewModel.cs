@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.view_model {
@@ -16,50 +15,27 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// Represents the view model for the email confirmation dialog.
     /// </summary>
     public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
-        //THIS PROPERTY IS NOT UPDATED DURING THE PASSWORD RESET PROCESS!!
         [ObservableProperty]
         private string emailAddress;
 
-        //[ObservableProperty]
-        //private string inputConfirmationCode;
-
-        //private ICrudRepository emailConfirmationRepository;
         private EmailService emailService;
         private EmailConfirmationSender emailConfirmationSender;
         private IConfirmationNotifier emailConfirmationNotifier;
         private SecretReader secretReader;
         private bool isConfirmationCodeMatch;
-        private string testMessage;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
-        /// </summary>
-        //public EmailConfirmationViewModel(IConfirmationNotifier emailConfirmationNotifier) {
-        //    //this.emailConfirmationRepository = emailConfirmationRepository;
-        //    this.emailConfirmationSender = new EmailConfirmationSender();
-        //    this.emailConfirmationNotifier = emailConfirmationNotifier;
-        //    this.secretReader = new SecretReader();
-        //    //IsActive = true;
-        //    isConfirmationCodeMatch = true;
-
-        //    WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
-
-        //}
-
-
+        private bool hasSentEmail;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
         /// </summary>
         public EmailConfirmationViewModel(EmailService emailService, IConfirmationNotifier emailConfirmationNotifier) {
-            //this.emailConfirmationRepository = emailConfirmationRepository;
             this.emailService = emailService;
             this.emailConfirmationNotifier = emailConfirmationNotifier;
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
 
-            //IsActive = true;
-            isConfirmationCodeMatch = true;
+            isConfirmationCodeMatch = false;
+            hasSentEmail = false;
 
             WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this);
         }
@@ -68,78 +44,24 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// Sends the confirmation code to the user email address.
         /// </summary>
         /// <exception cref="SystemException"></exception>
-        //public void SendEmailConfirmationCode() {
-        //    EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
-
-        //    string emailSubject = "BudgetManager-password reset";
-        //    //INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
-        //    string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
-        //    int confirmationCodeSize = 32;
-        //    generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
-
-        //    ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
-
-        //    try {
-        //        emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
-        //    } catch (Exception) {
-        //        throw new SystemException("An error occurred while sending the confirmation code by email");
-        //    }
-        //}
-
-
-        /// <summary>
-        /// Sends the confirmation code to the user email address.
-        /// </summary>
-        /// <exception cref="SystemException"></exception>
         public void SendEmail(EmailPurpose emailPurpose) {
-            //EmailSenderCredentials emailSenderCredentials = secretReader.GetEmailSenderCredentials();
-
-            //string emailSubject = "BudgetManager-password reset";
-            ////INCORRECT EMAIL BODY (SHOULD BE DIFFERENT FOR PASSWORD RESET AND USER REGISTRATION)!!
-            //string emailBody = "A password reset was requested for the BudgetManager application account associated to this email address.\nPlease enter the following code to finish the password reset process: {0} \nIf you have not requested the password reset please ignore this email and delete it immediately.";
-            //int confirmationCodeSize = 32;
-            //generatedConfirmationCode = emailConfirmationSender.GenerateConfirmationCode(confirmationCodeSize);
-
-            //ConfirmationEmailDetails confirmationEmailDetails = new ConfirmationEmailDetails(EmailAddress, emailSubject, emailBody, generatedConfirmationCode);
-
-            //try {
-            //    emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
-            //} catch (Exception) {
-            //    throw new SystemException("An error occurred while sending the confirmation code by email");
-            //}
-
             GenericResponse emailSendingResult = emailService.SendEmail(EmailAddress, emailPurpose);
         }
 
         [RelayCommand]
         private void RequestUserConfirmationCode(EmailPurpose emailPurpose) {
-            //EmailConfirmationSubmittedMessage message = new EmailConfirmationMessage();
-
-            //CHECK CONDITION TO SEE IF IT CAN BE IMPROVED!!
-            if (isConfirmationCodeMatch) {
+            if (!hasSentEmail) {
                 //CHECK METHOD BEHAVIOR ON EMAIL SENDING ERROR!!! 
-                //Sends the email confirmation code to the user's email address
                 SendEmail(emailPurpose);
+                hasSentEmail = true;
             }
 
-            //WeakReferenceMessenger.Default.Send(new RequestEmailConfirmationMessage());
             emailConfirmationNotifier.Notify();
-
-            //if (message.HasReceivedResponse) {
-            //    Task<EmailConfirmationResponse> response = message.Response;
-
-            //    this.inputConfirmationCode = response.Result.ConfirmationCode;
-
-            //if (ConfirmationCodesMatch(this.inputConfirmationCode, this.generatedConfirmationCode)) {
-
-            //}
         }
 
         ///<inheritdoc/>
         public void Receive(EmailConfirmationSubmittedMessage message) {
             String inputConfirmationCode = message.ConfirmationCode;
-
-            Debug.WriteLine($"Received confirmation code: {inputConfirmationCode}");
 
             string generatedConfirmationCode = emailService.GeneratedConfirmationCode;
             if (!ConfirmationCodesMatch(inputConfirmationCode, generatedConfirmationCode)) {
@@ -156,31 +78,12 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <param name="generatedConfirmationCode">The actual confirmation code that was generated.</param>
         /// <returns>A <see cref="bool"/> value indicating if the two confirmation codes match.</returns>
         public bool ConfirmationCodesMatch([NotNull] string inputConfirmationCode, [NotNull] string generatedConfirmationCode) {
-            //return true;
             return inputConfirmationCode.Equals(generatedConfirmationCode);
         }
-
-        //public string GeneratedConfirmationCode {
-        //    get { return this.generatedConfirmationCode; }
-        //}
-
-        //public string InputConfirmationCode {
-        //    get { return this.inputConfirmationCode; }
-        //}
 
         public bool IsConfirmationCodeMatch {
             get { return this.isConfirmationCodeMatch; }
             set { this.isConfirmationCodeMatch = value; }
         }
-
-        public string TestMessage {
-            get { return this.testMessage; }
-            set { this.testMessage = value; }
-        }
-
-        //public string EmailAddress {
-        //    get { return this.emailAddress; }
-        //    set { this.emailAddress = value; }
-        //}
     }
 }

@@ -2,7 +2,6 @@
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.exception;
-using AdvancedBudgetManagerCore.utils.security;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -26,18 +25,12 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private RegisterUserService registerUserService;
 
-        private PasswordSecurityManager securityManager;
-
-        private IMessenger messenger;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RegisterUserViewModel"/> based on the provided parameters.
         /// </summary>
         /// <param name="registerUserService">The user registration service.</param>
         public RegisterUserViewModel([NotNull] RegisterUserService registerUserService) {
             this.registerUserService = registerUserService;
-            this.securityManager = new PasswordSecurityManager();
-            this.messenger = new WeakReferenceMessenger();
         }
 
         /// <summary>
@@ -49,12 +42,6 @@ namespace AdvancedBudgetManagerCore.view_model {
             bool isSuccess = false;
 
             try {
-                //bool isValidUserData = IsValidUserData(this.UserName, this.EmailAddress);
-
-                //if (!isValidUserData) {
-                //    throw new AdvancedBudgetManagerException("Invalid username and/or email address!");
-                //}
-
                 UserInsertDto userInsertDto = new UserInsertDto(this.UserName, this.Password, this.EmailAddress);
                 registerUserService.RegisterUser(userInsertDto);
 

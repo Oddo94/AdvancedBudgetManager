@@ -86,7 +86,6 @@ namespace AdvancedBudgetManager.view.window {
                 registerUserViewModel.ValidateUserDataCommand.Execute(null);
 
                 //Send the confirmation code to the specified email address for confirming the identity of the new user
-                //confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
                 emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(EmailPurpose.REGISTER_USER_EMAIL);
             } catch (AdvancedBudgetManagerException ex) {
                 registerUserErrorDialog.Content = ex.Message;
@@ -106,7 +105,6 @@ namespace AdvancedBudgetManager.view.window {
 
                     WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse)); ;
 
-                    //Add try-catch logic for the situation when the user already exists or the email address is associated to an existing account
                     try {
                         if (!emailConfirmationViewModel.IsConfirmationCodeMatch) {
                             confirmationCodeInputDialog.ShowErrorTipOnLoad = true;
@@ -137,9 +135,6 @@ namespace AdvancedBudgetManager.view.window {
             if (emailConfirmationViewModel.IsConfirmationCodeMatch) {
                 this.Close();
             }
-
-
-            //message.Reply(true);
         }
     }
 }

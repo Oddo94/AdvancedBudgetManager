@@ -64,7 +64,6 @@ namespace AdvancedBudgetManager.view.window {
                         XamlRoot = this.Content.XamlRoot
                     };
 
-                    //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                     await loginErrorDialog.ShowAsync();
                 }
             } catch (SystemException ex) {

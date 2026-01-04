@@ -7,7 +7,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -107,7 +106,6 @@ namespace AdvancedBudgetManager.view.window {
             ContentDialogResult displayResult = await passwordResetContentDialog.ShowAsync();
 
             if (displayResult == ContentDialogResult.Primary && message.IsSuccess) {
-                Debug.WriteLine("Closing the password reset window...");
                 this.Close();
             }
         }

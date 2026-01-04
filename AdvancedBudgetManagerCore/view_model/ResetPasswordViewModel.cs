@@ -40,7 +40,6 @@ namespace AdvancedBudgetManagerCore.view_model {
             UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, NewPassword, EmailAddress);
 
             try {
-                //RETRIVE THE CORRECT ENTITY BASED ON THE EMAIL ADDRESS BEFORE PERFORMING THE UPDATE!!
                 resetPasswordResponse = resetPasswordService.ResetPassword(userUpdateDto);
             } catch (SystemException) {
                 resetPasswordResponse = new GenericResponse(ResultCode.ERROR, "Failed to reset your password. Please try again!");
