@@ -1,10 +1,12 @@
-﻿using AdvancedBudgetManager.view.dialog;
+﻿using AdvancedBudgetManager.utils.misc;
+using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.window;
 using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.database;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Autofac;
@@ -47,16 +49,6 @@ namespace AdvancedBudgetManager {
             builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
             builder.ConfigureContainer<ContainerBuilder>(container => {
-                //Single instances
-                //1.Notifiers
-                container.RegisterType<UserRegistrationEmailConfirmationNotifier>()
-                       .SingleInstance()
-                       .Keyed<IConfirmationNotifier>("UserRegistrationNotifier");
-
-                container.RegisterType<PasswordResetEmailConfirmationNotifier>()
-                       .SingleInstance()
-                       .Keyed<IConfirmationNotifier>("PasswordResetNotifier");
-
                 //Windows
                 container.RegisterType<LoginWindow>();
 
@@ -68,7 +60,8 @@ namespace AdvancedBudgetManager {
                             (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM")
                           );
 
-                container.RegisterType<ResetPasswordWindow>();
+                container.RegisterType<ResetPasswordWindow>()
+                         .Keyed<Window>(WindowKey.RESET_PASSWORD_WINDOW);
 
                 container.RegisterType<RegisterUserWindow>()
                          .WithParameter(
@@ -78,6 +71,11 @@ namespace AdvancedBudgetManager {
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>();
+
+                //NavigationServices
+                container.RegisterType<WindowNavigationService>()
+                    .As<IWindowNavigationService>()
+                    .SingleInstance();
 
                 //ViewModels
                 container.RegisterType<LoginViewModel>()
@@ -131,6 +129,15 @@ namespace AdvancedBudgetManager {
                                 (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
                          .Keyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM");
 
+                //Single instances
+                //1.Notifiers
+                container.RegisterType<UserRegistrationEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("UserRegistrationNotifier");
+
+                container.RegisterType<PasswordResetEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("PasswordResetNotifier");
 
                 //Services
                 container.RegisterType<LoginUserService>()

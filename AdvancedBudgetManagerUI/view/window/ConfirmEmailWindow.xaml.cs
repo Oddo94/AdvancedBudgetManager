@@ -1,6 +1,8 @@
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
@@ -20,17 +22,17 @@ namespace AdvancedBudgetManager.view.window {
         private SharedPropertiesViewModelWrapper changePasswordViewModelWrapper;
         private EmailConfirmationViewModel emailConfirmationViewModel;
         private ConfirmationCodeInputDialog confirmationCodeInputDialog;
-        private ResetPasswordWindow resetPasswordWindow;
+        private IWindowNavigationService windowNavigationService;
         private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
             [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
             [NotNull] SharedPropertiesViewModelWrapper changePasswordViewModelWrapper,
-            [NotNull] ResetPasswordWindow resetPasswordWindow) {
+            [NotNull] IWindowNavigationService windowNavigationService) {
 
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
-            this.resetPasswordWindow = resetPasswordWindow;
+            this.windowNavigationService = windowNavigationService;
 
             emailConfirmationViewModel = this.changePasswordViewModelWrapper.PasswordResetEmailConfirmationVM;
 
@@ -64,9 +66,7 @@ namespace AdvancedBudgetManager.view.window {
                         displayResult = await confirmationCodeInputDialog.ShowAsync();
                     } else {
                         emailConfirmationViewModel.IsConfirmationCodeMatch = true;
-
-                        //TO DO-check for an alternative approach to injecting the reset password window
-                        resetPasswordWindow.Activate();
+                        windowNavigationService.Show(WindowKey.RESET_PASSWORD_WINDOW);
 
                         this.Close();
                     }
