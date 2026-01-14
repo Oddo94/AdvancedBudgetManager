@@ -1,3 +1,4 @@
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
@@ -19,17 +20,20 @@ namespace AdvancedBudgetManager.view.window {
     public sealed partial class LoginWindow : Window {
         private LoginViewModel loginViewModel;
         private UserDashboard userDashboard;
-        private ConfirmEmailWindow confirmEmailWindow;
-        private RegisterUserWindow registerUserWindow;
+        //private ConfirmEmailWindow confirmEmailWindow;
+        private IWindowNavigationService windowNavigationService;
+        //private RegisterUserWindow registerUserWindow;
 
         public LoginWindow([NotNull] LoginViewModel loginViewModel,
             [NotNull] UserDashboard userDashboard,
-            [NotNull] ConfirmEmailWindow confirmEmailWindow,
-            [NotNull] RegisterUserWindow registerUserWindow) {
+            //[NotNull] ConfirmEmailWindow confirmEmailWindow,
+            //[NotNull] RegisterUserWindow registerUserWindow)
+            [NotNull] IWindowNavigationService windowNavigationService) {
             this.loginViewModel = loginViewModel;
             this.userDashboard = userDashboard;
-            this.confirmEmailWindow = confirmEmailWindow;
-            this.registerUserWindow = registerUserWindow;
+            //this.confirmEmailWindow = confirmEmailWindow;
+            //this.registerUserWindow = registerUserWindow;
+            this.windowNavigationService = windowNavigationService;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(600, 600));
@@ -79,11 +83,11 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
-            confirmEmailWindow.Activate();
+            windowNavigationService.Show(WindowKey.CONFIRM_EMAIL_WINDOW);
         }
 
         public void RegisterUser_Click(object sender, RoutedEventArgs e) {
-            registerUserWindow.Activate();
+            windowNavigationService.Show(WindowKey.REGISTER_USER_WINDOW);
         }
     }
 }

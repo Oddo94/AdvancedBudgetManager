@@ -57,8 +57,14 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<ConfirmEmailWindow>()
                          .WithParameter(
                             (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
-                            (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM")
-                          );
+                            (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM"))
+                         .OnActivated(e => {
+                             Window window = (Window)e.Instance;
+                             IWindowProvider windowProvider = e.Context.Resolve<IWindowProvider>();
+
+                             windowProvider.Register(window);
+                         })
+                         .Keyed<Window>(WindowKey.CONFIRM_EMAIL_WINDOW);
 
                 container.RegisterType<ResetPasswordWindow>()
                          .Keyed<Window>(WindowKey.RESET_PASSWORD_WINDOW);
@@ -118,6 +124,9 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(EmailService),
                                 (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
+                         //.WithParameter(
+                         //       (pi, ctx) => pi.ParameterType == typeof(IErrorService),
+                         //       (pi, ctx) => ctx.ResolveKeyed<IErrorService>("RegisterUserErrorService"))
                          .Keyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM");
 
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -127,6 +136,9 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(EmailService),
                                 (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
+                         //.WithParameter(
+                         //       (pi, ctx) => pi.ParameterType == typeof(IErrorService),
+                         //       (pi, ctx) => ctx.ResolveKeyed<IErrorService>("ResetPasswordErrorService"))
                          .Keyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM");
 
                 //Single instances
@@ -138,6 +150,12 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<PasswordResetEmailConfirmationNotifier>()
                        .SingleInstance()
                        .Keyed<IConfirmationNotifier>("PasswordResetNotifier");
+
+                //2.Providers
+                container.RegisterType<WindowProvider>()
+                         .As<IWindowProvider>()
+                         .SingleInstance();
+
 
                 //Services
                 container.RegisterType<LoginUserService>()
@@ -162,6 +180,10 @@ namespace AdvancedBudgetManager {
                          .AsSelf()
                          .SingleInstance()
                          .Keyed<EmailService>("EmailService");
+
+                container.RegisterType<ErrorService>()
+                        .As<IErrorService>();
+
 
                 //Repositories
                 container.RegisterType<UserLoginRepository>()
@@ -219,11 +241,12 @@ namespace AdvancedBudgetManager {
                 XamlRoot loginWindowRoot = loginWindow.Content.XamlRoot;
 
                 //Retrieves the ConfirmEmailWindow object from the DI container
-                ConfirmEmailWindow confirmEmailWindow = Container.Resolve<ConfirmEmailWindow>();
+                //Window confirmEmailWindow = Container
+                //.ResolveKeyed<Window>(WindowKey.CONFIRM_EMAIL_WINDOW);
 
                 /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
                 This allows the display of the password reset dialog on top of the login window*/
-                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
+                //confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
             }
         }
     }

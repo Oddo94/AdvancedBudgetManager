@@ -6,6 +6,9 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         RESET_PASSWORD_WINDOW,
 
         [Description("REGISTER_USER_WINDOW")]
-        REGISTER_USER_WINDOW
+        REGISTER_USER_WINDOW,
+
+        [Description("CONFIRM_EMAIL_WINDOW")]
+        CONFIRM_EMAIL_WINDOW
     }
 }

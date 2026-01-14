@@ -1,8 +1,8 @@
 ﻿using AdvancedBudgetManagerCore.model.message;
+using AdvancedBudgetManagerCore.model.misc;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.enums;
-using AdvancedBudgetManagerCore.utils.security;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -19,20 +19,21 @@ namespace AdvancedBudgetManagerCore.view_model {
         private string emailAddress;
 
         private EmailService emailService;
-        private EmailConfirmationSender emailConfirmationSender;
+        private IErrorService errorService;
+
         private IConfirmationNotifier emailConfirmationNotifier;
-        private SecretReader secretReader;
         private bool isConfirmationCodeMatch;
         private bool hasSentEmail;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailConfirmationViewModel"/> with default values.
         /// </summary>
-        public EmailConfirmationViewModel(EmailService emailService, IConfirmationNotifier emailConfirmationNotifier) {
+        public EmailConfirmationViewModel([NotNull] EmailService emailService,
+            [NotNull] IConfirmationNotifier emailConfirmationNotifier,
+            [NotNull] IErrorService errorService) {
             this.emailService = emailService;
+            this.errorService = errorService;
             this.emailConfirmationNotifier = emailConfirmationNotifier;
-            this.emailConfirmationSender = new EmailConfirmationSender();
-            this.secretReader = new SecretReader();
 
             isConfirmationCodeMatch = false;
             hasSentEmail = false;
@@ -45,18 +46,27 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <exception cref="SystemException"></exception>
         public void SendEmail(EmailPurpose emailPurpose) {
+            if (true) {
+                throw new SystemException("This is custom exception for test purposes");
+            }
             GenericResponse emailSendingResult = emailService.SendEmail(EmailAddress, emailPurpose);
         }
 
         [RelayCommand]
         private void RequestUserConfirmationCode(EmailPurpose emailPurpose) {
-            if (!hasSentEmail) {
-                //CHECK METHOD BEHAVIOR ON EMAIL SENDING ERROR!!! 
-                SendEmail(emailPurpose);
-                hasSentEmail = true;
-            }
+            try {
+                if (!hasSentEmail) {
+                    //CHECK METHOD BEHAVIOR ON EMAIL SENDING ERROR!!! 
+                    SendEmail(emailPurpose);
+                    hasSentEmail = true;
+                }
 
-            emailConfirmationNotifier.Notify();
+                emailConfirmationNotifier.Notify();
+
+            } catch (SystemException ex) {
+                ErrorInfo errorInfo = new ErrorInfo("Error", "Failed to send the confirmation code to the specified email address.", ErrorSeverity.ERROR);
+                errorService.Notify(errorInfo);
+            }
         }
 
         ///<inheritdoc/>
