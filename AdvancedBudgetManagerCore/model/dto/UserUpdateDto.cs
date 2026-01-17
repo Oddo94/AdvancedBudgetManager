@@ -43,7 +43,7 @@ namespace AdvancedBudgetManagerCore.model.dto {
         /// <param name="userId">The user id.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="salt">The <see cref="byte"/> array containing the salt.</param>
-        /// <param name="passwordHash">The password hash.</param>
+        /// <param name="password">The password represented as a <see cref="SecureString"/> instance.</param>
         /// <param name="emailAddress">The user's email address.</param>
         public UserUpdateDto(long? userId, String userName, byte[] salt, SecureString password, String emailAddress) {
             this.userId = userId;

@@ -72,8 +72,8 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<RegisterUserWindow>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
-                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM")
-                );
+                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM"))
+                         .Keyed<Window>(WindowKey.REGISTER_USER_WINDOW);
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>();
@@ -124,9 +124,6 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(EmailService),
                                 (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
-                         //.WithParameter(
-                         //       (pi, ctx) => pi.ParameterType == typeof(IErrorService),
-                         //       (pi, ctx) => ctx.ResolveKeyed<IErrorService>("RegisterUserErrorService"))
                          .Keyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM");
 
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -136,9 +133,6 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(EmailService),
                                 (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
-                         //.WithParameter(
-                         //       (pi, ctx) => pi.ParameterType == typeof(IErrorService),
-                         //       (pi, ctx) => ctx.ResolveKeyed<IErrorService>("ResetPasswordErrorService"))
                          .Keyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM");
 
                 //Single instances

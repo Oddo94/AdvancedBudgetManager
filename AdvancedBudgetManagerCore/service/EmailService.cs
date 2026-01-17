@@ -6,11 +6,29 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service {
+#pragma warning disable CS1591
+    /// <summary>
+    /// Service class used for performing the email sending operations.
+    /// </summary>
     public class EmailService {
+        /// <summary>
+        /// The email confirmation sender instance.
+        /// </summary>
         private EmailConfirmationSender emailConfirmationSender;
+
+        /// <summary>
+        /// The secret reader instance.
+        /// </summary>
         private SecretReader secretReader;
+
+        /// <summary>
+        /// The generated confirmation code.
+        /// </summary>
         private string generatedConfirmationCode;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailService"/> class.
+        /// </summary>
         public EmailService() {
             this.emailConfirmationSender = new EmailConfirmationSender();
             this.secretReader = new SecretReader();
@@ -47,6 +65,11 @@ namespace AdvancedBudgetManagerCore.service {
             return emailSendingResult;
         }
 
+        /// <summary>
+        /// Retrieves the email action to be displayed inside the sent email.
+        /// </summary>
+        /// <param name="emailPurpose">The <see cref="EmailPurpose"/> enum value used for specifying the email purpose.</param>
+        /// <returns></returns>
         private string GetEmailAction(EmailPurpose emailPurpose) {
             string emailAction = string.Empty;
 

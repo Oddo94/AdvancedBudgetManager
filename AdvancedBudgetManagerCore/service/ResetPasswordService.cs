@@ -7,6 +7,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service {
+    /// <summary>
+    /// Service class used for performing the operations required during the password reset process.
+    /// </summary>
     public class ResetPasswordService {
 
         /// <summary>
@@ -20,55 +23,20 @@ namespace AdvancedBudgetManagerCore.service {
         private PasswordSecurityManager securityManager;
 
         /// <summary>
-        /// Boolean flag indicating the success/failure of the reset password operation.
+        /// Initializes a new instance of the <see cref="ResetPasswordService"/> class based on the provided user repository.
         /// </summary>
-        private bool isSuccess;
-
-        /// <summary>
-        /// The description message for the result of the reset password operation. 
-        /// </summary>
-        private string resetPasswordResultMessage;
-
+        /// <param name="userRepository">The <see cref="IUserRepository"/> instance used for performing the password reset operations.</param>
         public ResetPasswordService(IUserRepository userRepository) {
             this.userRepository = userRepository;
             this.securityManager = new PasswordSecurityManager();
         }
 
-        //    public void ResetPassword([NotNull] string userEmail) {
-        //        bool isSuccess = false;
-        //        string resetPasswordResultMessage = String.Empty;
-
-        //        //SecureString newPassword = passwordDataUpdateRequest.NewPassword;
-        //        //string userEmail = passwordDataUpdateRequest.GetUpdateParameter();
-
-        //        /*TO DO
-        //         * Before resetting password:
-        //         * -get the userId by using the email address
-        //         * -create a new UserUpdateDto object based on the existing info (userId, emailAddress) and the newly generated info (salt, password hash)
-        //         * -use the newly created object to update the user data from the DB
-        //         */
-        //        byte[] newSalt = passwordSecurityManager.GetSalt(MinimumSaltLength);
-        //        byte[] newPasswordBytes = passwordSecurityManager.HashSecureString(NewPassword, newSalt);
-        //        string newPasswordHash = passwordSecurityManager.HashToBase64(newPasswordBytes);
-
-        //        //IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, UserEmail);
-        //        UserUpdateDto userUpdateDto = new UserUpdateDto();
-
-        //        try {
-        //            //RETRIVE THE CORRECT ENTITY BASED ON THE EMAIL ADDRESS BEFORE PERFORMING THE UPDATE!!
-        //            userRepository.Update(null);
-
-        //            isSuccess = true;
-        //            resetPasswordResultMessage = "Your password was successfully reset!";
-        //        } catch (SystemException) {
-        //            isSuccess = false;
-        //            resetPasswordResultMessage = "Failed to reset your password. Please try again!";
-        //        }
-
-        //        WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, resetPasswordResultMessage));
-        //    }
-        //}
-
+        /// <summary>
+        /// Resets the user password based on the provided data.
+        /// </summary>
+        /// <param name="userUpdateDto">The <see cref="UserUpdateDto"/> instance which contains the data required for the password reset process.</param>
+        /// <returns>A <see cref="GenericResponse"/> instance which contains the result of the password reset process.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public GenericResponse ResetPassword([NotNull] UserUpdateDto userUpdateDto) {
             if (userUpdateDto == null) {
                 throw new ArgumentException("The updated user cannot be null!");
@@ -93,7 +61,7 @@ namespace AdvancedBudgetManagerCore.service {
                 userRepository.Update(updatedUser);
 
                 resetPasswordResponse = new GenericResponse(utils.enums.ResultCode.OK, "Your password was successfully reset!");
-            } catch (SystemException ex) {
+            } catch (SystemException) {
                 resetPasswordResponse = new GenericResponse(utils.enums.ResultCode.OK, "Failed to reset your password. Please try again!");
             }
 

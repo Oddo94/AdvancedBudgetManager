@@ -46,9 +46,6 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// </summary>
         /// <exception cref="SystemException"></exception>
         public void SendEmail(EmailPurpose emailPurpose) {
-            if (true) {
-                throw new SystemException("This is custom exception for test purposes");
-            }
             GenericResponse emailSendingResult = emailService.SendEmail(EmailAddress, emailPurpose);
         }
 
@@ -56,14 +53,13 @@ namespace AdvancedBudgetManagerCore.view_model {
         private void RequestUserConfirmationCode(EmailPurpose emailPurpose) {
             try {
                 if (!hasSentEmail) {
-                    //CHECK METHOD BEHAVIOR ON EMAIL SENDING ERROR!!! 
                     SendEmail(emailPurpose);
                     hasSentEmail = true;
                 }
 
                 emailConfirmationNotifier.Notify();
 
-            } catch (SystemException ex) {
+            } catch (SystemException) {
                 ErrorInfo errorInfo = new ErrorInfo("Error", "Failed to send the confirmation code to the specified email address.", ErrorSeverity.ERROR);
                 errorService.Notify(errorInfo);
             }
