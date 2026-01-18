@@ -38,14 +38,19 @@ namespace AdvancedBudgetManagerCore.repository {
 
                     dataAdapter.Fill(userInfo);
 
-                    long userId;
-                    bool parseResult = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
-                    string userName = userInfo.Rows[0].ItemArray[1].ToString();
-                    byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
-                    string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
-                    string email = userInfo.Rows[0].ItemArray[4].ToString();
+                    User user = new User();
+                    if (userInfo.Rows.Count > 0) {
+                        long userId;
+                        bool parseResult = long.TryParse(userInfo.Rows[0].ItemArray[0].ToString(), out userId);
+                        string userName = userInfo.Rows[0].ItemArray[1].ToString();
+                        byte[] salt = (byte[])userInfo.Rows[0].ItemArray[2];
+                        string storedHash = userInfo.Rows[0].ItemArray[3].ToString();
+                        string email = userInfo.Rows[0].ItemArray[4].ToString();
 
-                    User user = new User(userId, userName, salt, storedHash, email);
+                        user = new User(userId, userName, salt, storedHash, email);
+                    } else {
+                        user = null;
+                    }
 
                     return user;
 
@@ -183,7 +188,7 @@ namespace AdvancedBudgetManagerCore.repository {
                 if (errorCode == 1042) {
                     message = "Unable to connect to the database! Please check the connection and try again.";
                 } else {
-                    message = "An error occurred during user registration! Please try again.";
+                    message = "An error occurred during user creation! Please try again.";
                 }
 
                 throw new SystemException(message);
@@ -222,7 +227,7 @@ namespace AdvancedBudgetManagerCore.repository {
                 if (errorCode == 1042) {
                     message = "Unable to connect to the database! Please check the connection and try again.";
                 } else {
-                    message = "An error occurred during password reset! Please try again.";
+                    message = "An error occurred during user update! Please try again.";
                 }
 
                 throw new SystemException(message);

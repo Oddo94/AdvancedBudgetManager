@@ -46,15 +46,12 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
             dataValidator = new InputDataValidator();
         }
 
-
-
         [TestMethod]
         public void CheckPassword_WhenValid_ReturnTrue() {
             bool checkResult = dataValidator.IsValidPassword(validPasswordInput);
 
             Assert.IsTrue(checkResult);
         }
-
 
         [TestMethod]
         public void CheckPassword_WhenMissingLowercase_ReturnFalse() {
@@ -63,7 +60,6 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
             Assert.IsFalse(checkResult);
         }
 
-
         [TestMethod]
         public void CheckPassword_WhenMissingUppercase_ReturnFalse() {
             bool checkResult = dataValidator.IsValidPassword(passwordMissingUppercase);
@@ -71,14 +67,12 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
             Assert.IsFalse(checkResult);
         }
 
-
         [TestMethod]
         public void CheckPassword_WhenMissingDigits_ReturnFalse() {
             bool checkResult = dataValidator.IsValidPassword(passwordMissingDigits);
 
             Assert.IsFalse(checkResult);
         }
-
 
         [TestMethod]
         public void CheckPassword_WhenMissingSpecialChars_ReturnFalse() {
@@ -115,7 +109,6 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
             Assert.IsFalse(checkResult);
         }
 
-
         [TestMethod]
         public void CheckInputLength_WhenNull_ThrowsException() {
             Assert.ThrowsException<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.STRICT));
@@ -150,7 +143,6 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
         public void CheckIsEmpty_WhenEmpty_ReturnTrue() {
             Assert.IsTrue(dataValidator.IsEmpty(""));
         }
-
 
         [TestMethod]
         public void CheckIsEmpty_WhenNonEmpty_ReturnFalse() {
