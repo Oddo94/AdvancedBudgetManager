@@ -7,6 +7,7 @@ using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Autofac;
@@ -149,6 +150,9 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<WindowProvider>()
                          .As<IWindowProvider>()
                          .SingleInstance();
+
+                //3.Others
+                container.RegisterType<PasswordSecurityManager>();
 
 
                 //Services

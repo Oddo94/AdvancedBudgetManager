@@ -71,7 +71,7 @@ namespace AdvancedBudgetManagerTest.repository {
 
 
         [TestMethod]
-        public void GetUserById_WhenDbIssue_ThrowException() {
+        public void GetUserById_WhenError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetById(validUserId).Throws(new SystemException(errorMessage));
@@ -109,7 +109,7 @@ namespace AdvancedBudgetManagerTest.repository {
 
 
         [TestMethod]
-        public void GetUserByEmail_WhenDbIssue_ThrowException() {
+        public void GetUserByEmail_WhenError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetByEmail(validEmailAddress).Throws(new SystemException(errorMessage));
@@ -148,7 +148,7 @@ namespace AdvancedBudgetManagerTest.repository {
 
 
         [TestMethod]
-        public void GetUserByUserName_WhenDbIssue_ThrowException() {
+        public void GetUserByUserName_WhenDError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetByUserName(validUserName).Throws(new SystemException(errorMessage));

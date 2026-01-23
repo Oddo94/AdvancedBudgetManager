@@ -32,9 +32,9 @@ namespace AdvancedBudgetManagerCore.service {
         /// Initializes a new instance of the <see cref="LoginUserService"/> based on the provided user repository.
         /// </summary>
         /// <param name="userRepository">The repository used for retrieving user details</param>
-        public LoginUserService(IUserRepository userRepository) {
+        public LoginUserService(IUserRepository userRepository, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
-            this.securityManager = new PasswordSecurityManager();
+            this.securityManager = securityManager;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace AdvancedBudgetManagerCore.service {
                 byte[] salt = actualUser.Salt;
                 String storedHash = actualUser.PasswordHash;
 
-                PasswordSecurityManager securityManager = new PasswordSecurityManager();
+                //PasswordSecurityManager securityManager = new PasswordSecurityManager();
 
                 //Generates the hashcode for the input password using the stored salt 
                 byte[] actualHashBytes = securityManager.HashSecureString(providedUser.Password, salt);
