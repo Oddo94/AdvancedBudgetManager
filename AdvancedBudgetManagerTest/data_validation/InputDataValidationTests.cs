@@ -111,7 +111,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckInputLength_WhenNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.STRICT));
+            Assert.Throws<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.STRICT));
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckIsMatch_WhenFirstParamNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsMatch(null!, secondParameterForCompare));
+            Assert.Throws<ArgumentException>(() => dataValidator.IsMatch(null!, secondParameterForCompare));
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckIsEmpty_WhenNull_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => dataValidator.IsEmpty(null!));
+            Assert.Throws<ArgumentException>(() => dataValidator.IsEmpty(null!));
         }
     }
 }

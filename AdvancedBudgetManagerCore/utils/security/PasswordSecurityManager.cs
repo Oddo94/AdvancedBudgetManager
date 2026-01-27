@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml.Documents;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -78,7 +77,7 @@ namespace AdvancedBudgetManagerCore.utils.security {
         /// <returns>The derived key as a byte array.</returns>
         /// <exception cref="ArgumentException">Thrown if inputs are null or invalid.</exception>
 
-        public byte[] HashSecureString([DisallowNull] SecureString secureString, [DisallowNull] byte[] salt) {
+        public virtual byte[] HashSecureString([DisallowNull] SecureString secureString, [DisallowNull] byte[] salt) {
             if (secureString == null || secureString.Length == 0) {
                 throw new ArgumentException("Cannot hash a null or empty SecureString object!");
             }
@@ -133,7 +132,7 @@ namespace AdvancedBudgetManagerCore.utils.security {
         /// <param name="hash">The input hash represented as a <see cref="byte"/> array.</param>
         /// <returns>The Base64 encoded string.</returns>
         /// <exception cref="ArgumentException">Thrown if the input hash is null.</exception>
-        public string HashToBase64(byte[] hash) {
+        public virtual string HashToBase64(byte[] hash) {
             if (hash == null) {
                 throw new ArgumentException("Cannot convert null byte array to Base64 string!");
             }

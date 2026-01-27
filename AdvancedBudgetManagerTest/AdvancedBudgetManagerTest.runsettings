@@ -9,8 +9,10 @@
     <Parameter name="invalidUserName" value="Winui4Test"/>
     <Parameter name="validPassword" value="9AxbgTc4(?{|n*"/>
     <Parameter name="invalidPassword" value="9AxbgTc4(?{ABC"/>
-    <Parameter name="salt" value="186, 141, 168, 253, 254, 205, 240, 237, 38, 162, 208, 33, 216, 59, 180, 196, 196, 135, 164, 238, 194, 205, 224, 153, 168, 106, 230, 101, 180, 136, 56, 104, 209, 135, 38, 30, 183, 23, 122, 199, 213, 235, 215, 69, 163, 96, 181, 80, 165, 62, 194, 15, 45, 33, 16, 21, 114, 165, 221, 153, 209, 251, 123, 58, 161, 76, 182, 113, 9, 133, 141, 160, 93, 225, 105, 14, 209, 185, 39, 86, 236, 133, 56, 103, 116, 61, 106, 164, 58, 92, 85, 100, 217, 109, 1, 220, 145, 112, 121, 210, 36, 37, 9, 205, 194, 138, 90, 12, 145, 90, 247, 130, 117, 103, 5, 81, 6, 49, 61, 148, 128, 98, 51, 188, 243, 144, 201, 30"/>
-    <Parameter name="passwordHash" value="kDnFKiIcP/X+0nczVTor5eOxfoNr9FitJ84ZcgCtdqcrDbDtSOjIaRQhC7cWEpGvT4FoTl7ESFx0O/3Pzku4lQ=="/>
+    <Parameter name="salt" value="MTg2LDE0MSwxNjgsMjUzLDI1NCwyMDUsMjQwLDIzNywzOCwxNjIsMjA4LDMzLDIxNiw1OSwxODAsMTk2LDE5NiwxMzUsMTY0LDIzOCwxOTQsMjA1LDIyNCwxNTMsMTY4LDEwNiwyMzAsMTAxLDE4MCwxMzYsNTYsMTA0LDIwOSwxMzUsMzgsMzAsMTgzLDIzLDEyMiwxOTksMjEzLDIzNSwyMTUsNjksMTYzLDk2LDE4MSw4MCwxNjUsNjIsMTk0LDE1LDQ1LDMzLDE2LDIxLDExNCwxNjUsMjIxLDE1MywyMDksMjUxLDEyMyw1OCwxNjEsNzYsMTgyLDExMyw5LDEzMywxNDEsMTYwLDkzLDIyNSwxMDUsMTQsMjA5LDE4NSwzOSw4NiwyMzYsMTMzLDU2LDEwMywxMTYsNjEsMTA2LDE2NCw1OCw5Miw4NSwxMDAsMjE3LDEwOSwxLDIyMCwxNDUsMTEyLDEyMSwyMTAsMzYsMzcsOSwyMDUsMTk0LDEzOCw5MCwxMiwxNDUsOTAsMjQ3LDEzMCwxMTcsMTAzLDUsODEsNiw0OSw2MSwxNDgsMTI4LDk4LDUxLDE4OCwyNDMsMTQ0LDIwMSwzMA=="/>
+    <!--<Parameter name="validPasswordHash" value="kDnFKiIcP/X+0nczVTor5eOxfoNr9FitJ84ZcgCtdqcrDbDtSOjIaRQhC7cWEpGvT4FoTl7ESFx0O/3Pzku4lQ=="/>-->
+    <Parameter name="validPasswordHash" value="QIt0P/vrGj6STPw+KFHYjiGpsSnv6aiF5jXuzmBwTDg="/>
+    <Parameter name="invalidPasswordHash" value="E997QlrXRcYgBr4DGvad+hyMINxKcinBCKdmJKbjr0k="/>
     <Parameter name="validEmailAddress" value="valid_email@yahoo.com"/>
     <Parameter name="invalidEmailAddress" value="invalid_email@yahoo.com"/>
     <Parameter name="updatedEmailAddress" value = "WinUI3TestUpdated"/>
@@ -37,7 +39,6 @@
     <!--REPOSITORY TEST DATA-->
     <Parameter name ="retrievedUserId" value="-1"/>
     <Parameter name ="userName" value="WinUI3Test"/>
-    <Parameter name ="salt" value="-1"/>
     
   </TestRunParameters>
 </RunSettings>

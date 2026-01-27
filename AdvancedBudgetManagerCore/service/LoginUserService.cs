@@ -72,7 +72,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <param name="providedUser">The <see cref="UserReadDto"/> that contains the login credentials.</param>
         /// <param name="actualUser">The <see cref="User"/> entity retrieved from the database.</param>
         /// <returns cref="bool"></returns>
-        private bool HasValidCredentials([NotNull] UserReadDto providedUser, User actualUser) {
+        public virtual bool HasValidCredentials([NotNull] UserReadDto providedUser, User actualUser) {
             if (providedUser != null && actualUser != null) {
                 //Extracts the stored salt and hashcode for the input password
                 byte[] salt = actualUser.Salt;

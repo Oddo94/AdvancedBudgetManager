@@ -76,7 +76,7 @@ namespace AdvancedBudgetManagerTest.repository {
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetById(validUserId).Throws(new SystemException(errorMessage));
 
-            SystemException exception = Assert.ThrowsException<SystemException>(() => userRepository.GetById(validUserId));
+            SystemException exception = Assert.Throws<SystemException>(() => userRepository.GetById(validUserId));
 
             Assert.AreEqual(errorMessage, exception.Message);
         }
@@ -114,7 +114,7 @@ namespace AdvancedBudgetManagerTest.repository {
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetByEmail(validEmailAddress).Throws(new SystemException(errorMessage));
 
-            SystemException exception = Assert.ThrowsException<SystemException>(() => userRepository.GetByEmail(validEmailAddress));
+            SystemException exception = Assert.Throws<SystemException>(() => userRepository.GetByEmail(validEmailAddress));
 
             Assert.AreEqual(errorMessage, exception.Message);
         }
@@ -153,7 +153,7 @@ namespace AdvancedBudgetManagerTest.repository {
             string errorMessage = "Unable to connect to the database! Please check the connection and try again.";
             userRepository.GetByUserName(validUserName).Throws(new SystemException(errorMessage));
 
-            SystemException exception = Assert.ThrowsException<SystemException>(() => userRepository.GetByUserName(validUserName));
+            SystemException exception = Assert.Throws<SystemException>(() => userRepository.GetByUserName(validUserName));
 
             Assert.AreEqual(errorMessage, exception.Message);
         }
@@ -181,7 +181,7 @@ namespace AdvancedBudgetManagerTest.repository {
 
             userRepository.Insert(user).Throws(new SystemException(errorMessage));
 
-            SystemException exception = Assert.ThrowsException<SystemException>(() => userRepository.Insert(user));
+            SystemException exception = Assert.Throws<SystemException>(() => userRepository.Insert(user));
 
             Assert.AreEqual(errorMessage, exception.Message);
         }
@@ -209,7 +209,7 @@ namespace AdvancedBudgetManagerTest.repository {
 
             userRepository.Update(updatedUser).Throws(new SystemException(errorMessage));
 
-            SystemException exception = Assert.ThrowsException<SystemException>(() => userRepository.Update(updatedUser));
+            SystemException exception = Assert.Throws<SystemException>(() => userRepository.Update(updatedUser));
 
             Assert.AreEqual(errorMessage, exception.Message);
         }

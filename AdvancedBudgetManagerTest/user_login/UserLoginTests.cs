@@ -52,7 +52,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
 
         [TestMethod]
         public void CreatePasswordHash_WithEmptyParams_ThrowsException() {
-            Assert.ThrowsException<ArgumentException>(() => securityManager.CreatePasswordHash(String.Empty, Array.Empty<byte>()));
+            Assert.Throws<ArgumentException>(() => securityManager.CreatePasswordHash(String.Empty, Array.Empty<byte>()));
         }
 
 
@@ -70,7 +70,7 @@ namespace AdvancedBudgetManagerCoreTest.user_login {
         public void GetSalt_WhenOutOfRangeSize_ThrowException() {
             int size = -1;
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => securityManager.GetSalt(size));
+            Assert.Throws<ArgumentOutOfRangeException>(() => securityManager.GetSalt(size));
         }
 
 
