@@ -23,8 +23,6 @@ namespace AdvancedBudgetManagerTest.service {
         private static string validEmailAddress = String.Empty;
         private static SecureString validPassword = new SecureString();
         private static SecureString invalidPassword = new SecureString();
-
-        //private static String invalidPasswordTest = String.Empty;
         private static string validPasswordString = String.Empty;
 
         public TestContext TestContext { get; set; }
@@ -47,8 +45,6 @@ namespace AdvancedBudgetManagerTest.service {
             validPasswordHash = testContext.Properties["validPasswordHash"]?.ToString() ?? String.Empty;
             invalidPasswordHash = testContext.Properties["invalidPasswordHash"]?.ToString() ?? String.Empty;
             validEmailAddress = testContext.Properties["validEmailAddress"]?.ToString() ?? String.Empty;
-
-            //invalidPasswordTest = testContext.Properties["invalidPassword"]?.ToString() ?? String.Empty;
             validPasswordString = testContext.Properties["validPassword"]?.ToString() ?? String.Empty;
 
             validPassword = securityManager.ToSecureString(validPasswordHash);
@@ -70,65 +66,86 @@ namespace AdvancedBudgetManagerTest.service {
         public void CheckCredentials_WhenError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = Substitute.For<LoginUserService>(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, validPassword);
-
             string errorMessage = "An error occurred while retrieving data! Please try again.";
-            userRepository.GetByUserName(userReadDto.UserName).Throws(new SystemException(errorMessage));
+
+
+            userRepository.GetByUserName(Arg.Is<String>(s => s.Length > 0)).Throws(new SystemException(errorMessage));
+
 
             SystemException exception = Assert.Throws<SystemException>(() => loginUserService.CheckCredentials(userReadDto));
 
             Assert.AreEqual(errorMessage, exception.Message);
+            userRepository.Received(1).GetByUserName(Arg.Is<String>(s => s.Length > 0));
         }
 
         [TestMethod]
         public void CheckCredentials_WhenValidCredentials_SuccessfulLogin() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = Substitute.For<LoginUserService>(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, validPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
 
-            userRepository.GetByUserName(userReadDto.UserName).Returns(retrievedUser);
-            loginUserService.HasValidCredentials(userReadDto, retrievedUser).Returns(true);
+
+            userRepository.GetByUserName(Arg.Is<String>(s => s.Length > 0)).Returns(retrievedUser);
+            byte[] validPasswordBytes = Convert.FromBase64String(validPasswordHash);
+            securityManager.HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray))).Returns(validPasswordBytes);
+            securityManager.HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(validPasswordBytes))).Returns(validPasswordHash);
+
+
             GenericResponse response = loginUserService.CheckCredentials(userReadDto);
+
 
             Assert.AreEqual(ResultCode.OK, response.ResultCode);
             Assert.AreEqual(String.Empty, response.ResponseMessage);
+            userRepository.Received(1).GetByUserName(Arg.Is<String>(s => s.Length > 0));
+            securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));
+            securityManager.Received(1).HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(validPasswordBytes)));
         }
 
         [TestMethod]
         public void CheckCredentials_WhenInvalidCredentials_FailedLogin() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = Substitute.For<LoginUserService>(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
             UserReadDto userReadDto = new UserReadDto(invalidUserName, validPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
-
-            userRepository.GetByUserName(userReadDto.UserName).Returns(retrievedUser);
-            loginUserService.HasValidCredentials(userReadDto, retrievedUser).Returns(false);
-            GenericResponse response = loginUserService.CheckCredentials(userReadDto);
             String errorMessage = "Invalid username and/or password! Please try again.";
+
+
+            userRepository.GetByUserName(Arg.Is<String>(s => s.Length > 0)).Returns(retrievedUser);
+            byte[] invalidPasswordBytes = Convert.FromBase64String(invalidPasswordHash);
+            securityManager.HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray))).Returns(invalidPasswordBytes);
+            securityManager.HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(invalidPasswordBytes))).Returns(invalidPasswordHash);
+
+
+            GenericResponse response = loginUserService.CheckCredentials(userReadDto);
+
 
             Assert.AreEqual(ResultCode.ERROR, response.ResultCode);
             Assert.AreEqual(errorMessage, response.ResponseMessage);
+            userRepository.Received(1).GetByUserName(Arg.Is<String>(s => s.Length > 0));
+            securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));
+            securityManager.Received(1).HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(invalidPasswordBytes)));
         }
 
         [TestMethod]
         public void HasValidCredentials_WhenInputUsersAreNull_ReturnFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = Substitute.For<LoginUserService>(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+
 
             bool checkResult = loginUserService.HasValidCredentials(null, null);
 
-            //Debug.WriteLine($"The password hash for the invalid password is: {securityManager.CreatePasswordHash(invalidPasswordTest, saltArray)}");
 
             Assert.IsFalse(checkResult);
         }
 
         [TestMethod]
-        public void HasValidCredentials_WhenNoMatch_ReturnFalse() {
+        public void HasValidCredentials_WhenPasswordHashDoesNotMatchStoredHash_ReturnsFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
@@ -137,16 +154,18 @@ namespace AdvancedBudgetManagerTest.service {
 
 
             byte[] invalidPasswordBytes = Convert.FromBase64String(invalidPasswordHash);
-            securityManager.HashSecureString(userReadDto.Password, saltArray).Returns(invalidPasswordBytes);
-            securityManager.HashToBase64(invalidPasswordBytes).Returns(invalidPasswordHash);
+            securityManager.HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray))).Returns(invalidPasswordBytes);
+            securityManager.HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(invalidPasswordBytes))).Returns(invalidPasswordHash);
 
             bool checkResult = loginUserService.HasValidCredentials(userReadDto, retrievedUser);
 
             Assert.IsFalse(checkResult);
+            securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));
+            securityManager.Received(1).HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(invalidPasswordBytes)));
         }
 
         [TestMethod]
-        public void HasValidCredentials_WhenMatch_ReturnTrue() {
+        public void HasValidCredentials_WhenPasswordHashMatchesStoredHash_ReturnsTrue() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
@@ -155,17 +174,16 @@ namespace AdvancedBudgetManagerTest.service {
 
 
             byte[] validPasswordBytes = Convert.FromBase64String(validPasswordHash);
-            securityManager.Received(1).HashSecureString(Arg.Any<SecureString>(), Arg.Any<byte[]>()).Returns(validPasswordBytes);
-            securityManager.Received(1).HashToBase64(Arg.Any<byte[]>()).Returns(validPasswordHash);
-            //String hashedPasswordTest = Convert.ToBase64String(validPasswordBytes);
+            securityManager.HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray))).Returns(validPasswordBytes);
+            securityManager.HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(validPasswordBytes))).Returns(validPasswordHash);
 
-            //String generatedHash = securityManager.CreatePasswordHash(validPasswordString, saltArray);
-
-            //bool hashCodesMatch = hashedPasswordTest.Equals(generatedHash);
 
             bool checkResult = loginUserService.HasValidCredentials(userReadDto, retrievedUser);
 
+
             Assert.IsTrue(checkResult);
+            securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));
+            securityManager.Received(1).HashToBase64(Arg.Is<byte[]>(b => b.SequenceEqual(validPasswordBytes)));
         }
     }
 }
