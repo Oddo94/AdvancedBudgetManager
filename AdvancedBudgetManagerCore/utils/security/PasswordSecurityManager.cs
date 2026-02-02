@@ -35,7 +35,7 @@ namespace AdvancedBudgetManagerCore.utils.security {
         /// <param name="size">The size of the array</param>
         /// <returns>A byte array containing the generated salt</returns>
         /// <throws cref="ArgumentOutOfRangeException"></throws>
-        public byte[] GetSalt(int size) {
+        public virtual byte[] GetSalt(int size) {
             if (size < 1 || size > Array.MaxLength) {
                 throw new ArgumentOutOfRangeException(string.Format("Invalid array size. Must be between 1 and {0}.", Array.MaxLength));
             }

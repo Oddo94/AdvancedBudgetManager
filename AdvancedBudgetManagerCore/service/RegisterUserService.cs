@@ -24,9 +24,9 @@ namespace AdvancedBudgetManagerCore.service {
         /// Initializes a new instance of the <see cref="RegisterUserService"/> class based on the provided <see cref="IUserRepository"/> implementation
         /// </summary>
         /// <param name="userRepository">The user repository.</param>
-        public RegisterUserService(IUserRepository userRepository) {
+        public RegisterUserService(IUserRepository userRepository, PasswordSecurityManager passwordSecurityManager) {
             this.userRepository = userRepository;
-            this.securityManager = new PasswordSecurityManager();
+            this.securityManager = passwordSecurityManager;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <returns>A <see cref="bool"/> value indicating whether the user exists or not.</returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="SystemException"></exception>
-        public bool UserExists([NotNull] string userName) {
+        public virtual bool UserExists([NotNull] string userName) {
             if (userName == null) {
                 throw new ArgumentException("The searched username cannot be null!");
             }
@@ -89,7 +89,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// <param name="emailAddress">The email address that needs to be checked</param>
         /// <returns>A <see cref="bool"/> value indicating whether the email address is used or not.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public bool IsEmailUsed([NotNull] string emailAddress) {
+        public virtual bool IsEmailUsed([NotNull] string emailAddress) {
             if (emailAddress == null) {
                 throw new ArgumentException("The searched email address cannot be null!");
             }
