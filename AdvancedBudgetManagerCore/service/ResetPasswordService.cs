@@ -2,6 +2,7 @@
 using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -26,9 +27,9 @@ namespace AdvancedBudgetManagerCore.service {
         /// Initializes a new instance of the <see cref="ResetPasswordService"/> class based on the provided user repository.
         /// </summary>
         /// <param name="userRepository">The <see cref="IUserRepository"/> instance used for performing the password reset operations.</param>
-        public ResetPasswordService(IUserRepository userRepository) {
+        public ResetPasswordService(IUserRepository userRepository, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
-            this.securityManager = new PasswordSecurityManager();
+            this.securityManager = securityManager;
         }
 
         /// <summary>
@@ -60,9 +61,9 @@ namespace AdvancedBudgetManagerCore.service {
 
                 userRepository.Update(updatedUser);
 
-                resetPasswordResponse = new GenericResponse(utils.enums.ResultCode.OK, "Your password was successfully reset!");
+                resetPasswordResponse = new GenericResponse(ResultCode.OK, "Your password was successfully reset!");
             } catch (SystemException) {
-                resetPasswordResponse = new GenericResponse(utils.enums.ResultCode.OK, "Failed to reset your password. Please try again!");
+                resetPasswordResponse = new GenericResponse(ResultCode.OK, "Failed to reset your password. Please try again!");
             }
 
             return resetPasswordResponse;

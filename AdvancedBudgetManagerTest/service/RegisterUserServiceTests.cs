@@ -77,10 +77,10 @@ namespace AdvancedBudgetManagerTest.service {
 
             //Checks that the service layer sent the User object with the correct attributes to the repository layer
             userRepository.Received(1).Insert(Arg.Is<User>(u =>
-            u.UserName.Equals(user.UserName) &&
-            u.Salt.SequenceEqual(user.Salt) &&
-            u.PasswordHash.Equals(user.PasswordHash) &&
-            u.EmailAddress.Equals(user.EmailAddress)));
+                u.UserName.Equals(user.UserName) &&
+                u.Salt.SequenceEqual(user.Salt) &&
+                u.PasswordHash.Equals(user.PasswordHash) &&
+                u.EmailAddress.Equals(user.EmailAddress)));
         }
 
         [TestMethod]
