@@ -3,6 +3,7 @@ using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.exception;
 using AdvancedBudgetManagerCore.utils.security;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -49,6 +50,10 @@ namespace AdvancedBudgetManagerCore.service {
                 //Retrieves the existing user
                 User existingUser = userRepository.GetByEmail(userUpdateDto.EmailAddress);
 
+                if (existingUser == null) {
+                    return new GenericResponse(ResultCode.ERROR, "No user was found for the specified email address.");
+                }
+
                 //Generates a new salt
                 byte[] newSalt = securityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH);
 
@@ -62,8 +67,8 @@ namespace AdvancedBudgetManagerCore.service {
                 userRepository.Update(updatedUser);
 
                 resetPasswordResponse = new GenericResponse(ResultCode.OK, "Your password was successfully reset!");
-            } catch (SystemException) {
-                resetPasswordResponse = new GenericResponse(ResultCode.OK, "Failed to reset your password. Please try again!");
+            } catch (AdvancedBudgetManagerException) {
+                resetPasswordResponse = new GenericResponse(ResultCode.ERROR, "Failed to reset your password. Please try again!");
             }
 
             return resetPasswordResponse;

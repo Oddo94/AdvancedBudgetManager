@@ -1,5 +1,7 @@
 ﻿using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.utils.database;
+using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.exception;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -108,7 +110,7 @@ namespace AdvancedBudgetManagerCore.repository {
                         message = "An error occurred while retrieving data! Please try again.";
                     }
 
-                    throw new SystemException(message);
+                    throw new AdvancedBudgetManagerException(ExceptionCategory.Persistence, message, ex);
                 }
             }
         }
@@ -230,7 +232,7 @@ namespace AdvancedBudgetManagerCore.repository {
                     message = "An error occurred during user update! Please try again.";
                 }
 
-                throw new SystemException(message);
+                throw new AdvancedBudgetManagerException(ExceptionCategory.Persistence, message, ex);
             }
         }
 

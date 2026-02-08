@@ -14,15 +14,13 @@ namespace AdvancedBudgetManagerTest.service {
         private static string validUserName = String.Empty;
         private static string invalidUserName = String.Empty;
         private static string validPasswordHash = String.Empty;
-        private static string invalidPasswordHash = String.Empty;
         private static SecureString validPassword = new SecureString();
-        private static string salt = String.Empty;
         private static byte[] saltArray = Array.Empty<byte>();
         private static string validEmailAddress = String.Empty;
         private static string invalidEmailAddress = String.Empty;
 
         public TestContext TestContext { get; set; }
-        public static PasswordSecurityManager securityManager;
+        public static PasswordSecurityManager securityManagerInstance;
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
@@ -30,7 +28,7 @@ namespace AdvancedBudgetManagerTest.service {
                 Assert.Fail("Failed to retrieve the test data.");
             }
 
-            securityManager = new PasswordSecurityManager();
+            securityManagerInstance = new PasswordSecurityManager();
 
             validUserName = testContext.Properties["validUserName"]?.ToString() ?? String.Empty;
             invalidUserName = testContext.Properties["invalidUserName"]?.ToString() ?? String.Empty;
@@ -38,15 +36,15 @@ namespace AdvancedBudgetManagerTest.service {
             validPasswordHash = testContext.Properties["validPasswordHash"]?.ToString() ?? String.Empty;
             validEmailAddress = testContext.Properties["validEmailAddress"]?.ToString() ?? String.Empty;
             invalidEmailAddress = testContext.Properties["invalidEmailAddress"]?.ToString() ?? String.Empty;
-            validPassword = securityManager.ToSecureString(validPasswordHash);
+            validPassword = securityManagerInstance.ToSecureString(validPasswordHash);
 
         }
 
         [TestMethod]
         public void RegisterUser_WhenNullUser_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             UserInsertDto userInsertDto = null;
             string expectedMessage = "The registered user cannot be null!";
 
@@ -60,15 +58,15 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void RegisterUser_WhenValidUserData_SuccessfulRegistration() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             UserInsertDto userInsertDto = new UserInsertDto(validUserName, validPassword, validEmailAddress);
 
 
-            passwordSecurityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH).Returns(saltArray);
-            byte[] validPasswordBytes = securityManager.HashSecureString(validPassword, saltArray);
-            passwordSecurityManager.HashSecureString(userInsertDto.Password, saltArray).Returns(validPasswordBytes);
-            passwordSecurityManager.HashToBase64(validPasswordBytes).Returns(validPasswordHash);
+            securityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH).Returns(saltArray);
+            byte[] validPasswordBytes = securityManagerInstance.HashSecureString(validPassword, saltArray);
+            securityManager.HashSecureString(userInsertDto.Password, saltArray).Returns(validPasswordBytes);
+            securityManager.HashToBase64(validPasswordBytes).Returns(validPasswordHash);
             User user = new User(1, validUserName, saltArray, validPasswordHash, validEmailAddress);
             userRepository.Insert(Arg.Any<User>()).Returns(user);
 
@@ -86,8 +84,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void RegisterUser_WhenDbError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             UserInsertDto userInsertDto = new UserInsertDto(validUserName, validPassword, validEmailAddress);
             string expectedMessage = "Unable to connect to the database! Please check the connection and try again.";
 
@@ -102,8 +100,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void UserExists_WhenNullUser_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             string userName = null;
             string expectedMessage = "The searched username cannot be null!";
 
@@ -117,8 +115,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void UserExists_WhenUserNotExists_ReturnFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             User retrievedUser = null;
 
             userRepository.GetByUserName(invalidUserName).Returns(retrievedUser);
@@ -129,8 +127,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void UserExists_WhenUserExists_ReturnTrue() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             User retrievedUser = new User(1, validUserName, saltArray, validPasswordHash, validEmailAddress);
 
             userRepository.GetByUserName(validUserName).Returns(retrievedUser);
@@ -141,8 +139,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void UserExists_WhenDbError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             string expectedMessage = "Unable to connect to the database! Please check the connection and try again.";
 
 
@@ -157,8 +155,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void IsEmailUsed_WhenNullEmailAddress_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             string emailAddress = null;
             string expectedMessage = "The searched email address cannot be null!";
 
@@ -172,8 +170,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void IsEmailUsed_WhenEmailNotUsed_ReturnFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             User retrievedUser = null;
 
 
@@ -186,8 +184,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void IsEmailUsed_WhenEmailUsed_ReturnTrue() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             User retrievedUser = new User(1, validUserName, saltArray, validPasswordHash, validEmailAddress);
 
 
@@ -200,8 +198,8 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void IsEmailUsed_DbError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
-            PasswordSecurityManager passwordSecurityManager = Substitute.For<PasswordSecurityManager>();
-            RegisterUserService registerUserService = new RegisterUserService(userRepository, passwordSecurityManager);
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
             string expectedMessage = "Unable to connect to the database! Please check the connection and try again.";
 
 

@@ -18,7 +18,6 @@ namespace AdvancedBudgetManagerTest.service {
         private static string invalidUserName = String.Empty;
         private static string validPasswordHash = String.Empty;
         private static string invalidPasswordHash = String.Empty;
-        private static string salt = String.Empty;
         private static byte[] saltArray = Array.Empty<byte>();
         private static string validEmailAddress = String.Empty;
         private static SecureString validPassword = new SecureString();
@@ -26,7 +25,7 @@ namespace AdvancedBudgetManagerTest.service {
         private static string validPasswordString = String.Empty;
 
         public TestContext TestContext { get; set; }
-        public static PasswordSecurityManager securityManager;
+        public static PasswordSecurityManager securityManagerInstance;
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
@@ -34,7 +33,7 @@ namespace AdvancedBudgetManagerTest.service {
                 Assert.Fail("Failed to retrieve the test data.");
             }
 
-            securityManager = new PasswordSecurityManager();
+            securityManagerInstance = new PasswordSecurityManager();
 
 
             validUserId = Convert.ToInt32(testContext.Properties["validUserId"]?.ToString() ?? String.Empty);
@@ -47,8 +46,8 @@ namespace AdvancedBudgetManagerTest.service {
             validEmailAddress = testContext.Properties["validEmailAddress"]?.ToString() ?? String.Empty;
             validPasswordString = testContext.Properties["validPassword"]?.ToString() ?? String.Empty;
 
-            validPassword = securityManager.ToSecureString(validPasswordHash);
-            invalidPassword = securityManager.ToSecureString(invalidPasswordHash);
+            validPassword = securityManagerInstance.ToSecureString(validPasswordHash);
+            invalidPassword = securityManagerInstance.ToSecureString(invalidPasswordHash);
         }
 
 

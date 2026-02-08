@@ -4,8 +4,10 @@ using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.exception;
 using AdvancedBudgetManagerCore.utils.security;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System.Security;
 
 namespace AdvancedBudgetManagerTest.service {
@@ -54,7 +56,7 @@ namespace AdvancedBudgetManagerTest.service {
         }
 
         [TestMethod]
-        public void ResetPassword_WhenNullUser_ThrowException() {
+        public void ResetPassword_WhenNullInputUser_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             ResetPasswordService resetPasswordService = new ResetPasswordService(userRepository, securityManager);
@@ -81,7 +83,7 @@ namespace AdvancedBudgetManagerTest.service {
 
 
             securityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH).Returns(newSaltArray);
-            byte[] newPasswordBytes = securityManager.HashSecureString(userUpdateDto.Password, newSaltArray);
+            byte[] newPasswordBytes = securityManagerInstance.HashSecureString(userUpdateDto.Password, newSaltArray);
             securityManager.HashSecureString(userUpdateDto.Password, newSaltArray).Returns(newPasswordBytes);
             securityManager.HashToBase64(newPasswordBytes).Returns(newPasswordHash);
             userRepository.GetByEmail(validEmailAddress).Returns(retrievedUser);
@@ -100,5 +102,58 @@ namespace AdvancedBudgetManagerTest.service {
             Assert.AreEqual(expectedMessage, resetPasswordResponse.ResponseMessage);
         }
 
+        [TestMethod]
+        public void ResetPassword_WhenNoUserFound_FailedReset() {
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            ResetPasswordService resetPasswordService = new ResetPasswordService(userRepository, securityManager);
+            UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
+            User retrievedUser = null;
+            User updatedUser = null;
+            ResultCode expectedResultCode = ResultCode.ERROR;
+            string expectedMessage = "No user was found for the specified email address.";
+
+
+            securityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH).Returns(newSaltArray);
+            byte[] newPasswordBytes = securityManagerInstance.HashSecureString(userUpdateDto.Password, newSaltArray);
+            securityManager.HashSecureString(userUpdateDto.Password, newSaltArray).Returns(newPasswordBytes);
+            securityManager.HashToBase64(newPasswordBytes).Returns(newPasswordHash);
+            userRepository.GetByEmail(validEmailAddress).Returns(retrievedUser);
+
+
+            GenericResponse resetPasswordResponse = resetPasswordService.ResetPassword(userUpdateDto);
+
+
+            Assert.AreEqual(expectedResultCode, resetPasswordResponse.ResultCode);
+            Assert.AreEqual(expectedMessage, resetPasswordResponse.ResponseMessage);
+        }
+
+        [TestMethod]
+        public void ResetPassword_WhenDbError_FailedReset() {
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
+            ResetPasswordService resetPasswordService = new ResetPasswordService(userRepository, securityManager);
+            UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
+            User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
+            User updatedUser = new User(retrievedUser.UserId, retrievedUser.UserName, newSaltArray, newPasswordHash, retrievedUser.EmailAddress);
+            ResultCode expectedResultCode = ResultCode.ERROR;
+            string dbExpectedMessage = "Unable to connect to the database! Please check the connection and try again.";
+            string expectedMessage = "Failed to reset your password. Please try again!";
+
+
+            securityManager.GetSalt(SecurityConstants.MINIMUM_SALT_LENGTH).Returns(newSaltArray);
+            byte[] newPasswordBytes = securityManagerInstance.HashSecureString(userUpdateDto.Password, newSaltArray);
+            securityManager.HashSecureString(userUpdateDto.Password, newSaltArray).Returns(newPasswordBytes);
+            securityManager.HashToBase64(newPasswordBytes).Returns(newPasswordHash);
+            userRepository.GetByEmail(validEmailAddress).Returns(retrievedUser);
+            userRepository.Update(Arg.Any<User>()).Throws(new AdvancedBudgetManagerException(dbExpectedMessage));
+
+
+            GenericResponse resetPasswordResponse = resetPasswordService.ResetPassword(userUpdateDto);
+
+
+            Assert.AreEqual(expectedResultCode, resetPasswordResponse.ResultCode);
+            Assert.AreEqual(expectedMessage, resetPasswordResponse.ResponseMessage);
+        }
     }
 }
