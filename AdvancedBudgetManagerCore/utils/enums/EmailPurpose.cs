@@ -8,20 +8,20 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         /// <summary>
         /// Value for the user registration email.
         /// </summary>
-        [Description("REGISTER_USER_EMAIL")]
-        REGISTER_USER_EMAIL,
+        [Description("RegisterUserEmail")]
+        RegisterUserEmail,
 
         /// <summary>
         /// Value for the reset password email.
         /// </summary>
-        [Description("RESET_PASSWORD_EMAIL")]
-        RESET_PASSWORD_EMAIL,
+        [Description("ResetPasswordEmail")]
+        ResetPasswordEmail,
 
         /// <summary>
         /// Default value to be used when the email purpose is unknown.
         /// </summary>
-        [Description("UNDEFINED")]
-        UNDEFINED
+        [Description("Undefined")]
+        Undefined
 
     }
 }

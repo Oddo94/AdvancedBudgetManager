@@ -42,10 +42,10 @@ namespace AdvancedBudgetManagerCore.view_model {
             try {
                 resetPasswordResponse = resetPasswordService.ResetPassword(userUpdateDto);
             } catch (SystemException) {
-                resetPasswordResponse = new GenericResponse(ResultCode.ERROR, "Failed to reset your password. Please try again!");
+                resetPasswordResponse = new GenericResponse(ResultCode.Error, "Failed to reset your password. Please try again!");
             }
 
-            WeakReferenceMessenger.Default.Send(new GenericResultMessage(resetPasswordResponse.ResultCode == ResultCode.OK, resetPasswordResponse.ResponseMessage));
+            WeakReferenceMessenger.Default.Send(new GenericResultMessage(resetPasswordResponse.ResultCode == ResultCode.Ok, resetPasswordResponse.ResponseMessage));
         }
     }
 }

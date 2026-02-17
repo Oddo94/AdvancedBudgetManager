@@ -60,7 +60,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 emailConfirmationNotifier.Notify();
 
             } catch (SystemException) {
-                ErrorInfo errorInfo = new ErrorInfo("Error", "Failed to send the confirmation code to the specified email address.", ErrorSeverity.ERROR);
+                ErrorInfo errorInfo = new ErrorInfo("Error", "Failed to send the confirmation code to the specified email address.", ErrorSeverity.Error);
                 errorService.Notify(errorInfo);
             }
         }

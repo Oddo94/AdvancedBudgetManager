@@ -8,25 +8,25 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         /// <summary>
         /// Value for the INFO level.
         /// </summary>
-        [Description("INFO")]
-        INFO,
+        [Description("Info")]
+        Info,
 
         /// <summary>
         /// Value for the WARNING level.
         /// </summary>
-        [Description("WARNING")]
-        WARNING,
+        [Description("Warning")]
+        Warning,
 
         /// <summary>
         /// Value for the ERROR level.
         /// </summary>
-        [Description("ERROR")]
-        ERROR,
+        [Description("Error")]
+        Error,
 
         /// <summary>
         /// Value for the CRITICAL level.
         /// </summary>
-        [Description("CRITICAL")]
-        CRITICAL
+        [Description("Critical")]
+        Critical
     }
 }

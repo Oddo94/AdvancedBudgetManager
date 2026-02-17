@@ -57,9 +57,9 @@ namespace AdvancedBudgetManagerCore.service {
 
             try {
                 emailConfirmationSender.SendConfirmationEmail(emailSenderCredentials, confirmationEmailDetails);
-                emailSendingResult = new GenericResponse(ResultCode.OK, $"The {emailAction} email was succesfully sent.");
+                emailSendingResult = new GenericResponse(ResultCode.Ok, $"The {emailAction} email was succesfully sent.");
             } catch (Exception) {
-                emailSendingResult = new GenericResponse(ResultCode.ERROR, $"An error occurred while sending the {emailAction} email");
+                emailSendingResult = new GenericResponse(ResultCode.Error, $"An error occurred while sending the {emailAction} email");
             }
 
             return emailSendingResult;
@@ -74,11 +74,11 @@ namespace AdvancedBudgetManagerCore.service {
             string emailAction = string.Empty;
 
             switch (emailPurpose) {
-                case EmailPurpose.REGISTER_USER_EMAIL:
+                case EmailPurpose.RegisterUserEmail:
                     emailAction = "user registration";
                     break;
 
-                case EmailPurpose.RESET_PASSWORD_EMAIL:
+                case EmailPurpose.ResetPasswordEmail:
                     emailAction = "password reset";
                     break;
 

@@ -57,7 +57,7 @@ namespace AdvancedBudgetManager.view.window {
                 PasswordBox.Password = String.Empty;
 
                 GenericResponse loginResponse = loginViewModel.loginResponse;
-                if (loginResponse.ResultCode == ResultCode.OK) {
+                if (loginResponse.ResultCode == ResultCode.Ok) {
                     this.Close();
                     userDashboard.Activate();
                 } else {
@@ -83,11 +83,11 @@ namespace AdvancedBudgetManager.view.window {
         }
 
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
-            windowNavigationService.Show(WindowKey.CONFIRM_EMAIL_WINDOW);
+            windowNavigationService.Show(WindowKey.ConfirmEmailWindow);
         }
 
         public void RegisterUser_Click(object sender, RoutedEventArgs e) {
-            windowNavigationService.Show(WindowKey.REGISTER_USER_WINDOW);
+            windowNavigationService.Show(WindowKey.RegisterUserWindow);
         }
     }
 }

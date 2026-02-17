@@ -2,13 +2,13 @@
 
 namespace AdvancedBudgetManagerCore.utils.enums {
     public enum WindowKey {
-        [Description("RESET_PASSWORD_WINDOW")]
-        RESET_PASSWORD_WINDOW,
+        [Description("ResetPasswordWindow")]
+        ResetPasswordWindow,
 
-        [Description("REGISTER_USER_WINDOW")]
-        REGISTER_USER_WINDOW,
+        [Description("RegisterUserWindow")]
+        RegisterUserWindow,
 
-        [Description("CONFIRM_EMAIL_WINDOW")]
-        CONFIRM_EMAIL_WINDOW
+        [Description("ConfirmEmailWindow")]
+        ConfirmEmailWindow
     }
 }

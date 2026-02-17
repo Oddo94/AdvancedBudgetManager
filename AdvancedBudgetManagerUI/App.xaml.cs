@@ -65,16 +65,16 @@ namespace AdvancedBudgetManager {
 
                              windowProvider.Register(window);
                          })
-                         .Keyed<Window>(WindowKey.CONFIRM_EMAIL_WINDOW);
+                         .Keyed<Window>(WindowKey.ConfirmEmailWindow);
 
                 container.RegisterType<ResetPasswordWindow>()
-                         .Keyed<Window>(WindowKey.RESET_PASSWORD_WINDOW);
+                         .Keyed<Window>(WindowKey.ResetPasswordWindow);
 
                 container.RegisterType<RegisterUserWindow>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
                                (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM"))
-                         .Keyed<Window>(WindowKey.REGISTER_USER_WINDOW);
+                         .Keyed<Window>(WindowKey.RegisterUserWindow);
 
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>();

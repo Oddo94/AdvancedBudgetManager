@@ -97,7 +97,7 @@ namespace AdvancedBudgetManagerTest.service {
             GenericResponse response = loginUserService.CheckCredentials(userReadDto);
 
 
-            Assert.AreEqual(ResultCode.OK, response.ResultCode);
+            Assert.AreEqual(ResultCode.Ok, response.ResultCode);
             Assert.AreEqual(String.Empty, response.ResponseMessage);
             userRepository.Received(1).GetByUserName(Arg.Is<String>(s => s.Length > 0));
             securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));
@@ -123,7 +123,7 @@ namespace AdvancedBudgetManagerTest.service {
             GenericResponse response = loginUserService.CheckCredentials(userReadDto);
 
 
-            Assert.AreEqual(ResultCode.ERROR, response.ResultCode);
+            Assert.AreEqual(ResultCode.Error, response.ResultCode);
             Assert.AreEqual(errorMessage, response.ResponseMessage);
             userRepository.Received(1).GetByUserName(Arg.Is<String>(s => s.Length > 0));
             securityManager.Received(1).HashSecureString(Arg.Is<SecureString>(s => s.Length > 0), Arg.Is<byte[]>(b => b.SequenceEqual(saltArray)));

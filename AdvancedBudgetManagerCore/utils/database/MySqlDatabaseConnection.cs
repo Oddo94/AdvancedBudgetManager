@@ -22,7 +22,7 @@ namespace AdvancedBudgetManagerCore.utils.database {
         /// <inheritdoc />
         public IDbConnection GetConnection() {
             //Sets the default value to "TEST" if the extracted value is null
-            string appEnvironmentValue = ConfigurationManager.AppSettings["appEnvironment"] ?? "TEST";
+            string appEnvironmentValue = ConfigurationManager.AppSettings["appEnvironment"] ?? "Test";
 
             AppEnvironment appEnvironment = AppEnvironmentExtensions.GetByDescription(appEnvironmentValue);
 

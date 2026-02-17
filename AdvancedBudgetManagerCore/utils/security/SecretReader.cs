@@ -1,7 +1,6 @@
 ﻿using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.utils.enums;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace AdvancedBudgetManagerCore.utils.security {
     /// <summary>
@@ -22,15 +21,15 @@ namespace AdvancedBudgetManagerCore.utils.security {
             string dbConnectionString;
 
             switch (appEnvironment) {
-                case AppEnvironment.PROD:
+                case AppEnvironment.Production:
                     dbConnectionString = config["ProdDatabaseConnectionString"];
                     break;
 
-                case AppEnvironment.TEST:
+                case AppEnvironment.Test:
                     dbConnectionString = config["TestDatabaseConnectionString"];
                     break;
 
-                case AppEnvironment.DEV:
+                case AppEnvironment.Development:
                     dbConnectionString = config["DevDatabaseConnectionString"];
                     break;
 

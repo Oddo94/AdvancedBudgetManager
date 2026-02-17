@@ -12,7 +12,7 @@ namespace AdvancedBudgetManagerCore.model.response {
         /// Initializes a new instance of the <see cref="GenericResponse"/> class with no arguments.
         /// </summary>
         public GenericResponse() {
-            resultCode = ResultCode.UNDEFINED;
+            resultCode = ResultCode.Undefined;
             responseMessage = string.Empty;
         }
 

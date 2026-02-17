@@ -58,9 +58,9 @@ namespace AdvancedBudgetManagerCore.service {
             ////Checks that the user exists and his credentials are correct
             if (user != null && HasValidCredentials(userReadDto, user)) {
                 //Sets the login response to success
-                loginResponse = new GenericResponse(ResultCode.OK, String.Empty);
+                loginResponse = new GenericResponse(ResultCode.Ok, String.Empty);
             } else {
-                loginResponse = new GenericResponse(ResultCode.ERROR, "Invalid username and/or password! Please try again.");
+                loginResponse = new GenericResponse(ResultCode.Error, "Invalid username and/or password! Please try again.");
             }
 
             return loginResponse;

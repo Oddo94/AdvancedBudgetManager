@@ -78,7 +78,7 @@ namespace AdvancedBudgetManagerTest.service {
             UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
             User updatedUser = new User(retrievedUser.UserId, retrievedUser.UserName, newSaltArray, newPasswordHash, retrievedUser.EmailAddress);
-            ResultCode expectedResultCode = ResultCode.OK;
+            ResultCode expectedResultCode = ResultCode.Ok;
             string expectedMessage = "Your password was successfully reset!";
 
 
@@ -110,7 +110,7 @@ namespace AdvancedBudgetManagerTest.service {
             UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
             User retrievedUser = null;
             User updatedUser = null;
-            ResultCode expectedResultCode = ResultCode.ERROR;
+            ResultCode expectedResultCode = ResultCode.Error;
             string expectedMessage = "No user was found for the specified email address.";
 
 
@@ -136,7 +136,7 @@ namespace AdvancedBudgetManagerTest.service {
             UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
             User updatedUser = new User(retrievedUser.UserId, retrievedUser.UserName, newSaltArray, newPasswordHash, retrievedUser.EmailAddress);
-            ResultCode expectedResultCode = ResultCode.ERROR;
+            ResultCode expectedResultCode = ResultCode.Error;
             string dbExpectedMessage = "Unable to connect to the database! Please check the connection and try again.";
             string expectedMessage = "Failed to reset your password. Please try again!";
 

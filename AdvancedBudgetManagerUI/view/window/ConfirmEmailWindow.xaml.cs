@@ -66,7 +66,7 @@ namespace AdvancedBudgetManager.view.window {
                         displayResult = await confirmationCodeInputDialog.ShowAsync();
                     } else {
                         emailConfirmationViewModel.IsConfirmationCodeMatch = true;
-                        windowNavigationService.Show(WindowKey.RESET_PASSWORD_WINDOW);
+                        windowNavigationService.Show(WindowKey.ResetPasswordWindow);
 
                         this.Close();
                     }

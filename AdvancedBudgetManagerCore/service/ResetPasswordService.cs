@@ -51,7 +51,7 @@ namespace AdvancedBudgetManagerCore.service {
                 User existingUser = userRepository.GetByEmail(userUpdateDto.EmailAddress);
 
                 if (existingUser == null) {
-                    return new GenericResponse(ResultCode.ERROR, "No user was found for the specified email address.");
+                    return new GenericResponse(ResultCode.Error, "No user was found for the specified email address.");
                 }
 
                 //Generates a new salt
@@ -66,9 +66,9 @@ namespace AdvancedBudgetManagerCore.service {
 
                 userRepository.Update(updatedUser);
 
-                resetPasswordResponse = new GenericResponse(ResultCode.OK, "Your password was successfully reset!");
+                resetPasswordResponse = new GenericResponse(ResultCode.Ok, "Your password was successfully reset!");
             } catch (AdvancedBudgetManagerException) {
-                resetPasswordResponse = new GenericResponse(ResultCode.ERROR, "Failed to reset your password. Please try again!");
+                resetPasswordResponse = new GenericResponse(ResultCode.Error, "Failed to reset your password. Please try again!");
             }
 
             return resetPasswordResponse;

@@ -54,7 +54,7 @@ namespace AdvancedBudgetManagerCore.view_model {
                 this.loginResponse = loginUserService.CheckCredentials(userReadDto);
 
             } catch (SystemException ex) {
-                this.loginResponse = new GenericResponse(utils.enums.ResultCode.ERROR, $"Failed to login user! Reason: {ex.Message}");
+                this.loginResponse = new GenericResponse(utils.enums.ResultCode.Error, $"Failed to login user! Reason: {ex.Message}");
             }
         }
     }

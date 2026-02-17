@@ -86,7 +86,7 @@ namespace AdvancedBudgetManager.view.window {
                 registerUserViewModel.ValidateUserDataCommand.Execute(null);
 
                 //Send the confirmation code to the specified email address for confirming the identity of the new user
-                emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(EmailPurpose.REGISTER_USER_EMAIL);
+                emailConfirmationViewModel.RequestUserConfirmationCodeCommand.Execute(EmailPurpose.RegisterUserEmail);
             } catch (AdvancedBudgetManagerException ex) {
                 registerUserErrorDialog.Content = ex.Message;
                 await registerUserErrorDialog.ShowAsync();
