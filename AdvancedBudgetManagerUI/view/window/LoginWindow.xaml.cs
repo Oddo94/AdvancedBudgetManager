@@ -1,3 +1,4 @@
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
@@ -14,17 +15,25 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManager.view.window {
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// The user login window.
     /// </summary>
     public sealed partial class LoginWindow : Window {
         private LoginViewModel loginViewModel;
         private UserDashboard userDashboard;
-        private ConfirmEmailWindow confirmEmailWindow;
+        //private ConfirmEmailWindow confirmEmailWindow;
+        private IWindowNavigationService windowNavigationService;
+        //private RegisterUserWindow registerUserWindow;
 
-        public LoginWindow([NotNull] LoginViewModel loginViewModel, [NotNull] UserDashboard userDashboard, [NotNull] ConfirmEmailWindow confirmEmailWindow) {
+        public LoginWindow([NotNull] LoginViewModel loginViewModel,
+            [NotNull] UserDashboard userDashboard,
+            //[NotNull] ConfirmEmailWindow confirmEmailWindow,
+            //[NotNull] RegisterUserWindow registerUserWindow)
+            [NotNull] IWindowNavigationService windowNavigationService) {
             this.loginViewModel = loginViewModel;
             this.userDashboard = userDashboard;
-            this.confirmEmailWindow = confirmEmailWindow;
+            //this.confirmEmailWindow = confirmEmailWindow;
+            //this.registerUserWindow = registerUserWindow;
+            this.windowNavigationService = windowNavigationService;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(600, 600));
@@ -43,13 +52,12 @@ namespace AdvancedBudgetManager.view.window {
         public async void LoginButton_Click(object sender, RoutedEventArgs e) {
             ContentDialog loginErrorDialog;
 
-            try {             
-                loginViewModel.CheckCredentials();
+            try {
+                loginViewModel.LoginUser();
                 PasswordBox.Password = String.Empty;
 
-                LoginResponse loginResponse = loginViewModel.LoginResponse;
-                //LoginResponse loginResponse = new LoginResponse(ResultCode.OK, "User successfully logged in");//ONLY FOR TESTING PURPOSES!!
-                if (loginResponse.ResultCode == ResultCode.OK) {
+                GenericResponse loginResponse = loginViewModel.loginResponse;
+                if (loginResponse.ResultCode == ResultCode.Ok) {
                     this.Close();
                     userDashboard.Activate();
                 } else {
@@ -60,7 +68,6 @@ namespace AdvancedBudgetManager.view.window {
                         XamlRoot = this.Content.XamlRoot
                     };
 
-                    //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                     await loginErrorDialog.ShowAsync();
                 }
             } catch (SystemException ex) {
@@ -71,14 +78,16 @@ namespace AdvancedBudgetManager.view.window {
                     XamlRoot = this.Content.XamlRoot
                 };
 
-                //loginErrorDialog.XamlRoot = this.Content.XamlRoot;
                 await loginErrorDialog.ShowAsync();
             }
         }
 
         public void ResetLink_Click(object sender, RoutedEventArgs e) {
-            //ConfirmEmailWindow confirmEmailWindow = new ConfirmEmailWindow();
-            confirmEmailWindow.Activate();
+            windowNavigationService.Show(WindowKey.ConfirmEmailWindow);
+        }
+
+        public void RegisterUser_Click(object sender, RoutedEventArgs e) {
+            windowNavigationService.Show(WindowKey.RegisterUserWindow);
         }
     }
 }

@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:AdvancedBudgetManager.utils"
     mc:Ignorable="d"
-    Title="LoginWindow">
+    Title="Login">
 
     <Grid>
         <Grid>
@@ -21,7 +21,7 @@
                 <Button x:Name="LoginButton" Content="Login" Click="LoginButton_Click" Background="DodgerBlue" Foreground="White" Margin="10" Width="125" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <HyperlinkButton x:Name="ResetPasswordLink" Content="Forgot password?" Click="ResetLink_Click" Foreground="DodgerBlue" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
                 <TextBlock Text="Don't have an account?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-                <HyperlinkButton x:Name="RegisterUserTextBlock" Content="Register now" Foreground="DodgerBlue" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <HyperlinkButton x:Name="RegisterUserTextBlock" Content="Register now" Click="RegisterUser_Click" Foreground="DodgerBlue" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
             </StackPanel>
         </Grid>
     </Grid>

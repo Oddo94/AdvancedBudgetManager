@@ -26,7 +26,7 @@ namespace AdvancedBudgetManagerCore.utils.security {
                 mail.From = new MailAddress(senderCredentials.EmailSenderAddress);
                 mail.To.Add(confirmationEmailDetails.RecipientEmailAddress);
                 mail.Subject = confirmationEmailDetails.EmailSubject;
-                mail.Body = String.Format(confirmationEmailDetails.EmailBody, confirmationEmailDetails.ConfirmationCode);
+                mail.Body = confirmationEmailDetails.EmailBody;
 
                 SmtpServer.Port = 587;
                 SmtpServer.UseDefaultCredentials = false;
@@ -74,11 +74,5 @@ namespace AdvancedBudgetManagerCore.utils.security {
 
             return resultArray.ToString();
         }
-
-
-        //public bool ConfirmationCodesMatch([DisallowNull] string generatedConfirmationCode, [DisallowNull] string userInputConfirmationCode) {
-        //    return true;
-        //    //return generatedConfirmationCode.Equals(userInputConfirmationCode);
-        //}
     }
 }

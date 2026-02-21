@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManager.utils {
     /// <summary>
@@ -57,11 +53,11 @@ namespace AdvancedBudgetManager.utils {
                 throw new ArgumentException("The minimum size must be greater than or equal to 0!");
             }
 
-            if (comparisonMode == ComparisonMode.LENIENT) {
+            if (comparisonMode == ComparisonMode.Lenient) {
                 if (input.Length >= requiredLength) {
                     return true;
                 }
-            } else if (comparisonMode == ComparisonMode.STRICT) {
+            } else if (comparisonMode == ComparisonMode.Strict) {
                 if (input.Length == requiredLength) {
                     return true;
                 }

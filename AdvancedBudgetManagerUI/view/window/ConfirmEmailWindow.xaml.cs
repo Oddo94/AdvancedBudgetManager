@@ -1,17 +1,15 @@
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.view_model;
-using Autofac.Features.AttributeFilters;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using MySqlX.XDevAPI.Common;
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,23 +18,23 @@ namespace AdvancedBudgetManager.view.window {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ConfirmEmailWindow : Window, IRecipient<RequestEmailConfirmationMessage> {
+    public sealed partial class ConfirmEmailWindow : Window, IRecipient<RequestPasswordResetEmailConfirmationMessage> {
+        private SharedPropertiesViewModelWrapper changePasswordViewModelWrapper;
         private EmailConfirmationViewModel emailConfirmationViewModel;
-        private ChangePasswordViewModelWrapper changePasswordViewModelWrapper;
-        private ConfirmationCodeInputDialog confirmationCodeInputDialog;       
-        private ResetPasswordWindow resetPasswordWindow;
+        private ConfirmationCodeInputDialog confirmationCodeInputDialog;
+        private IWindowNavigationService windowNavigationService;
         private XamlRoot? baseWindowXamlRoot;
 
         public ConfirmEmailWindow(
-            [NotNull] EmailConfirmationViewModel emailConfirmationViewModel,
-            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,          
-            [NotNull] ChangePasswordViewModelWrapper changePasswordViewModelWrapper,
-            [NotNull] ResetPasswordWindow resetPasswordWindow) {
+            [NotNull] ConfirmationCodeInputDialog confirmationCodeInputDialog,
+            [NotNull] SharedPropertiesViewModelWrapper changePasswordViewModelWrapper,
+            [NotNull] IWindowNavigationService windowNavigationService) {
 
-            this.emailConfirmationViewModel = emailConfirmationViewModel;
             this.confirmationCodeInputDialog = confirmationCodeInputDialog;
             this.changePasswordViewModelWrapper = changePasswordViewModelWrapper;
-            this.resetPasswordWindow = resetPasswordWindow;
+            this.windowNavigationService = windowNavigationService;
+
+            emailConfirmationViewModel = this.changePasswordViewModelWrapper.PasswordResetEmailConfirmationVM;
 
             AppWindow appWindow = this.AppWindow;
             appWindow.Resize(new Windows.Graphics.SizeInt32(500, 500));
@@ -45,64 +43,18 @@ namespace AdvancedBudgetManager.view.window {
                 appWindowPresenter.IsResizable = false;
             }
 
-            WeakReferenceMessenger.Default.Register<RequestEmailConfirmationMessage>(this);
+            //Registers the window so that the MVVM Toolkit messaging system can work properly
+            WeakReferenceMessenger.Default.Register(this);
+
             this.InitializeComponent();
         }
 
-        //OLD CODE VERSION
-        //public async void ConfirmEmailButton_Click(object sender, RoutedEventArgs e) {
-        //    this.confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
-
-        //    ContentDialogResult confirmationDialogResult = await confirmationCodeInputDialog.ShowAsync();
-
-        //    //this.Close();
-
-        //    if (confirmationDialogResult == ContentDialogResult.Primary && confirmationCodeInputDialog.IsValidConfirmationCode) {
-        //        await Task.Delay(50);
-        //        //resetPasswordDialog.XamlRoot = this.Content.XamlRoot;
-        //        resetPasswordDialog.XamlRoot = baseWindowXamlRoot;
-
-        //        await resetPasswordDialog.ShowAsync();
-        //    } else {
-        //        Debug.WriteLine("User closed the email confirmation dialog.");
-        //    }
-        //}
-        //public async void ConfirmEmailButton_Click(object sender, RoutedEventArgs e) {
-        //    WeakReferenceMessenger.Default.Register<EmailConfirmationSubmittedMessage>(this, async (r, m) => {
-        //        var result = await ShowEmailConfirmationDialog(m.PromptTitle);
-        //        if (result != null) {
-        //            m.Reply(result);
-        //        }
-        //    });
-        //}
-
-        //private async Task<EmailConfirmationResponse> ShowEmailConfirmationDialog(string title) {
-        //    confirmationCodeInputDialog.Title = title;
-        //    confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
-
-        //    var result = await confirmationCodeInputDialog.ShowAsync();
-
-        //    return result == ContentDialogResult.Primary ? this.confirmationCodeInputDialog.
-        //}
-
-        public async void Receive(RequestEmailConfirmationMessage message) {
+        public async void Receive(RequestPasswordResetEmailConfirmationMessage message) {
             confirmationCodeInputDialog.XamlRoot = this.Content.XamlRoot;
 
             ContentDialogResult displayResult = await confirmationCodeInputDialog.ShowAsync();
 
-            //if (displayResult == ContentDialogResult.Primary) {
-            //    EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
-
-            //    WeakReferenceMessenger.Default.Send(new EmailConfirmationSubmittedMessage(emailConfirmationResponse));
-
-            //    if (!emailConfirmationViewModel.IsConfirmationCodeMatch) {
-            //        confirmationCodeInputDialog.ShowErrorTipOnLoad = true;
-
-            //        displayResult = await confirmationCodeInputDialog.ShowAsync();
-            //    }
-            //}
-
-                do {
+            do {
                 if (displayResult == ContentDialogResult.Primary) {
                     EmailConfirmationResponse emailConfirmationResponse = new EmailConfirmationResponse(confirmationCodeInputDialog.ConfirmationCode);
 
@@ -114,7 +66,7 @@ namespace AdvancedBudgetManager.view.window {
                         displayResult = await confirmationCodeInputDialog.ShowAsync();
                     } else {
                         emailConfirmationViewModel.IsConfirmationCodeMatch = true;
-                        resetPasswordWindow.Activate();
+                        windowNavigationService.Show(WindowKey.ResetPasswordWindow);
 
                         this.Close();
                     }

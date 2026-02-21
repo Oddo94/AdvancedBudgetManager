@@ -1,7 +1,12 @@
-﻿using AdvancedBudgetManager.view.dialog;
+﻿using AdvancedBudgetManager.utils.misc;
+using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.window;
+using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
+using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.utils.database;
+using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.security;
 using AdvancedBudgetManagerCore.view_model;
 using AdvancedBudgetManagerUI.view.window;
 using Autofac;
@@ -34,28 +39,8 @@ namespace AdvancedBudgetManager {
         /// </summary>
         public App() {
             this.InitializeComponent();
-
-            //TO DO: change dependency injection container to Autofac before continuing the implementation of password reset feature
-            //AppHost = Host.CreateDefaultBuilder()
-            //    .ConfigureServices((context, services) => {
-            //        services.AddTransient<UserDashboard>();
-            //        services.AddTransient<LoginViewModel>();
-            //        //services.AddSingleton<ICrudRepository, EmailConfirmationRepository>();
-            //        services.AddSingleton<ICrudRepository, ResetPasswordRepository>();
-            //        services.AddSingleton<ResetPasswordDialog>();
-            //        services.AddSingleton<ResetPasswordViewModel>();
-            //        services.AddSingleton<EmailConfirmationViewModel>();
-            //        services.AddSingleton<ConfirmationCodeInputDialog>();
-            //        services.AddSingleton<ConfirmEmailWindow>();
-            //        services.AddTransient<LoginWindow>();
-            //        services.AddSingleton<IDatabaseConnection, MySqlDatabaseConnection>();
-            //        services.AddSingleton<ICrudRepository, UserLoginRepository>();                                     
-            //    })
-            //    .Build();
-
-
             IHost serviceProvider = ConfigureServices();
-            Container = (AutofacContainer) serviceProvider.Services.GetAutofacRoot();
+            Container = (AutofacContainer)serviceProvider.Services.GetAutofacRoot();
 
         }
 
@@ -65,53 +50,144 @@ namespace AdvancedBudgetManager {
 
             builder.ConfigureContainer<ContainerBuilder>(container => {
                 //Windows
-                container.RegisterType<LoginWindow>()
-                         .SingleInstance();
-                container.RegisterType<UserDashboard>()
-                         .SingleInstance();
+                container.RegisterType<LoginWindow>();
+
+                container.RegisterType<UserDashboard>();
+
                 container.RegisterType<ConfirmEmailWindow>()
-                         .SingleInstance();
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
+                            (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM"))
+                         .OnActivated(e => {
+                             Window window = (Window)e.Instance;
+                             IWindowProvider windowProvider = e.Context.Resolve<IWindowProvider>();
+
+                             windowProvider.Register(window);
+                         })
+                         .Keyed<Window>(WindowKey.ConfirmEmailWindow);
+
                 container.RegisterType<ResetPasswordWindow>()
-                         .SingleInstance();
+                         .Keyed<Window>(WindowKey.ResetPasswordWindow);
+
+                container.RegisterType<RegisterUserWindow>()
+                         .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(EmailConfirmationViewModel),
+                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM"))
+                         .Keyed<Window>(WindowKey.RegisterUserWindow);
 
                 //InputDialogs
-                container.RegisterType<ConfirmationCodeInputDialog>()
-                         .SingleInstance();           
+                container.RegisterType<ConfirmationCodeInputDialog>();
+
+                //NavigationServices
+                container.RegisterType<WindowNavigationService>()
+                    .As<IWindowNavigationService>()
+                    .SingleInstance();
 
                 //ViewModels
                 container.RegisterType<LoginViewModel>()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("UserLoginRepo")
+                               (pi, ctx) => pi.ParameterType == typeof(LoginUserService),
+                               (pi, ctx) => ctx.ResolveKeyed<LoginUserService>("LoginUserService")
                 );
 
-                container.RegisterType<ChangePasswordViewModelWrapper>();
+                /*Since the constructor of SharedPropertiesViewModelWrapper needs two EmailConfirmationViewModel the way in which they
+                they are injected will be determined by their parameter name*/
+                container.RegisterType<SharedPropertiesViewModelWrapper>()
+                        .WithParameter(
+                               (pi, ctx) => pi.Name == "userRegistrationEmailConfirmationVM",
+                               (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM"))
+                        .WithParameter(
+                              (pi, ctx) => pi.Name == "passwordResetEmailConfirmationVM",
+                              (pi, ctx) => ctx.ResolveKeyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM")
+                 );
 
-                container.RegisterType<ResetPasswordViewModel>()
+                container.RegisterType<RegisterUserViewModel>()
                          .SingleInstance()
                          .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(ICrudRepository),
-                               (pi, ctx) => ctx.ResolveKeyed<ICrudRepository>("ResetPasswordRepo")
-                          
-                );
+                                (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
+                                (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserService")
+                    );
+
+                container.RegisterType<ResetPasswordViewModel>()
+                     .SingleInstance()
+                     .WithParameter(
+                           (pi, ctx) => pi.ParameterType == typeof(ResetPasswordService),
+                           (pi, ctx) => ctx.ResolveKeyed<ResetPasswordService>("ResetPasswordService")
+
+            );
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
-                         .AsSelf()
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
+                                (pi, ctx) => ctx.ResolveKeyed<IConfirmationNotifier>("UserRegistrationNotifier"))
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(EmailService),
+                                (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
+                         .Keyed<EmailConfirmationViewModel>("UserRegistrationEmailConfirmationVM");
+
+                container.RegisterType<EmailConfirmationViewModel>()
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IConfirmationNotifier),
+                                (pi, ctx) => ctx.ResolveKeyed<IConfirmationNotifier>("PasswordResetNotifier"))
+                         .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(EmailService),
+                                (pi, ctx) => ctx.ResolveKeyed<EmailService>("EmailService"))
+                         .Keyed<EmailConfirmationViewModel>("PasswordResetEmailConfirmationVM");
+
+                //Single instances
+                //1.Notifiers
+                container.RegisterType<UserRegistrationEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("UserRegistrationNotifier");
+
+                container.RegisterType<PasswordResetEmailConfirmationNotifier>()
+                       .SingleInstance()
+                       .Keyed<IConfirmationNotifier>("PasswordResetNotifier");
+
+                //2.Providers
+                container.RegisterType<WindowProvider>()
+                         .As<IWindowProvider>()
                          .SingleInstance();
 
-                //Repositories
-                container.RegisterType<UserLoginRepository>()
+                //3.Others
+                container.RegisterType<PasswordSecurityManager>();
+
+
+                //Services
+                container.RegisterType<LoginUserService>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                    (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                .Keyed<LoginUserService>("LoginUserService");
+
+                container.RegisterType<RegisterUserService>()
+                         .WithParameter(
+                                 (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                                 (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                         .Keyed<RegisterUserService>("RegisterUserService");
+
+                container.RegisterType<ResetPasswordService>()
+                        .WithParameter(
+                                (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                                (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                        .Keyed<ResetPasswordService>("ResetPasswordService");
+
+                container.RegisterType<EmailService>()
+                         .AsSelf()
+                         .SingleInstance()
+                         .Keyed<EmailService>("EmailService");
+
+                container.RegisterType<ErrorService>()
+                        .As<IErrorService>();
+
+
+                //Repositories      
+                container.RegisterType<UserRepository>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                         .Keyed<ICrudRepository>("UserLoginRepo");
-
-                container.RegisterType<ResetPasswordRepository>()
-                        .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                        .Keyed<ICrudRepository>("ResetPasswordRepo");
+                         .Keyed<IUserRepository>("UserRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()
@@ -138,7 +214,7 @@ namespace AdvancedBudgetManager {
             } else {
                 loginWindow.Activate();
 
-                FrameworkElement rootElement = (FrameworkElement) loginWindow.Content;
+                FrameworkElement rootElement = (FrameworkElement)loginWindow.Content;
 
                 if (!rootElement.IsLoaded) {
                     TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
@@ -146,15 +222,16 @@ namespace AdvancedBudgetManager {
 
                     await tcs.Task;
                 }
-                
+
                 XamlRoot loginWindowRoot = loginWindow.Content.XamlRoot;
 
                 //Retrieves the ConfirmEmailWindow object from the DI container
-                ConfirmEmailWindow confirmEmailWindow = Container.Resolve<ConfirmEmailWindow>();
+                //Window confirmEmailWindow = Container
+                //.ResolveKeyed<Window>(WindowKey.CONFIRM_EMAIL_WINDOW);
 
                 /*Sets the BaseWindowXamlRoot property of the ConfirmEmailWindow to the XamlRoot of the LoginWindow
                 This allows the display of the password reset dialog on top of the login window*/
-                confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;            
+                //confirmEmailWindow.BaseWindowXamlRoot = loginWindowRoot;
             }
         }
     }

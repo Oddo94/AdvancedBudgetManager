@@ -8,19 +8,19 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         /// <summary>
         /// Value for the success response
         /// </summary>
-        [Description("OK")]
-        OK,
+        [Description("Ok")]
+        Ok,
 
         /// <summary>
         /// Value for the error response
         /// </summary>
-        [Description("ERROR")]
-        ERROR,
+        [Description("Error")]
+        Error,
 
         /// <summary>
         /// Default value to be used when the response code is not known.
         /// </summary>
-        [Description("UNDEFINED")]
-        UNDEFINED
+        [Description("Undefined")]
+        Undefined
     }
 }

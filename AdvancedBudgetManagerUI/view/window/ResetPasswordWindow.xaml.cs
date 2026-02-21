@@ -7,8 +7,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Diagnostics;
-using System.Security;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,7 +46,6 @@ namespace AdvancedBudgetManager.view.window {
 
         public async void ResetPasswordButton_Click(object sender, RoutedEventArgs e) {
             PasswordSecurityManager passwordSecurityManager = new PasswordSecurityManager();
-            passwordSecurityManager.ToSecureString("sgdfasgfhgsjf");
 
             ContentDialog passwordResetErrorDialog = new ContentDialog {
                 Title = "Reset password",
@@ -70,7 +67,7 @@ namespace AdvancedBudgetManager.view.window {
                 return;
             }
 
-            if (!inputValidator.HasRequiredLength(NewPasswordBox.Password, minimumPasswordLength, ComparisonMode.LENIENT)) {
+            if (!inputValidator.HasRequiredLength(NewPasswordBox.Password, minimumPasswordLength, ComparisonMode.Lenient)) {
                 passwordResetErrorDialog.Content = $"Your password should be at least {minimumPasswordLength} characters long! Please try again.";
                 await passwordResetErrorDialog.ShowAsync();
 
@@ -109,7 +106,6 @@ namespace AdvancedBudgetManager.view.window {
             ContentDialogResult displayResult = await passwordResetContentDialog.ShowAsync();
 
             if (displayResult == ContentDialogResult.Primary && message.IsSuccess) {
-                Debug.WriteLine("Closing the password reset window...");
                 this.Close();
             }
         }

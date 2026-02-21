@@ -1,6 +1,8 @@
-﻿using AdvancedBudgetManagerCore.model.message;
-using AdvancedBudgetManagerCore.model.request;
-using AdvancedBudgetManagerCore.repository;
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.message;
+using AdvancedBudgetManagerCore.model.response;
+using AdvancedBudgetManagerCore.service;
+using AdvancedBudgetManagerCore.utils.enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -17,40 +19,33 @@ namespace AdvancedBudgetManagerCore.view_model {
         private SecureString newPassword;
 
         [ObservableProperty]
-        private string userEmail;
+        private string emailAddress;
 
-        private ICrudRepository resetPasswordRepository;
+        private ResetPasswordService resetPasswordService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResetPasswordViewModel"/> based on the provided <see cref="ICrudRepository"/> implementation.
+        /// Initializes a new instance of the <see cref="ResetPasswordViewModel"/> based on the provided <see cref="ResetPasswordService"/>.
         /// </summary>
-        /// <param name="resetPasswordRepository">The actual repository used to reset the user password.</param>
-        public ResetPasswordViewModel([NotNull] ICrudRepository resetPasswordRepository) {
-            this.resetPasswordRepository = resetPasswordRepository;
+        /// <param name="resetPasswordService">The actual repository used to reset the user password.</param>
+        public ResetPasswordViewModel([NotNull] ResetPasswordService resetPasswordService) {
+            this.resetPasswordService = resetPasswordService;
         }
 
         /// <summary>
         /// Method that performs the password reset operation.
         /// </summary>
-        /// <param name="userEmail">The user email for which the password reset was requested.</param>
         [RelayCommand]
-        public void ResetPassword([NotNull] string userEmail) {
-            bool isSuccess = false;
-            string resetPasswordResultMessage = String.Empty;
-
-            IDataUpdateRequest passwordUpdateRequest = new PasswordDataUpdateRequest(NewPassword, UserEmail);
+        public void ResetPassword() {
+            GenericResponse resetPasswordResponse;
+            UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, NewPassword, EmailAddress);
 
             try {
-                resetPasswordRepository.UpdateData(passwordUpdateRequest);
-
-                isSuccess = true;
-                resetPasswordResultMessage = "Your password was successfully reset!";
+                resetPasswordResponse = resetPasswordService.ResetPassword(userUpdateDto);
             } catch (SystemException) {
-                isSuccess = false;
-                resetPasswordResultMessage = "Failed to reset your password. Please try again!";
+                resetPasswordResponse = new GenericResponse(ResultCode.Error, "Failed to reset your password. Please try again!");
             }
 
-            WeakReferenceMessenger.Default.Send(new GenericResultMessage(isSuccess, resetPasswordResultMessage));
+            WeakReferenceMessenger.Default.Send(new GenericResultMessage(resetPasswordResponse.ResultCode == ResultCode.Ok, resetPasswordResponse.ResponseMessage));
         }
     }
 }

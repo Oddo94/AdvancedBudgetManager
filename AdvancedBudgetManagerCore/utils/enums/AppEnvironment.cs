@@ -8,26 +8,26 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         /// <summary>
         /// Value for the production environment.
         /// </summary>
-        [Description("PROD")]
-        PROD,
+        [Description("Production")]
+        Production,
 
         /// <summary>
         /// Value for the test environment.
         /// </summary>
-        [Description("TEST")]
-        TEST,
+        [Description("Test")]
+        Test,
 
         /// <summary>
         /// Value for the development environment.
         /// </summary>
-        [Description("DEV")]
-        DEV,
+        [Description("Development")]
+        Development,
 
         /// <summary>
         /// Default value to be used when the application environment is not known.
         /// </summary>
-        [Description("UNDEFINED")]
-        UNDEFINED
+        [Description("Undefined")]
+        Undefined
     }
 
     /// <summary>
@@ -43,20 +43,20 @@ namespace AdvancedBudgetManagerCore.utils.enums {
             AppEnvironment appEnvironment;
 
             switch (appEnvDescription) {
-                case "PROD":
-                    appEnvironment = AppEnvironment.PROD;
+                case "Production":
+                    appEnvironment = AppEnvironment.Production;
                     break;
 
-                case "TEST":
-                    appEnvironment = AppEnvironment.TEST;
+                case "Test":
+                    appEnvironment = AppEnvironment.Test;
                     break;
 
-                case "DEV":
-                    appEnvironment = AppEnvironment.DEV;
+                case "Development":
+                    appEnvironment = AppEnvironment.Development;
                     break;
 
                 default:
-                    appEnvironment = AppEnvironment.UNDEFINED;
+                    appEnvironment = AppEnvironment.Undefined;
                     break;
             }
 
