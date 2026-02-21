@@ -20,15 +20,13 @@ namespace AdvancedBudgetManagerTest.service {
         private static string invalidEmailAddress = String.Empty;
 
         public TestContext TestContext { get; set; }
-        public static PasswordSecurityManager securityManagerInstance;
+        public static PasswordSecurityManager securityManagerInstance = new PasswordSecurityManager();
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
             if (testContext == null) {
                 Assert.Fail("Failed to retrieve the test data.");
             }
-
-            securityManagerInstance = new PasswordSecurityManager();
 
             validUserName = testContext.Properties["validUserName"]?.ToString() ?? String.Empty;
             invalidUserName = testContext.Properties["invalidUserName"]?.ToString() ?? String.Empty;
@@ -45,7 +43,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
-            UserInsertDto userInsertDto = null;
+            UserInsertDto? userInsertDto = null;
             string expectedMessage = "The registered user cannot be null!";
 
 
@@ -102,7 +100,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
-            string userName = null;
+            string? userName = null;
             string expectedMessage = "The searched username cannot be null!";
 
 
@@ -117,7 +115,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
-            User retrievedUser = null;
+            User? retrievedUser = null;
 
             userRepository.GetByUserName(invalidUserName).Returns(retrievedUser);
 
@@ -157,7 +155,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
-            string emailAddress = null;
+            string? emailAddress = null;
             string expectedMessage = "The searched email address cannot be null!";
 
 
@@ -172,7 +170,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             RegisterUserService registerUserService = new RegisterUserService(userRepository, securityManager);
-            User retrievedUser = null;
+            User? retrievedUser = null;
 
 
             userRepository.GetByEmail(invalidEmailAddress).Returns(retrievedUser);

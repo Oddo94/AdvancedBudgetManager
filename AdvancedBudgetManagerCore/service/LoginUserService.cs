@@ -32,6 +32,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// Initializes a new instance of the <see cref="LoginUserService"/> based on the provided user repository.
         /// </summary>
         /// <param name="userRepository">The repository used for retrieving user details</param>
+        /// <param name="securityManager">The <see cref="PasswordSecurityManager"/> instance used for performing the data security operations.</param>
         public LoginUserService(IUserRepository userRepository, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
             this.securityManager = securityManager;

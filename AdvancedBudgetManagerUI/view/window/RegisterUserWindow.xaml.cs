@@ -67,7 +67,7 @@ namespace AdvancedBudgetManager.view.window {
                 return;
             }
 
-            if (!inputValidator.HasRequiredLength(PasswordBox.Password, SecurityConstants.MINIMUM_PASSWORD_LENGTH, ComparisonMode.LENIENT)) {
+            if (!inputValidator.HasRequiredLength(PasswordBox.Password, SecurityConstants.MINIMUM_PASSWORD_LENGTH, ComparisonMode.Lenient)) {
                 registerUserErrorDialog.Content = $"Your password should be at least {SecurityConstants.MINIMUM_PASSWORD_LENGTH} characters long! Please try again.";
                 await registerUserErrorDialog.ShowAsync();
 

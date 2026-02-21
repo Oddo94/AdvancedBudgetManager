@@ -25,7 +25,7 @@ namespace AdvancedBudgetManagerTest.service {
         private static string validPasswordString = String.Empty;
 
         public TestContext TestContext { get; set; }
-        public static PasswordSecurityManager securityManagerInstance;
+        public static PasswordSecurityManager? securityManagerInstance;
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
@@ -56,7 +56,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             LoginUserService loginUserService = Substitute.For<LoginUserService>(userRepository, securityManager);
-            UserReadDto userReadDto = null;
+            UserReadDto? userReadDto = null;
 
             Assert.Throws<ArgumentException>(() => loginUserService.CheckCredentials(userReadDto));
         }

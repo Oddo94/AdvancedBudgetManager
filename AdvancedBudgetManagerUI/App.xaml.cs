@@ -1,7 +1,6 @@
 ﻿using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.window;
-using AdvancedBudgetManagerCore.model.entity;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
@@ -183,19 +182,7 @@ namespace AdvancedBudgetManager {
                         .As<IErrorService>();
 
 
-                //Repositories
-                container.RegisterType<UserLoginRepository>()
-                         .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                         .Keyed<ICrudRepository<User, long>>("UserLoginRepo");
-
-                container.RegisterType<ResetPasswordRepository>()
-                        .WithParameter(
-                               (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-                               (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                        .Keyed<IUserRepository>("ResetPasswordRepo");
-
+                //Repositories      
                 container.RegisterType<UserRepository>()
                          .WithParameter(
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),

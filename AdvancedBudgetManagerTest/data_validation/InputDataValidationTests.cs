@@ -83,35 +83,35 @@ namespace AdvancedBudgetManagerCoreTest.data_validation {
 
         [TestMethod]
         public void CheckInputLength_WhenMatchesRequiredLength_ReturnTrue() {
-            bool checkResult = dataValidator.HasRequiredLength(validLengthInput, requiredInputLength, ComparisonMode.STRICT);
+            bool checkResult = dataValidator.HasRequiredLength(validLengthInput, requiredInputLength, ComparisonMode.Strict);
 
             Assert.IsTrue(checkResult);
         }
 
         [TestMethod]
         public void CheckInputLength_WhenLongerThanRequiredLengthAndModeIsLenient_ReturnTrue() {
-            bool checkResult = dataValidator.HasRequiredLength(validLengthInputWithExtraChars, requiredInputLength, ComparisonMode.LENIENT);
+            bool checkResult = dataValidator.HasRequiredLength(validLengthInputWithExtraChars, requiredInputLength, ComparisonMode.Lenient);
 
             Assert.IsTrue(checkResult);
         }
 
         [TestMethod]
         public void CheckInputLength_WhenDoesNotMatchRequiredLength_ReturnFalse() {
-            bool checkResult = dataValidator.HasRequiredLength(invalidLengthInput, requiredInputLength, ComparisonMode.STRICT);
+            bool checkResult = dataValidator.HasRequiredLength(invalidLengthInput, requiredInputLength, ComparisonMode.Strict);
 
             Assert.IsFalse(checkResult);
         }
 
         [TestMethod]
         public void CheckInputLength_WhenLongerThanRequiredLengthAndModeIsStrict_ReturnFalse() {
-            bool checkResult = dataValidator.HasRequiredLength(validLengthInputWithExtraChars, requiredInputLength, ComparisonMode.STRICT);
+            bool checkResult = dataValidator.HasRequiredLength(validLengthInputWithExtraChars, requiredInputLength, ComparisonMode.Strict);
 
             Assert.IsFalse(checkResult);
         }
 
         [TestMethod]
         public void CheckInputLength_WhenNull_ThrowsException() {
-            Assert.Throws<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.STRICT));
+            Assert.Throws<ArgumentException>(() => dataValidator.HasRequiredLength(null!, requiredInputLength, ComparisonMode.Strict));
         }
 
         [TestMethod]

@@ -67,7 +67,7 @@ namespace AdvancedBudgetManager.view.window {
                 return;
             }
 
-            if (!inputValidator.HasRequiredLength(NewPasswordBox.Password, minimumPasswordLength, ComparisonMode.LENIENT)) {
+            if (!inputValidator.HasRequiredLength(NewPasswordBox.Password, minimumPasswordLength, ComparisonMode.Lenient)) {
                 passwordResetErrorDialog.Content = $"Your password should be at least {minimumPasswordLength} characters long! Please try again.";
                 await passwordResetErrorDialog.ShowAsync();
 

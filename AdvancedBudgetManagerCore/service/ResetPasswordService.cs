@@ -28,6 +28,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// Initializes a new instance of the <see cref="ResetPasswordService"/> class based on the provided user repository.
         /// </summary>
         /// <param name="userRepository">The <see cref="IUserRepository"/> instance used for performing the password reset operations.</param>
+        /// <param name="securityManager">The <see cref="PasswordSecurityManager"/> instance used for performing the data security operations.</param>
         public ResetPasswordService(IUserRepository userRepository, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
             this.securityManager = securityManager;

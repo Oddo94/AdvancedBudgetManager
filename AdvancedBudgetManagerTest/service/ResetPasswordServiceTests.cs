@@ -30,7 +30,7 @@ namespace AdvancedBudgetManagerTest.service {
         private static string invalidEmailAddress = String.Empty;
 
         public TestContext TestContext { get; set; }
-        public static PasswordSecurityManager securityManagerInstance;
+        public static PasswordSecurityManager securityManagerInstance = new PasswordSecurityManager();
 
         [ClassInitialize]
         public static void SetupTestData(TestContext testContext) {
@@ -60,7 +60,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             ResetPasswordService resetPasswordService = new ResetPasswordService(userRepository, securityManager);
-            UserUpdateDto userUpdateDto = null;
+            UserUpdateDto? userUpdateDto = null;
             string expectedMessage = "The updated user cannot be null!";
 
 
@@ -108,8 +108,7 @@ namespace AdvancedBudgetManagerTest.service {
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
             ResetPasswordService resetPasswordService = new ResetPasswordService(userRepository, securityManager);
             UserUpdateDto userUpdateDto = new UserUpdateDto(null, null, null, newPassword, validEmailAddress);
-            User retrievedUser = null;
-            User updatedUser = null;
+            User? retrievedUser = null;
             ResultCode expectedResultCode = ResultCode.Error;
             string expectedMessage = "No user was found for the specified email address.";
 

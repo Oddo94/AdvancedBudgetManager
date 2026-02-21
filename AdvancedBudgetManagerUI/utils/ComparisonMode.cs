@@ -8,13 +8,13 @@ namespace AdvancedBudgetManager.utils {
         /// <summary>
         /// Represents a flexible comparison mode which can allow a more diverse range of values to be accepted.
         /// </summary>
-        [Description("LENIENT")]
-        LENIENT,
+        [Description("Lenient")]
+        Lenient,
 
         /// <summary>
         /// Represents a more rigid comparison mode which allows only specific values to be accepted.
         /// </summary>
-        [Description("STRICT")]
-        STRICT
+        [Description("Strict")]
+        Strict
     }
 }
