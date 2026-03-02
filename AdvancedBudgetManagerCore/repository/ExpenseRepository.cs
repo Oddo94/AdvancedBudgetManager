@@ -63,7 +63,6 @@ namespace AdvancedBudgetManagerCore.repository {
                         long.TryParse(expenseRow.ItemArray[3].ToString(), out expenseType);
                         long.TryParse(expenseRow.ItemArray[4].ToString(), out expenseValue);
                         DateTime expenseDate = DateTime.Parse(expenseRow.ItemArray[5].ToString());
-                        //DateTime date = DateTime.ParseExact(expenseRow.ItemArray[5].ToString(), "yyyy-MM-dd", CultureInfo.CurrentCulture);
                         Expense expense = new Expense(expenseId, retrievedUserId, name, expenseType, expenseValue, expenseDate);
 
                         expensesList.Add(expense);
