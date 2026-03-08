@@ -35,7 +35,7 @@ namespace AdvancedBudgetManagerCore.repository {
         public TEntity Update(TEntity entity);
 
         /// <summary>
-        /// Deletes the specififed entity from the database.
+        /// Deletes the specified entity from the database.
         /// </summary>
         /// <param name="id">The ID of the entity that needs to be deleted.</param>
         public bool Delete(TKey id);
