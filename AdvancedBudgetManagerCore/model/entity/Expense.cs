@@ -6,10 +6,10 @@ namespace AdvancedBudgetManagerCore.model.entity {
         private long userId;
         private string name;
         private long type;
-        private long value;
+        private int value;
         private DateTime date;
 
-        public Expense(long expenseId, long userId, string name, long type, long value, DateTime date) {
+        public Expense(long expenseId, long userId, string name, long type, int value, DateTime date) {
             this.expenseId = expenseId;
             this.userId = userId;
             this.name = name;
@@ -38,7 +38,7 @@ namespace AdvancedBudgetManagerCore.model.entity {
             set { this.type = value; }
         }
 
-        public long Value {
+        public int Value {
             get { return this.value; }
             set { this.value = value; }
         }

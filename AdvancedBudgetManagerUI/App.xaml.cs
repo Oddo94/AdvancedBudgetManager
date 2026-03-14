@@ -106,7 +106,7 @@ namespace AdvancedBudgetManager {
                          .WithParameter(
                                 (pi, ctx) => pi.ParameterType == typeof(RegisterUserService),
                                 (pi, ctx) => ctx.ResolveKeyed<RegisterUserService>("RegisterUserService")
-                    );
+                 );
 
                 container.RegisterType<ResetPasswordViewModel>()
                      .SingleInstance()
@@ -114,7 +114,16 @@ namespace AdvancedBudgetManager {
                            (pi, ctx) => pi.ParameterType == typeof(ResetPasswordService),
                            (pi, ctx) => ctx.ResolveKeyed<ResetPasswordService>("ResetPasswordService")
 
-            );
+                 );
+
+                container.RegisterType<BudgetSummaryViewModel>()
+                    .SingleInstance()
+                    .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(BudgetSummaryService),
+                            (pi, ctx) => ctx.ResolveKeyed<BudgetSummaryService>("BudgetSummaryService")
+
+                 );
+
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -155,11 +164,19 @@ namespace AdvancedBudgetManager {
 
 
                 //Services
+                container.RegisterType<UserSessionService>()
+                 .AsSelf()
+                 .SingleInstance()
+                 .Keyed<IUserSessionService>("UserSessionService");
+
                 container.RegisterType<LoginUserService>()
-                .WithParameter(
-                    (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
-                    (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
-                .Keyed<LoginUserService>("LoginUserService");
+                        .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                               (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                        .WithParameter(
+                               (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
+                               (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"))
+                        .Keyed<LoginUserService>("LoginUserService");
 
                 container.RegisterType<RegisterUserService>()
                          .WithParameter(
@@ -181,6 +198,26 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<ErrorService>()
                         .As<IErrorService>();
 
+                container.RegisterType<BudgetSummaryService>()
+                        .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IIncomeRepository),
+                            (pi, ctx) => ctx.ResolveKeyed<IIncomeRepository>("IncomeRepo"))
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IExpenseRepository),
+                            (pi, ctx) => ctx.ResolveKeyed<IExpenseRepository>("ExpenseRepo"))
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IDebtRepository),
+                            (pi, ctx) => ctx.ResolveKeyed<IDebtRepository>("DebtRepo"))
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(ISavingRepository),
+                            (pi, ctx) => ctx.ResolveKeyed<ISavingRepository>("SavingRepo"))
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IUserRepository),
+                            (pi, ctx) => ctx.ResolveKeyed<IUserRepository>("UserRepo"))
+                         .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
+                            (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"))
+                         .Keyed<BudgetSummaryService>("BudgetSummaryService");
 
                 //Repositories      
                 container.RegisterType<UserRepository>()
@@ -188,6 +225,36 @@ namespace AdvancedBudgetManager {
                                (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                                (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
                          .Keyed<IUserRepository>("UserRepo");
+
+                container.RegisterType<IncomeRepository>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                .Keyed<IIncomeRepository>("IncomeRepo");
+
+                container.RegisterType<ExpenseRepository>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                 .Keyed<IExpenseRepository>("ExpenseRepo");
+
+                container.RegisterType<DebtRepository>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                 .Keyed<IDebtRepository>("DebtRepo");
+
+                container.RegisterType<SavingRepository>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                .Keyed<ISavingRepository>("SavingRepo");
+
+                container.RegisterType<CreditorRepository>()
+                .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                .Keyed<ICreditorRepository>("CreditorRepo");
 
                 //Database
                 container.RegisterType<MySqlDatabaseConnection>()

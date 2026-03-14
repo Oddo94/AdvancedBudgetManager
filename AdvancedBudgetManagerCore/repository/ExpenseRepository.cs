@@ -55,13 +55,13 @@ namespace AdvancedBudgetManagerCore.repository {
                         long expenseId = -1;
                         long retrievedUserId = -1;
                         long expenseType = -1; ;
-                        long expenseValue = -1; ;
+                        int expenseValue = -1; ;
 
                         long.TryParse(expenseRow.ItemArray[0].ToString(), out expenseId);
                         long.TryParse(expenseRow.ItemArray[1].ToString(), out retrievedUserId);
                         string name = expenseRow.ItemArray[2].ToString();
                         long.TryParse(expenseRow.ItemArray[3].ToString(), out expenseType);
-                        long.TryParse(expenseRow.ItemArray[4].ToString(), out expenseValue);
+                        int.TryParse(expenseRow.ItemArray[4].ToString(), out expenseValue);
                         DateTime expenseDate = DateTime.Parse(expenseRow.ItemArray[5].ToString());
                         Expense expense = new Expense(expenseId, retrievedUserId, name, expenseType, expenseValue, expenseDate);
 

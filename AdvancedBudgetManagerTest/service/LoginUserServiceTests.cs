@@ -64,8 +64,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void CheckCredentials_WhenError_ThrowException() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, validPassword);
             string errorMessage = "An error occurred while retrieving data! Please try again.";
 
@@ -82,8 +83,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void CheckCredentials_WhenValidCredentials_SuccessfulLogin() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, validPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
 
@@ -107,8 +109,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void CheckCredentials_WhenInvalidCredentials_FailedLogin() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
             UserReadDto userReadDto = new UserReadDto(invalidUserName, validPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
             String errorMessage = "Invalid username and/or password! Please try again.";
@@ -133,8 +136,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void HasValidCredentials_WhenInputUsersAreNull_ReturnFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
 
 
             bool checkResult = loginUserService.HasValidCredentials(null, null);
@@ -146,8 +150,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void HasValidCredentials_WhenPasswordHashDoesNotMatchStoredHash_ReturnsFalse() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, invalidPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
 
@@ -166,8 +171,9 @@ namespace AdvancedBudgetManagerTest.service {
         [TestMethod]
         public void HasValidCredentials_WhenPasswordHashMatchesStoredHash_ReturnsTrue() {
             IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             PasswordSecurityManager securityManager = Substitute.For<PasswordSecurityManager>();
-            LoginUserService loginUserService = new LoginUserService(userRepository, securityManager);
+            LoginUserService loginUserService = new LoginUserService(userRepository, userSessionService, securityManager);
             UserReadDto userReadDto = new UserReadDto(validUserName, validPassword);
             User retrievedUser = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress);
 

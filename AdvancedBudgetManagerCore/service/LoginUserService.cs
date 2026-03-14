@@ -1,5 +1,6 @@
 ﻿using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.model.misc;
 using AdvancedBudgetManagerCore.model.response;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.enums;
@@ -18,6 +19,8 @@ namespace AdvancedBudgetManagerCore.service {
         /// </summary>
         private IUserRepository userRepository;
 
+        private IUserSessionService userSessionService;
+
         /// <summary>
         /// The security manager used for performing password related operations.
         /// </summary>
@@ -33,8 +36,9 @@ namespace AdvancedBudgetManagerCore.service {
         /// </summary>
         /// <param name="userRepository">The repository used for retrieving user details</param>
         /// <param name="securityManager">The <see cref="PasswordSecurityManager"/> instance used for performing the data security operations.</param>
-        public LoginUserService(IUserRepository userRepository, PasswordSecurityManager securityManager) {
+        public LoginUserService(IUserRepository userRepository, IUserSessionService userSessionService, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
+            this.userSessionService = userSessionService;
             this.securityManager = securityManager;
         }
 
@@ -60,6 +64,12 @@ namespace AdvancedBudgetManagerCore.service {
             if (user != null && HasValidCredentials(userReadDto, user)) {
                 //Sets the login response to success
                 loginResponse = new GenericResponse(ResultCode.Ok, String.Empty);
+
+                //Sets the authenticated user info for later usage
+                long userId = user.UserId ?? -1;
+                string emailAddress = user.EmailAddress;
+                AuthenticatedUser authenticatedUser = new AuthenticatedUser(userId, emailAddress);
+                userSessionService.SetUser(authenticatedUser);
             } else {
                 loginResponse = new GenericResponse(ResultCode.Error, "Invalid username and/or password! Please try again.");
             }
