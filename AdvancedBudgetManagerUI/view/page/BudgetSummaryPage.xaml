@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="AdvancedBudgetManager.view.page.BudgetSummaryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdvancedBudgetManager.view.page"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI" 
+    xmlns:tableView="using:WinUI.TableView"
+    mc:Ignorable="d">
+
+    <Grid Margin="10" Grid.Row="0" Grid.Column="1">
+        <!-- Define rows for layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Define columns for layout -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Budget summary" FontFamily="Comic Sans MS" FontSize="22" Grid.Row="0" Grid.Column="0"/>
+        <!-- Start DatePicker -->
+        <CalendarDatePicker x:Name="startDatePicker" Header="Start date" DateFormat="{}{dayofweek.full}, {month.full} {day.integer}, {year.full}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+
+        <!-- End DatePicker -->
+        <CalendarDatePicker x:Name="endDatePicker" Header="End date" DateFormat="{}{dayofweek.full}, {month.full} {day.integer}, {year.full}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+
+        <!-- Display expenses button -->
+        <Button x:Name="displayExpenseButton" Content="Display expenses" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+
+        <!-- TableView (DataGrid) below Start DatePicker -->
+        <tableView:TableView x:Name="MyTableView"              
+Height="300"
+Grid.Row="2"
+AutoGenerateColumns="True" 
+IsReadOnly="True"
+HorizontalAlignment="Center"
+VerticalAlignment="Center"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1">
+            <TextBlock Text="Expense percentage PieChart" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10"></TextBlock>
+            <lvc:PieChart x:Name="expensePercentagePieChart" Width="500" Height="500" Margin="0,20,0,0" LegendPosition="Right"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0">
+            <Button Content="Uppercase axis" Click="Button_Click" />
+            <Button Content="Lowercase axis" Click="LowercaseButton_Click"/>
+            <Button Content="Change chart data" Click="ChangeChartDataButton_Click"/>
+            <Button Content="Display secret"/>
+            <TextBlock x:Name="sampleTextBlock"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="3">
+            <DatePicker x:Name="yearDatePicker" Header="Select year"  MonthVisible="False" DayVisible="False" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <lvc:CartesianChart HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="1600" Height="350"/>
+        </StackPanel>
+    </Grid>
+</Page>
