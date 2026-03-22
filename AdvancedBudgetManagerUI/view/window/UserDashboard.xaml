@@ -17,9 +17,8 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
-        <Frame x:Name="userDashboardContentFrame">
-            <Button Content="MyButton"/>
-        </Frame>
+        <NavigationView.Content>
+            <Frame x:Name="userDashboardContentFrame"/>
+        </NavigationView.Content>
     </NavigationView>
-
 </Window>

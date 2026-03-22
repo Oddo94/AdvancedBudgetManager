@@ -1,4 +1,7 @@
-using AdvancedBudgetManager.view.page;
+using AdvancedBudgetManager;
+using AdvancedBudgetManager.utils.enums;
+using AdvancedBudgetManager.utils.misc;
+using Autofac;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -11,9 +14,22 @@ namespace AdvancedBudgetManagerUI.view.window {
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class UserDashboard : Window {
+        private readonly IPageNavigationService navigationService;
         public UserDashboard() {
             this.InitializeComponent();
+
+            //if (userDashboardContentFrame == null) {
+            //    throw new Exception("Frame is NULL after InitializeComponent");
+            //}
+            //this.contentLoaded += UserDashboard_Loaded; 
+
+            this.navigationService = App.Container.Resolve<IPageNavigationService>();
+            navigationService.Initialize(this.userDashboardContentFrame);
         }
+
+        //public void UserDashboard_Loaded(object sender, RoutedEventArgs e) {
+        //    userDashboardContentFrame.Navigate(typeof(BudgetSummaryPage));
+        //}
 
         //private void MyButton_Click(object sender, RoutedEventArgs e)
         //{
@@ -34,7 +50,8 @@ namespace AdvancedBudgetManagerUI.view.window {
                     //    break;
 
                     case "budgetSummaryPage":
-                        userDashboardContentFrame.Navigate(typeof(BudgetSummaryPage), null);
+                        //userDashboardContentFrame.Navigate(typeof(BudgetSummaryPage), null);
+                        navigationService.Show(PageKey.BudgetSummaryPage);
                         break;
 
                     default:

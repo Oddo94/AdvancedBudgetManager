@@ -1,7 +1,14 @@
-﻿namespace AdvancedBudgetManager.utils.misc {
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AdvancedBudgetManager.utils.misc {
     public class BudgetSummaryItem {
+        [Display(Name = "Category")]
         private string itemName;
+
+        [Display(Name = "Total value")]
         private int totalValue;
+
+        [Display(Name = "Total percentage(%)")]
         private double totalPercentage;
 
         public BudgetSummaryItem(string itemName, int totalValue, double totalPercentage) {

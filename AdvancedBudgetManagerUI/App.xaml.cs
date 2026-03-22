@@ -1,5 +1,7 @@
-﻿using AdvancedBudgetManager.utils.misc;
+﻿using AdvancedBudgetManager.utils.enums;
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
+using AdvancedBudgetManager.view.page;
 using AdvancedBudgetManager.view.window;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
@@ -13,6 +15,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using AutofacContainer = Autofac.IContainer;
@@ -78,9 +81,17 @@ namespace AdvancedBudgetManager {
                 //InputDialogs
                 container.RegisterType<ConfirmationCodeInputDialog>();
 
+                //Pages
+                container.RegisterType<BudgetSummaryPage>()
+                         .Keyed<Page>(PageKey.BudgetSummaryPage);
+
                 //NavigationServices
                 container.RegisterType<WindowNavigationService>()
                     .As<IWindowNavigationService>()
+                    .SingleInstance();
+
+                container.RegisterType<PageNavigationService>()
+                    .As<IPageNavigationService>()
                     .SingleInstance();
 
                 //ViewModels

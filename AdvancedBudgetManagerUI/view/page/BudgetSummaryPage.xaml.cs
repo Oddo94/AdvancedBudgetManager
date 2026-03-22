@@ -1,3 +1,4 @@
+using AdvancedBudgetManagerCore.view_model;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -9,24 +10,17 @@ namespace AdvancedBudgetManager.view.page {
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class BudgetSummaryPage : Page {
-        //[ObservableProperty]
-        //private ObservableCollection<BudgetSummaryItem> budgetSummaryItems;
-        public BudgetSummaryPage() {
+        private BudgetSummaryViewModel budgetSummaryViewModel;
+        //public BudgetSummaryPage([NotNull] BudgetSummaryViewModel budgetSummaryViewModel) {
+        //    InitializeComponent();
+        //    this.budgetSummaryViewModel = budgetSummaryViewModel;
+        //    //budgetSummaryItems = new ObservableCollection<BudgetSummaryItem>();
+        //}
+
+        public BudgetSummaryPage(BudgetSummaryViewModel budgetSummaryViewModel) {
             InitializeComponent();
-            //budgetSummaryItems = new ObservableCollection<BudgetSummaryItem>();
-
-            //BudgetSummaryItem incomesItem = new BudgetSummaryItem("Incomes", 10000, 100.00);
-            //BudgetSummaryItem expensesItem = new BudgetSummaryItem("Expenses", 4000, 40.00);
-            //BudgetSummaryItem debtsItem = new BudgetSummaryItem("Debts", 1000, 10.00);
-            //BudgetSummaryItem savingsItem = new BudgetSummaryItem("Savings", 5000, 50.00);
-
-            //budgetSummaryItems.Add(incomesItem);
-            //budgetSummaryItems.Add(expensesItem);
-            //budgetSummaryItems.Add(debtsItem);
-            //budgetSummaryItems.Add(savingsItem);
-
+            this.budgetSummaryViewModel = budgetSummaryViewModel;
         }
-
 
         public void Button_Click(object sender, RoutedEventArgs e) {
             //Console.WriteLine("Inside 'Button_Click' method");
