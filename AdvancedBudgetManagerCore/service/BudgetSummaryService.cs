@@ -34,9 +34,10 @@ namespace AdvancedBudgetManagerCore.service {
         public BudgetSummaryDto GetBudgetSummaryInfo(DateTime startDate, DateTime endDate) {
             long userId = userSessionService.AuthenticatedUser.UserId;
             BudgetItemStatistics incomeStatistics = GetIncomeStatistics(userId, startDate, endDate);
-            BudgetItemStatistics expenseStatistics = GetExpenseStatistics(userId, startDate, endDate);
-            BudgetItemStatistics debtStatistics = GetDebtStatistics(userId, startDate, endDate);
-            BudgetItemStatistics savingStatistics = GetSavingStatistics(userId, startDate, endDate);
+            BudgetItemStatistics expenseStatistics = GetExpenseStatistics(userId, startDate, endDate, incomeStatistics.TotalValue);
+            BudgetItemStatistics debtStatistics = GetDebtStatistics(userId, startDate, endDate, incomeStatistics.TotalValue);
+            BudgetItemStatistics savingStatistics = GetSavingStatistics(userId, startDate, endDate, incomeStatistics.TotalValue);
+            BudgetItemStatistics totalLeftToSpendStatistics = GetTotalLeftToSpendStatistics(incomeStatistics.TotalValue, expenseStatistics.TotalValue, debtStatistics.TotalValue, savingStatistics.TotalValue);
 
             BudgetSummaryDto budgetSummaryDto = new BudgetSummaryDto(
                 incomeStatistics.TotalValue,
@@ -46,7 +47,9 @@ namespace AdvancedBudgetManagerCore.service {
                 debtStatistics.TotalValue,
                 debtStatistics.TotalPercentage,
                 savingStatistics.TotalValue,
-                savingStatistics.TotalPercentage);
+                savingStatistics.TotalPercentage,
+                totalLeftToSpendStatistics.TotalValue,
+                totalLeftToSpendStatistics.TotalPercentage);
 
             return budgetSummaryDto;
         }
@@ -69,7 +72,7 @@ namespace AdvancedBudgetManagerCore.service {
             return incomeStatistics;
         }
 
-        public BudgetItemStatistics GetExpenseStatistics(long userId, DateTime startDate, DateTime endDate) {
+        public BudgetItemStatistics GetExpenseStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
             int expenseSum = expenseRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
@@ -77,18 +80,18 @@ namespace AdvancedBudgetManagerCore.service {
                 .DefaultIfEmpty(0)
                 .Sum();
 
-            int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-                .Select(income => income.Value)
-                .DefaultIfEmpty(0)
-                .Sum();
+            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
+            //    .Select(income => income.Value)
+            //    .DefaultIfEmpty(0)
+            //    .Sum();
 
-            double totalPercentage = expenseSum * 100 / totalIncomes;
+            double totalPercentage = totalIncomes > 0 ? expenseSum * 100 / totalIncomes : 0;
             BudgetItemStatistics expenseStatistics = new BudgetItemStatistics(expenseSum, totalPercentage);
 
             return expenseStatistics;
         }
 
-        public BudgetItemStatistics GetDebtStatistics(long userId, DateTime startDate, DateTime endDate) {
+        public BudgetItemStatistics GetDebtStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
             int debtSum = debtRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
@@ -96,18 +99,18 @@ namespace AdvancedBudgetManagerCore.service {
                 .DefaultIfEmpty(0)
                 .Sum();
 
-            int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-                .Select(income => income.Value)
-                .DefaultIfEmpty(0)
-                .Sum();
+            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
+            //    .Select(income => income.Value)
+            //    .DefaultIfEmpty(0)
+            //    .Sum();
 
-            double totalPercentage = debtSum * 100 / totalIncomes;
+            double totalPercentage = totalIncomes > 0 ? debtSum * 100 / totalIncomes : 0;
             BudgetItemStatistics debtStatistics = new BudgetItemStatistics(debtSum, totalPercentage);
 
             return debtStatistics;
         }
 
-        public BudgetItemStatistics GetSavingStatistics(long userId, DateTime startDate, DateTime endDate) {
+        public BudgetItemStatistics GetSavingStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
             int savingSum = savingRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
@@ -115,15 +118,26 @@ namespace AdvancedBudgetManagerCore.service {
                 .DefaultIfEmpty(0)
                 .Sum();
 
-            int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-                .Select(income => income.Value)
-                .DefaultIfEmpty(0)
-                .Sum();
+            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
+            //    .Select(income => income.Value)
+            //    .DefaultIfEmpty(0)
+            //    .Sum();
 
-            double totalPercentage = savingSum * 100 / totalIncomes;
+            double totalPercentage = totalIncomes > 0 ? savingSum * 100 / totalIncomes : 0;
             BudgetItemStatistics savingStatistics = new BudgetItemStatistics(savingSum, totalPercentage);
 
             return savingStatistics;
+        }
+
+        public BudgetItemStatistics GetTotalLeftToSpendStatistics(int totalIncomes, int totalExpenses, int totalDebts, int totalSavings) {
+            if (totalIncomes <= 0) {
+                return new BudgetItemStatistics(0, 0);
+            }
+
+            int totalLeftToSpend = totalIncomes - (totalExpenses + totalDebts + totalSavings);
+            double totalLeftToSpendPercentage = totalLeftToSpend * 100 / totalIncomes;
+
+            return new BudgetItemStatistics(totalLeftToSpend, totalLeftToSpendPercentage);
         }
 
         private void ValidateInputParams(long userId, DateTime startDate, DateTime endDate) {

@@ -8,9 +8,12 @@
         private double totalDebtsPercentage;
         private int totalSavings;
         private double totalSavingsPercentage;
+        private int totalLeftToSpend;
+        private double totalLeftToSpendPercentage;
 
         public BudgetSummaryDto(int totalIncomes, double totalIncomesPercentage, int totalExpenses, double totalExpensesPercentage,
-            int totalDebts, double totalDebtsPercentage, int totalSavings, double totalSavingsPercentage) {
+            int totalDebts, double totalDebtsPercentage, int totalSavings, double totalSavingsPercentage, int totalLeftToSpend,
+            double totalLeftToSpendPercentage) {
             this.totalIncomes = totalIncomes;
             this.totalIncomesPercentage = totalIncomesPercentage;
             this.totalExpenses = totalExpenses;
@@ -19,6 +22,8 @@
             this.totalDebtsPercentage = totalDebtsPercentage;
             this.totalSavings = totalSavings;
             this.totalSavingsPercentage = totalSavingsPercentage;
+            this.totalLeftToSpend = totalLeftToSpend;
+            this.totalLeftToSpendPercentage = totalLeftToSpendPercentage;
         }
 
         public int TotalIncomes {
@@ -58,6 +63,16 @@
         public double TotalSavingsPercentage {
             get { return this.totalSavingsPercentage; }
             set { this.totalSavingsPercentage = value; }
+        }
+
+        public int TotalLeftToSpend {
+            get { return this.totalLeftToSpend; }
+            set { this.totalLeftToSpend = value; }
+        }
+
+        public double TotalLeftToSpendPercentage {
+            get { return this.totalLeftToSpendPercentage; }
+            set { this.totalLeftToSpendPercentage = value; }
         }
     }
 }

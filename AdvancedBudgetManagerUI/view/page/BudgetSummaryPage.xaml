@@ -18,6 +18,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Define columns for layout -->
@@ -27,24 +29,27 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="Budget summary" FontFamily="Comic Sans MS" FontSize="22" Grid.Row="0" Grid.Column="0"/>
+
+        <CheckBox x:Name="monthIntervalCheckBox" Content="Month interval" IsChecked="{x:Bind budgetSummaryViewModel.isMonthInterval, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+
         <!-- Start DatePicker -->
-        <CalendarDatePicker x:Name="startDatePicker" Header="Start date" DateFormat="{}{dayofweek.full}, {month.full} {day.integer}, {year.full}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+        <DatePicker x:Name="startDatePicker" Header="Start date" DayVisible="False" MonthVisible="True" YearVisible="True" Date="{x:Bind budgetSummaryViewModel.budgetSummaryStartDate, Mode=TwoWay}" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
 
         <!-- End DatePicker -->
-        <CalendarDatePicker x:Name="endDatePicker" Header="End date" DateFormat="{}{dayofweek.full}, {month.full} {day.integer}, {year.full}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+        <DatePicker x:Name="endDatePicker" Header="End date" DayVisible="False" MonthVisible="True" YearVisible="True" Date="{x:Bind budgetSummaryViewModel.budgetSummaryEndDate, Mode=TwoWay}" Margin="20" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
 
-        <!-- Display expenses button -->
-        <Button x:Name="displayExpenseButton" Content="Display expenses" Command="{x:Bind budgetSummaryViewModel.DisplayBudgetSummaryCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="4" Grid.Column="0">
+            <!-- Display expenses button -->
+        <Button x:Name="displayBudgetSummaryStatistics" Content="Display statistics" Command="{x:Bind budgetSummaryViewModel.DisplayBudgetSummaryCommand}" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         <!-- TableView (DataGrid) below Start DatePicker -->
         <tableView:TableView x:Name="MyTableView"
                              ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"                           
-                             Height="300"
-                             Grid.Row="2"
+                             Height="300"                        
                              AutoGenerateColumns="False"
                              IsReadOnly="True"
                              GridLinesVisibility="All"
-                             HorizontalAlignment="Center"
+                             HorizontalAlignment="Left"
                              VerticalAlignment="Center">
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn Header="Category" Binding="{Binding ItemName}"/>
@@ -52,19 +57,20 @@
                 <tableView:TableViewTextColumn Header="Percentage from total incomes(%)" Binding="{Binding TotalPercentage}"/>
             </tableView:TableView.Columns>
         </tableView:TableView>
+        </StackPanel>
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1">
             <TextBlock Text="Expense percentage PieChart" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10"></TextBlock>
             <lvc:PieChart x:Name="expensePercentagePieChart" Width="500" Height="500" Margin="0,20,0,0" LegendPosition="Right"/>
         </StackPanel>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="5" Grid.Column="0">
             <Button Content="Uppercase axis" Click="Button_Click" />
             <Button Content="Lowercase axis" Click="LowercaseButton_Click"/>
             <Button Content="Change chart data" Click="ChangeChartDataButton_Click"/>
             <Button Content="Display secret"/>
             <TextBlock x:Name="sampleTextBlock"/>
         </StackPanel>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="3">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="3">
             <DatePicker x:Name="yearDatePicker" Header="Select year"  MonthVisible="False" DayVisible="False" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <lvc:CartesianChart HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="1600" Height="350"/>
         </StackPanel>

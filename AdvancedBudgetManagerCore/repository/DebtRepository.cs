@@ -10,7 +10,11 @@ using System.Data;
 namespace AdvancedBudgetManagerCore.repository {
     public class DebtRepository : IDebtRepository {
         private IDatabaseConnection dbConnection;
-        private string sqlStatementGetDebtsByUserIdAndDateInterval = "SELECT debtID, user_ID, name, value, creditor_ID, date FROM debts WHERE user_ID = @userId date BETWEEN @startDate AND @endDate";
+        private string sqlStatementGetDebtsByUserIdAndDateInterval = "SELECT debtID, user_ID, name, value, creditor_ID, date FROM debts WHERE user_ID = @userId AND date BETWEEN @startDate AND @endDate";
+
+        public DebtRepository(IDatabaseConnection dbConnection) {
+            this.dbConnection = dbConnection;
+        }
 
         public bool Delete(long id) {
             throw new NotImplementedException();

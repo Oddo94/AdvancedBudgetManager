@@ -41,8 +41,8 @@ namespace AdvancedBudgetManagerCore.repository {
                 try {
                     MySqlCommand getIncomesByUserIdAndDateIntervalCommand = new MySqlCommand(sqlStatementGetIncomesByUserIdAndDateInterval, conn);
                     getIncomesByUserIdAndDateIntervalCommand.Parameters.AddWithValue("@userId", userId);
-                    getIncomesByUserIdAndDateIntervalCommand.Parameters.AddWithValue("@startDate", startDate);
-                    getIncomesByUserIdAndDateIntervalCommand.Parameters.AddWithValue("@endDate", endDate);
+                    getIncomesByUserIdAndDateIntervalCommand.Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
+                    getIncomesByUserIdAndDateIntervalCommand.Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
 
                     conn.Open();
                     MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getIncomesByUserIdAndDateIntervalCommand);
