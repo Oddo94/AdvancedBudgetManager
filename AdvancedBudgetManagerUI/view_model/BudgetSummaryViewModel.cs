@@ -21,6 +21,10 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private ObservableCollection<BudgetSummaryItem> budgetSummaryItems;
 
+        private DateTime normalizedStartDate;
+
+        private DateTime normalizedEndDate;
+
         private BudgetSummaryService budgetSummaryService;
 
         public BudgetSummaryViewModel([NotNull] BudgetSummaryService budgetSummaryService) {
@@ -38,24 +42,30 @@ namespace AdvancedBudgetManagerCore.view_model {
         [RelayCommand]
         public void DisplayBudgetSummary() {
             //BudgetSummaryDto budgetSummaryDto = budgetSummaryService.GetBudgetSummaryInfo(budgetSummaryStartDate, budgetSummaryEndDate);
-            DateTime startDate;
-            DateTime endDate;
+            //DateTime startDate;
+            //DateTime endDate;
 
-            DateTime selectedStartDate = BudgetSummaryStartDate.Date;
-            DateTime selectedEndDate = BudgetSummaryEndDate.Date;
-            if (IsMonthInterval) {
-                startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-                endDate = new DateTime(selectedEndDate.Year, selectedEndDate.Month, DateTime.DaysInMonth(selectedEndDate.Year, selectedEndDate.Month));
-            } else {
-                startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-                endDate = startDate.AddMonths(1).AddMinutes(-1);
-                //endDate = startDate.AddDays(DateTime.DaysInMonth(selectedStartDate.Year, selectedStartDate.Month));
+            //DateTime selectedStartDate = BudgetSummaryStartDate.Date;
+            //DateTime selectedEndDate = BudgetSummaryEndDate.Date;
+            //if (IsMonthInterval) {
+            //    startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
+            //    endDate = new DateTime(selectedEndDate.Year, selectedEndDate.Month, DateTime.DaysInMonth(selectedEndDate.Year, selectedEndDate.Month));
+            //} else {
+            //    startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
+            //    endDate = startDate.AddMonths(1).AddMinutes(-1);
+            //    //endDate = startDate.AddDays(DateTime.DaysInMonth(selectedStartDate.Year, selectedStartDate.Month));
+            //}
+
+            DateRange? monthRange = GetMonthRange(BudgetSummaryStartDate, BudgetSummaryEndDate, IsMonthInterval);
+
+            if (monthRange == null) {
+                return;
             }
 
             ObservableCollection<BudgetSummaryItem> retrievedItems = new ObservableCollection<BudgetSummaryItem>();
             BudgetSummaryItems.Clear();
 
-            BudgetSummaryDto budgetSummaryDto = budgetSummaryService.GetBudgetSummaryInfo(startDate, endDate);
+            BudgetSummaryDto budgetSummaryDto = budgetSummaryService.GetBudgetSummaryInfo(monthRange.StartDate, monthRange.EndDate);
             BudgetSummaryItem incomesItem = new BudgetSummaryItem("Incomes", budgetSummaryDto.TotalIncomes, budgetSummaryDto.TotalIncomesPercentage);
             BudgetSummaryItem expensesItem = new BudgetSummaryItem("Expenses", budgetSummaryDto.TotalExpenses, budgetSummaryDto.TotalExpensesPercentage);
             BudgetSummaryItem debtsItem = new BudgetSummaryItem("Debts", budgetSummaryDto.TotalDebts, budgetSummaryDto.TotalDebtsPercentage);
@@ -67,18 +77,31 @@ namespace AdvancedBudgetManagerCore.view_model {
             BudgetSummaryItems.Add(debtsItem);
             BudgetSummaryItems.Add(savingsItem);
             BudgetSummaryItems.Add(leftToSpendItem);
-
-
-
-            //BudgetSummaryItem incomesItem = new BudgetSummaryItem("Incomes", 10000, 100.00);
-            //BudgetSummaryItem expensesItem = new BudgetSummaryItem("Expenses", 4000, 40.00);
-            //BudgetSummaryItem debtsItem = new BudgetSummaryItem("Debts", 1000, 10.00);
-            //BudgetSummaryItem savingsItem = new BudgetSummaryItem("Savings", 5000, 50.00);
-
-            //BudgetSummaryItems.Add(incomesItem);
-            //BudgetSummaryItems.Add(expensesItem);
-            //BudgetSummaryItems.Add(debtsItem);
-            //BudgetSummaryItems.Add(savingsItem);
         }
+
+        private DateRange? GetMonthRange(DateTimeOffset? inputStartDate, DateTimeOffset? inputEndDate, bool isMonthInterval) {
+            if (inputStartDate == null) {
+                return null;
+            }
+
+            DateTime selectedStartDate = inputStartDate.Value.DateTime;
+
+            DateTime normalizedStartDate;
+            DateTime normalizedEndDate;
+            if (isMonthInterval && inputEndDate != null) {
+                DateTime selectedEndDate = inputEndDate.Value.DateTime;
+
+                normalizedStartDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
+                normalizedEndDate = new DateTime(selectedEndDate.Year, selectedEndDate.Month, DateTime.DaysInMonth(selectedEndDate.Year, selectedEndDate.Month)
+                ).AddDays(1).AddTicks(-1);
+            } else {
+                normalizedStartDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
+                normalizedEndDate = normalizedStartDate.AddMonths(1).AddTicks(-1);
+            }
+
+            return new DateRange(normalizedStartDate, normalizedEndDate);
+        }
+
+
     }
 }
