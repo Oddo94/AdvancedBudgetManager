@@ -103,5 +103,9 @@ namespace AdvancedBudgetManager.utils {
 
             return input.Equals("");
         }
+
+        public bool IsValidDateSelection(DateTimeOffset startDate, DateTimeOffset endDate) {
+            return startDate < endDate;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AdvancedBudgetManager.utils.enums;
+﻿using AdvancedBudgetManager.utils;
+using AdvancedBudgetManager.utils.enums;
 using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.page;
@@ -172,6 +173,8 @@ namespace AdvancedBudgetManager {
 
                 //3.Others
                 container.RegisterType<PasswordSecurityManager>();
+                container.RegisterType<DateTimeUtils>();
+                container.RegisterType<InputDataValidator>();
 
 
                 //Services

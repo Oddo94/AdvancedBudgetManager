@@ -1,4 +1,5 @@
-﻿using AdvancedBudgetManager.utils.misc;
+﻿using AdvancedBudgetManager.utils;
+using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.service;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,12 +9,13 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.view_model {
-    public partial class BudgetSummaryViewModel : ObservableObject {
+    public partial class BudgetSummaryViewModel : ObservableValidator {
         [ObservableProperty]
-        public DateTimeOffset budgetSummaryStartDate;
+        //[DateRange("StartDate", "EndDate")]
+        public DateTimeOffset startDate;
 
         [ObservableProperty]
-        public DateTimeOffset budgetSummaryEndDate;
+        public DateTimeOffset endDate;
 
         [ObservableProperty]
         public bool isMonthInterval;
@@ -21,42 +23,48 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private ObservableCollection<BudgetSummaryItem> budgetSummaryItems;
 
+        [ObservableProperty]
+        public bool isValidDateSelection;
+
         private DateTime normalizedStartDate;
 
         private DateTime normalizedEndDate;
 
         private BudgetSummaryService budgetSummaryService;
 
-        public BudgetSummaryViewModel([NotNull] BudgetSummaryService budgetSummaryService) {
+        private DateTimeUtils dateTimeUtils;
+
+        private InputDataValidator dataValidator;
+
+        //public string StartDateError => GetErrors(nameof(StartDate))?.Cast<string>().FirstOrDefault();
+        //public string StartDateError => "This is a test error for the start date picker";
+
+        //public string EndDateError => GetErrors(nameof(EndDate))?.Cast<string>().FirstOrDefault();
+
+        //public string EndDateError => "This is a test error for the end date picker";
+
+
+
+        public BudgetSummaryViewModel([NotNull] BudgetSummaryService budgetSummaryService, [NotNull] DateTimeUtils dateTimeUtils, [NotNull] InputDataValidator dataValidator) {
             this.budgetSummaryService = budgetSummaryService;
+            this.dateTimeUtils = dateTimeUtils;
+            this.dataValidator = dataValidator;
             this.budgetSummaryItems = new ObservableCollection<BudgetSummaryItem>();
 
             DateTime currentDate = DateTime.Now;
             DateTime firstDateOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
-            DateTime lastDateOfMonth = firstDateOfMonth.AddDays(DateTime.DaysInMonth(currentDate.Year, currentDate.Month));
+            //DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
+            DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
 
-            this.budgetSummaryStartDate = new DateTimeOffset(firstDateOfMonth);
-            this.budgetSummaryEndDate = new DateTimeOffset(lastDateOfMonth);
+            this.isValidDateSelection = false;
+            this.StartDate = new DateTimeOffset(firstDateOfMonth);
+            this.EndDate = new DateTimeOffset(lastDateOfMonth);
+
         }
 
         [RelayCommand]
         public void DisplayBudgetSummary() {
-            //BudgetSummaryDto budgetSummaryDto = budgetSummaryService.GetBudgetSummaryInfo(budgetSummaryStartDate, budgetSummaryEndDate);
-            //DateTime startDate;
-            //DateTime endDate;
-
-            //DateTime selectedStartDate = BudgetSummaryStartDate.Date;
-            //DateTime selectedEndDate = BudgetSummaryEndDate.Date;
-            //if (IsMonthInterval) {
-            //    startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-            //    endDate = new DateTime(selectedEndDate.Year, selectedEndDate.Month, DateTime.DaysInMonth(selectedEndDate.Year, selectedEndDate.Month));
-            //} else {
-            //    startDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-            //    endDate = startDate.AddMonths(1).AddMinutes(-1);
-            //    //endDate = startDate.AddDays(DateTime.DaysInMonth(selectedStartDate.Year, selectedStartDate.Month));
-            //}
-
-            DateRange? monthRange = GetMonthRange(BudgetSummaryStartDate, BudgetSummaryEndDate, IsMonthInterval);
+            DateRange? monthRange = dateTimeUtils.GetMonthRange(StartDate, EndDate, IsMonthInterval);
 
             if (monthRange == null) {
                 return;
@@ -79,29 +87,41 @@ namespace AdvancedBudgetManagerCore.view_model {
             BudgetSummaryItems.Add(leftToSpendItem);
         }
 
-        private DateRange? GetMonthRange(DateTimeOffset? inputStartDate, DateTimeOffset? inputEndDate, bool isMonthInterval) {
-            if (inputStartDate == null) {
-                return null;
-            }
+        //partial void OnStartDateChanged(DateTimeOffset value) {
+        //    ValidateAllProperties();
+        //    OnPropertyChanged(nameof(StartDateError));
+        //    OnPropertyChanged(nameof(EndDateError));
+        //}
 
-            DateTime selectedStartDate = inputStartDate.Value.DateTime;
+        //partial void OnEndDateChanged(DateTimeOffset value) {
+        //    ValidateAllProperties();
+        //    OnPropertyChanged(nameof(StartDateError));
+        //    OnPropertyChanged(nameof(EndDateError));
+        //}
 
-            DateTime normalizedStartDate;
-            DateTime normalizedEndDate;
-            if (isMonthInterval && inputEndDate != null) {
-                DateTime selectedEndDate = inputEndDate.Value.DateTime;
-
-                normalizedStartDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-                normalizedEndDate = new DateTime(selectedEndDate.Year, selectedEndDate.Month, DateTime.DaysInMonth(selectedEndDate.Year, selectedEndDate.Month)
-                ).AddDays(1).AddTicks(-1);
+        partial void OnStartDateChanged(DateTimeOffset value) {
+            if (isMonthInterval) {
+                if (isMonthInterval && dataValidator.IsValidDateSelection(StartDate, EndDate)) {
+                    IsValidDateSelection = true;
+                } else {
+                    IsValidDateSelection = false;
+                }
             } else {
-                normalizedStartDate = new DateTime(selectedStartDate.Year, selectedStartDate.Month, 1);
-                normalizedEndDate = normalizedStartDate.AddMonths(1).AddTicks(-1);
+                isValidDateSelection = true;
             }
-
-            return new DateRange(normalizedStartDate, normalizedEndDate);
         }
 
+        partial void OnEndDateChanged(DateTimeOffset value) {
+            if (isMonthInterval) {
+                if (dataValidator.IsValidDateSelection(StartDate, EndDate)) {
+                    IsValidDateSelection = true;
+                } else {
+                    IsValidDateSelection = false;
+                }
+            } else {
+                IsValidDateSelection = true;
+            }
+        }
 
     }
 }
