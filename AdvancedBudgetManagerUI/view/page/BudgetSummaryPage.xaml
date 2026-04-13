@@ -214,7 +214,7 @@
                 <TextBlock Text="Budget summary categories" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
                 <tableView:TableView x:Name="MyTableView"
                  ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"                           
-                 Height="230"
+                 Height="235"
                  Grid.Column="0"
                  AutoGenerateColumns="False"
                  IsReadOnly="True"
@@ -232,7 +232,7 @@
                 <StackPanel Grid.Column="1" Spacing="8">
                     <TextBlock Text="Budget summary chart" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
                     <!-- Replace with actual chart control -->
-                    <lvc:PieChart x:Name="expensePercentagePieChart" Width="500" Height="500" Margin="0,20,0,0" LegendPosition="Right"/>
+                    <lvc:PieChart x:Name="budgetItemsPercentagePieChart" Series="{x:Bind budgetSummaryViewModel.PieSeries, Mode=TwoWay}" Width="500" Height="500" Margin="0,20,0,0" LegendPosition="Right"/>
                 </StackPanel>
 
             </Grid>
@@ -241,14 +241,14 @@
         <!-- 5. BOTTOM SECTION -->
         <StackPanel Grid.Row="4" Spacing="12" Margin="0,-100,0,100">
 
-            <DatePicker x:Name="yearDatePicker" Header="Select month"  DayVisible="False" MonthVisible="True" YearVisible="True"/>
+            <DatePicker x:Name="yearDatePicker" Date="{x:Bind budgetSummaryViewModel.DailyExpenseTotalsDate, Mode=TwoWay}" Header="Select month"  DayVisible="False" MonthVisible="True" YearVisible="True"/>
 
-            <Button Content="Display daily expense evolution" Background="SpringGreen" Foreground="Black" Margin="0,20,0,20"/>
+            <Button Content="Display daily expense evolution" Command="{x:Bind budgetSummaryViewModel.DisplayDailyExpenseTotalsCommand}" Background="SpringGreen" Foreground="Black" Margin="0,20,0,20"/>
 
             <TextBlock Text="Daily expense evolution" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
             <StackPanel Orientation="Horizontal" Spacing="20">
-                <!-- ColumnChart -->               
-                <lvc:CartesianChart HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="1300" Height="200"/>
+                <!-- ColumnChart -->
+                <lvc:CartesianChart XAxes="{x:Bind budgetSummaryViewModel.DailyExpenseTotalAxis, Mode=OneWay}" Series="{x:Bind budgetSummaryViewModel.DailyExpenseTotalSeries, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="1400" Height="300"/>
             </StackPanel>
 
         </StackPanel>

@@ -1,4 +1,5 @@
 using AdvancedBudgetManagerCore.view_model;
+using LiveChartsCore.Kernel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -84,5 +85,12 @@ namespace AdvancedBudgetManager.view.page {
             //coreModelWrapper.Series.Add(new ColumnSeries<double>(values: seriesList.ToArray()));
         }
 
+        public string PieChartFormatToolTip(ChartPoint point) {
+            string name = point.Context.Series?.Name ?? "N/A";
+            double value = point.Coordinate.PrimaryValue;
+            double share = point.StackedValue?.Share ?? 0;
+
+            return $"{name}: {value:N2} ({share:P2})";
+        }
     }
 }

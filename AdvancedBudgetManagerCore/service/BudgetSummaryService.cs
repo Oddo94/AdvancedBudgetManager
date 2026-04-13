@@ -53,6 +53,20 @@ namespace AdvancedBudgetManagerCore.service {
 
             return budgetSummaryDto;
         }
+
+        public Dictionary<int, double> GetDailyExpenseTotals(DateTime startDate, DateTime endDate) {
+            long userId = userSessionService.AuthenticatedUser.UserId;
+            ValidateInputParams(userId, startDate, endDate);
+
+            List<DailyExpenseTotalDto> dailyTotals = expenseRepository.GetDailyExpenseTotalsForDateInterval(userId, startDate, endDate);
+
+            Dictionary<int, double> dailyExpenseTotals = new Dictionary<int, double>();
+            foreach (DailyExpenseTotalDto dailyTotal in dailyTotals) {
+                dailyExpenseTotals.Add(dailyTotal.Day, dailyTotal.TotalValue);
+            }
+
+            return dailyExpenseTotals;
+        }
         public BudgetItemStatistics GetIncomeStatistics(long userId, DateTime startDate, DateTime endDate) {
             ValidateInputParams(userId, startDate, endDate);
 
@@ -135,7 +149,7 @@ namespace AdvancedBudgetManagerCore.service {
             }
 
             int totalLeftToSpend = totalIncomes - (totalExpenses + totalDebts + totalSavings);
-            double totalLeftToSpendPercentage = totalLeftToSpend * 100 / totalIncomes;
+            double totalLeftToSpendPercentage = Math.Round(totalLeftToSpend * 100 / (double)totalIncomes, 2);
 
             return new BudgetItemStatistics(totalLeftToSpend, totalLeftToSpendPercentage);
         }

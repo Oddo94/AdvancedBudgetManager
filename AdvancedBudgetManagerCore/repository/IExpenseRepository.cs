@@ -1,4 +1,5 @@
-﻿using AdvancedBudgetManagerCore.model.entity;
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.model.entity;
 using System;
 using System.Collections.Generic;
 
@@ -7,5 +8,6 @@ namespace AdvancedBudgetManagerCore.repository {
         public List<Expense> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate);
         public List<Expense> GetAllLikeName(long userId, string name);
         public Expense GetByName(long userId, string name);
+        public List<DailyExpenseTotalDto> GetDailyExpenseTotalsForDateInterval(long userId, DateTime startDate, DateTime endDate);
     }
 }
