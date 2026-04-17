@@ -203,17 +203,17 @@
 
             <!-- 4. MAIN CONTENT -->
             <Grid Grid.Row="3" x:Name="MainContentGrid" ColumnSpacing="20">
-
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- LEFT: GridView -->
+                <StackPanel Grid.Column="0" Spacing="20">
+                    <!-- LEFT: GridView -->
                 <!--<GridView Grid.Column="0"/>-->
                 <TextBlock Text="Budget summary categories" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
                 <tableView:TableView x:Name="MyTableView"
-                 ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"                           
+                 ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"
                  Height="235"
                  Grid.Column="0"
                  AutoGenerateColumns="False"
@@ -227,14 +227,13 @@
                         <tableView:TableViewTextColumn Header="Percentage from total incomes(%)" Binding="{Binding TotalPercentage}"/>
                     </tableView:TableView.Columns>
                 </tableView:TableView>
-
-                <!-- RIGHT: PieChart -->
-                <StackPanel Grid.Column="1" Spacing="8">
-                    <TextBlock Text="Budget summary chart" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-                    <!-- Replace with actual chart control -->
-                    <lvc:PieChart x:Name="budgetItemsPercentagePieChart" Series="{x:Bind budgetSummaryViewModel.PieSeries, Mode=TwoWay}" Width="500" Height="500" Margin="0,20,0,0" LegendPosition="Right"/>
                 </StackPanel>
 
+                <!-- RIGHT: PieChart -->
+                <StackPanel Grid.Column="1" Spacing="20">
+                    <TextBlock Text="Budget summary chart" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
+                    <lvc:PieChart x:Name="budgetItemsPercentagePieChart" Series="{x:Bind budgetSummaryViewModel.PieSeries, Mode=TwoWay}" Width="500" Height="350" TooltipPosition="Hidden" LegendPosition="Right"/>
+                </StackPanel>
             </Grid>
         </StackPanel>
 

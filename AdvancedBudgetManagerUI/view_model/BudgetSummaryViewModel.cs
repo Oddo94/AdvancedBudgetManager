@@ -217,67 +217,40 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         }
 
+
         private void UpdateBudgetSummaryPieChart(BudgetSummaryDto budgetSummaryDto) {
             if (budgetSummaryDto == null) {
                 return;
             }
 
-            BudgetSummaryItem incomesItem = new BudgetSummaryItem("Incomes", budgetSummaryDto.TotalIncomes, budgetSummaryDto.TotalIncomesPercentage);
             BudgetSummaryItem expensesItem = new BudgetSummaryItem("Expenses", budgetSummaryDto.TotalExpenses, budgetSummaryDto.TotalExpensesPercentage);
             BudgetSummaryItem debtsItem = new BudgetSummaryItem("Debts", budgetSummaryDto.TotalDebts, budgetSummaryDto.TotalDebtsPercentage);
             BudgetSummaryItem savingsItem = new BudgetSummaryItem("Savings", budgetSummaryDto.TotalSavings, budgetSummaryDto.TotalSavingsPercentage);
             BudgetSummaryItem leftToSpendItem = new BudgetSummaryItem("Left to spend", budgetSummaryDto.TotalLeftToSpend, budgetSummaryDto.TotalLeftToSpendPercentage);
 
-            double[] expenseValue = new double[] { Convert.ToDouble(expensesItem.TotalValue) };
-            double[] debtsValue = new double[] { Convert.ToDouble(debtsItem.TotalValue) };
-            double[] savingsValue = new double[] { Convert.ToDouble(savingsItem.TotalValue) };
-            double[] leftToSpendValue = new double[] { Convert.ToDouble(leftToSpendItem.TotalValue) };
-
+            List<BudgetSummaryItem> budgetSummaryItems = new List<BudgetSummaryItem>() { expensesItem, debtsItem, savingsItem, leftToSpendItem };
             ObservableCollection<ISeries> pieSeriesCollection = new ObservableCollection<ISeries>();
-            pieSeriesCollection.Add(new PieSeries<double> {
-                Values = expenseValue, Name = "Expenses",
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-                DataLabelsFormatter = point => {
-                    double itemValue = point.Coordinate.PrimaryValue;
-                    //double itemPercentage = point.Coordinate.PrimaryValue / incomesItem.TotalValue;
-                    return $"{itemValue} ({incomesItem.TotalPercentage}%)";
+
+            foreach (BudgetSummaryItem item in budgetSummaryItems) {
+                double[] budgetSummaryItemValue = new double[] { Convert.ToDouble(item.TotalValue) };
+
+                //The elements whose value is equal to 0 will not be shown because they are irrelevant
+                if (budgetSummaryItemValue[0] > 0) {
+                    pieSeriesCollection.Add(new PieSeries<double> {
+                        Values = budgetSummaryItemValue, Name = item.ItemName,
+                        DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                        DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                        DataLabelsFormatter = point => {
+                            double itemValue = point.Coordinate.PrimaryValue;
+                            return $"{itemValue} ({item.TotalPercentage}%)";
+                        }
+                    });
                 }
-            });
-            pieSeriesCollection.Add(new PieSeries<double> {
-                Values = debtsValue, Name = "Debts",
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-                DataLabelsFormatter = point => {
-                    double itemValue = point.Coordinate.PrimaryValue;
-                    //double itemPercentage = point.Coordinate.PrimaryValue / incomesItem.TotalValue;
-                    return $"{itemValue} ({debtsItem.TotalPercentage}%)";
-                }
-            });
-            pieSeriesCollection.Add(new PieSeries<double> {
-                Values = savingsValue, Name = "Savings",
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-                DataLabelsFormatter = point => {
-                    double itemValue = point.Coordinate.PrimaryValue;
-                    //double itemPercentage = point.Coordinate.PrimaryValue / incomesItem.TotalValue;
-                    return $"{itemValue} ({savingsItem.TotalPercentage}%)";
-                }
-            });
-            pieSeriesCollection.Add(new PieSeries<double> {
-                Values = leftToSpendValue,
-                Name = "Left to spend",
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-                DataLabelsFormatter = point => {
-                    double itemValue = point.Coordinate.PrimaryValue;
-                    //double itemPercentage = point.Coordinate.PrimaryValue / incomesItem.TotalValue;
-                    return $"{itemValue} ({leftToSpendItem.TotalPercentage}%)";
-                }
-            });
+            }
 
             this.PieSeries = pieSeriesCollection;
         }
+
         partial void OnStartDateChanged(DateTimeOffset value) {
             if (isMonthInterval) {
                 if (isMonthInterval && dataValidator.IsValidDateSelection(StartDate, EndDate)) {

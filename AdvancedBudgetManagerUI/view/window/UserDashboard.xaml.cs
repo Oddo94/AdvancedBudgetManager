@@ -2,6 +2,7 @@ using AdvancedBudgetManager;
 using AdvancedBudgetManager.utils.enums;
 using AdvancedBudgetManager.utils.misc;
 using Autofac;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -22,6 +23,13 @@ namespace AdvancedBudgetManagerUI.view.window {
             //    throw new Exception("Frame is NULL after InitializeComponent");
             //}
             //this.contentLoaded += UserDashboard_Loaded; 
+
+            AppWindow appWindow = this.AppWindow;
+            if (appWindow.Presenter is OverlappedPresenter presenter) {
+                presenter.Maximize();
+            }
+
+            appWindow.Hide();
 
             this.navigationService = App.Container.Resolve<IPageNavigationService>();
             navigationService.Initialize(this.userDashboardContentFrame);
