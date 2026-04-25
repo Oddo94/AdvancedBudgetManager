@@ -175,6 +175,7 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<PasswordSecurityManager>();
                 container.RegisterType<DateTimeUtils>();
                 container.RegisterType<InputDataValidator>();
+                container.RegisterType<UIComponentInitUtils>();
 
 
                 //Services

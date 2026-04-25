@@ -22,6 +22,5 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         /// </summary>
         [Description("Undefined")]
         Undefined
-
     }
 }

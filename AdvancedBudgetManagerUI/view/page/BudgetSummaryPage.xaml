@@ -196,7 +196,7 @@
             Content="Display statistics"
             IsEnabled="{x:Bind budgetSummaryViewModel.IsValidDateSelection, Mode=TwoWay}"
             Command="{x:Bind budgetSummaryViewModel.DisplayBudgetSummaryCommand}"
-            Background="SpringGreen"
+            Background="Gold"
             Foreground="Black"
             HorizontalAlignment="Left"
             Margin="0,20,0,20"/>
@@ -242,7 +242,7 @@
 
             <DatePicker x:Name="yearDatePicker" Date="{x:Bind budgetSummaryViewModel.DailyExpenseTotalsDate, Mode=TwoWay}" Header="Select month"  DayVisible="False" MonthVisible="True" YearVisible="True"/>
 
-            <Button Content="Display daily expense evolution" Command="{x:Bind budgetSummaryViewModel.DisplayDailyExpenseTotalsCommand}" Background="SpringGreen" Foreground="Black" Margin="0,20,0,20"/>
+            <Button Content="Display daily expense evolution" Command="{x:Bind budgetSummaryViewModel.DisplayDailyExpenseTotalsCommand}" Background="Gold" Foreground="Black" Margin="0,20,0,20"/>
 
             <TextBlock Text="Daily expense evolution" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
             <StackPanel Orientation="Horizontal" Spacing="20">

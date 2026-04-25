@@ -2,6 +2,7 @@
 using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.service;
+using AdvancedBudgetManagerCore.utils.enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
@@ -41,7 +42,6 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         private ObservableCollection<ISeries> dailyExpenseTotalSeries;
 
-
         [ObservableProperty]
         public bool isValidDateSelection;
 
@@ -55,26 +55,21 @@ namespace AdvancedBudgetManagerCore.view_model {
 
         private InputDataValidator dataValidator;
 
-        //public string StartDateError => GetErrors(nameof(StartDate))?.Cast<string>().FirstOrDefault();
-        //public string StartDateError => "This is a test error for the start date picker";
-
-        //public string EndDateError => GetErrors(nameof(EndDate))?.Cast<string>().FirstOrDefault();
-
-        //public string EndDateError => "This is a test error for the end date picker";
+        private UIComponentInitUtils uiComponentInitUtils;
 
 
-
-        public BudgetSummaryViewModel([NotNull] BudgetSummaryService budgetSummaryService, [NotNull] DateTimeUtils dateTimeUtils, [NotNull] InputDataValidator dataValidator) {
+        public BudgetSummaryViewModel([NotNull] BudgetSummaryService budgetSummaryService,
+            [NotNull] DateTimeUtils dateTimeUtils,
+            [NotNull] InputDataValidator dataValidator,
+            [NotNull] UIComponentInitUtils uiComponentInitUtils) {
             this.budgetSummaryService = budgetSummaryService;
             this.dateTimeUtils = dateTimeUtils;
             this.dataValidator = dataValidator;
+            this.uiComponentInitUtils = uiComponentInitUtils;
             this.budgetSummaryItems = new ObservableCollection<BudgetSummaryItem>();
             this.pieSeries = new ObservableCollection<ISeries>();
 
-            List<string> defaultLabels = new List<string>();
-            for (int i = 1; i < 30; i++) {
-                defaultLabels.Add(Convert.ToString(i));
-            }
+            List<string> defaultLabels = uiComponentInitUtils.InitColumnChartLabels(TimeUnit.Day);
 
             this.dailyExpenseTotalAxis = new ObservableCollection<ICartesianAxis>() {
                 new Axis {
@@ -86,7 +81,6 @@ namespace AdvancedBudgetManagerCore.view_model {
 
             DateTime currentDate = DateTime.Now;
             DateTime firstDateOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
-            //DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
             DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
 
             this.isValidDateSelection = false;
@@ -94,55 +88,6 @@ namespace AdvancedBudgetManagerCore.view_model {
             this.EndDate = new DateTimeOffset(lastDateOfMonth);
             this.DailyExpenseTotalsDate = new DateTimeOffset(firstDateOfMonth);
 
-            //double[] expenseValue = new double[] { 25.48 };
-            //double[] debtsValue = new double[] { 14.52 };
-            //double[] savingsValue = new double[] { 24.00 };
-            //double[] leftToSpendValue = new double[] { 36.00 };
-            //double percentage = leftToSpendValue[0] * 100 / 125;
-            //ObservableCollection<ISeries> pieSeriesCollection = new ObservableCollection<ISeries>();
-            //pieSeriesCollection.Add(new PieSeries<double> {
-            //    Values = expenseValue, Name = "Expenses",
-            //    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-            //    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-            //    DataLabelsFormatter = point => {
-            //        double itemValue = point.Coordinate.PrimaryValue;
-            //        double itemPercentage = point.Coordinate.PrimaryValue / 120;
-            //        return $"{itemValue:N2} ({itemPercentage:P2})";
-            //    }
-            //});
-            //pieSeriesCollection.Add(new PieSeries<double> {
-            //    Values = debtsValue, Name = "Debts",
-            //    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-            //    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-            //    DataLabelsFormatter = point => {
-            //        double itemValue = point.Coordinate.PrimaryValue;
-            //        double itemPercentage = point.Coordinate.PrimaryValue / 120;
-            //        return $"{itemValue:N2} ({itemPercentage:P2})";
-            //    }
-            //});
-            //pieSeriesCollection.Add(new PieSeries<double> {
-            //    Values = savingsValue, Name = "Savings",
-            //    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-            //    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-            //    DataLabelsFormatter = point => {
-            //        double itemValue = point.Coordinate.PrimaryValue;
-            //        double itemPercentage = point.Coordinate.PrimaryValue / 120;
-            //        return $"{itemValue:N2} ({itemPercentage:P2})";
-            //    }
-            //});
-            //pieSeriesCollection.Add(new PieSeries<double> {
-            //    Values = leftToSpendValue,
-            //    Name = "Left to spend",
-            //    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-            //    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-            //    DataLabelsFormatter = point => {
-            //        double itemValue = point.Coordinate.PrimaryValue;
-            //        double itemPercentage = point.Coordinate.PrimaryValue / 120;
-            //        return $"{itemValue:N2} ({itemPercentage:P2})";
-            //    }
-            //});
-
-            //this.pieSeries = pieSeriesCollection;
         }
 
         [RelayCommand]
@@ -211,12 +156,12 @@ namespace AdvancedBudgetManagerCore.view_model {
             DailyExpenseTotalSeries = new ObservableCollection<ISeries> {
                 new ColumnSeries<double> {
                     Name = "Total expenses",
-                    Values = values.ToArray()
+                    Values = values.ToArray(),
+                    Fill = new SolidColorPaint(SKColors.Gold)
                 }
-            };
+            }; ;
 
         }
-
 
         private void UpdateBudgetSummaryPieChart(BudgetSummaryDto budgetSummaryDto) {
             if (budgetSummaryDto == null) {

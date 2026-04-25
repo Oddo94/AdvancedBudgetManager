@@ -19,11 +19,6 @@ namespace AdvancedBudgetManagerUI.view.window {
         public UserDashboard() {
             this.InitializeComponent();
 
-            //if (userDashboardContentFrame == null) {
-            //    throw new Exception("Frame is NULL after InitializeComponent");
-            //}
-            //this.contentLoaded += UserDashboard_Loaded; 
-
             AppWindow appWindow = this.AppWindow;
             if (appWindow.Presenter is OverlappedPresenter presenter) {
                 presenter.Maximize();
@@ -33,16 +28,10 @@ namespace AdvancedBudgetManagerUI.view.window {
 
             this.navigationService = App.Container.Resolve<IPageNavigationService>();
             navigationService.Initialize(this.userDashboardContentFrame);
+
+            //Sets the default page on app startup
+            navigationService.Show(PageKey.BudgetSummaryPage);
         }
-
-        //public void UserDashboard_Loaded(object sender, RoutedEventArgs e) {
-        //    userDashboardContentFrame.Navigate(typeof(BudgetSummaryPage));
-        //}
-
-        //private void MyButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MyButton.Content = "Clicked";
-        //}
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args) {
             if (args.SelectedItem is NavigationViewItem selectedItem) {
@@ -58,7 +47,6 @@ namespace AdvancedBudgetManagerUI.view.window {
                     //    break;
 
                     case "budgetSummaryPage":
-                        //userDashboardContentFrame.Navigate(typeof(BudgetSummaryPage), null);
                         navigationService.Show(PageKey.BudgetSummaryPage);
                         break;
 

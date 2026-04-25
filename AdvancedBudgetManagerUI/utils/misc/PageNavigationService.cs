@@ -8,10 +8,6 @@ namespace AdvancedBudgetManager.utils.misc {
         private readonly IContainer container;
         private ILifetimeScope rootScope;
 
-        //public PageNavigationService(IContainer container) {
-        //    this.container = container;
-        //}
-
         public PageNavigationService(ILifetimeScope rootScope) {
             this.rootScope = rootScope;
         }
