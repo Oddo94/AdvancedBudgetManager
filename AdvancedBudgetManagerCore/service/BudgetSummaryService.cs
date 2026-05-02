@@ -94,11 +94,6 @@ namespace AdvancedBudgetManagerCore.service {
                 .DefaultIfEmpty(0)
                 .Sum();
 
-            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-            //    .Select(income => income.Value)
-            //    .DefaultIfEmpty(0)
-            //    .Sum();
-
             double totalPercentage = totalIncomes > 0 ? expenseSum * 100 / totalIncomes : 0;
             BudgetItemStatistics expenseStatistics = new BudgetItemStatistics(expenseSum, totalPercentage);
 
@@ -113,11 +108,6 @@ namespace AdvancedBudgetManagerCore.service {
                 .DefaultIfEmpty(0)
                 .Sum();
 
-            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-            //    .Select(income => income.Value)
-            //    .DefaultIfEmpty(0)
-            //    .Sum();
-
             double totalPercentage = totalIncomes > 0 ? debtSum * 100 / totalIncomes : 0;
             BudgetItemStatistics debtStatistics = new BudgetItemStatistics(debtSum, totalPercentage);
 
@@ -131,11 +121,6 @@ namespace AdvancedBudgetManagerCore.service {
                 .Select(saving => saving.Value)
                 .DefaultIfEmpty(0)
                 .Sum();
-
-            //int totalIncomes = incomeRepository.GetByUserIdAndDateInterval(userId, startDate, endDate)
-            //    .Select(income => income.Value)
-            //    .DefaultIfEmpty(0)
-            //    .Sum();
 
             double totalPercentage = totalIncomes > 0 ? savingSum * 100 / totalIncomes : 0;
             BudgetItemStatistics savingStatistics = new BudgetItemStatistics(savingSum, totalPercentage);

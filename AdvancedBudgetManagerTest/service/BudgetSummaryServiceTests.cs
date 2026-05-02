@@ -21,6 +21,14 @@ namespace AdvancedBudgetManagerTest.service {
         private static DateTime invalidEndDate = DateTime.Now;
         private static List<DailyExpenseTotalDto> dailyTotalsWithData = new List<DailyExpenseTotalDto>();
         private static List<DailyExpenseTotalDto> dailyTotalsNoDataFound = new List<DailyExpenseTotalDto>();
+        private static List<Income> incomeListWithData = new List<Income>();
+        private static List<Income> incomeListNoDataFound = new List<Income>();
+        private static List<Expense> expenseListWithData = new List<Expense>();
+        private static List<Expense> expenseListNoDataFound = new List<Expense>();
+        private static List<Debt> debtListWithData = new List<Debt>();
+        private static List<Debt> debtListNoDataFound = new List<Debt>();
+        private static List<Saving> savingListWithData = new List<Saving>();
+        private static List<Saving> savingListNoDataFound = new List<Saving>();
         private static Dictionary<int, double> dailyExpenseTotals = new Dictionary<int, double>();
 
         public TestContext TestContext { get; set; }
@@ -49,6 +57,21 @@ namespace AdvancedBudgetManagerTest.service {
 
                 DailyExpenseTotalDto dailyTotalDtoNoDataFound = new DailyExpenseTotalDto(i, 0);
                 dailyTotalsNoDataFound.Add(dailyTotalDtoNoDataFound);
+            }
+
+            int totalItems = 10;
+            for (int i = 1; i <= totalItems; i++) {
+                Income income = new Income(i, validUserId, "Test income", 1, i * 100, DateTime.Now.AddDays(i));
+                incomeListWithData.Add(income);
+
+                Expense expense = new Expense(i, validUserId, "Test expense", 1, i * 30, DateTime.Now.AddDays(i));
+                expenseListWithData.Add(expense);
+
+                Debt debt = new Debt(i, validUserId, "Test debt", i * 20, 1, DateTime.Now.AddDays(i));
+                debtListWithData.Add(debt);
+
+                Saving saving = new Saving(i, validUserId, "Test saving", i * 50, DateTime.Now.AddDays(i));
+                savingListWithData.Add(saving);
             }
         }
 
@@ -150,5 +173,436 @@ namespace AdvancedBudgetManagerTest.service {
             Assert.AreEqual(expectedMessage, exception.Message);
         }
 
+        [TestMethod]
+        public void GetIncomeStatistics_WhenIncomesFound_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            incomeRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(incomeListWithData);
+
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics incomeStatistics = budgetSummaryService.GetIncomeStatistics(validUserId, validStartDate, validEndDate);
+
+            int expectedValue = 5500;
+            double expectedPercentage = 100;
+            Assert.AreEqual(expectedValue, incomeStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, incomeStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetIncomeStatistics_WhenNoIncomesFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            incomeRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(incomeListNoDataFound);
+
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics incomeStatistics = budgetSummaryService.GetIncomeStatistics(validUserId, validStartDate, validEndDate);
+
+            int expectedValue = 0;
+            double expectedPercentage = 100;
+            Assert.AreEqual(expectedValue, incomeStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, incomeStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetExpenseStatistics_WhenExpensesFound_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            expenseRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(expenseListWithData);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics expenseStatistics = budgetSummaryService.GetExpenseStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 1650;
+            double expectedPercentage = 30;
+            Assert.AreEqual(expectedValue, expenseStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, expenseStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetExpenseStatistics_WhenNoExpensesFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            expenseRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(expenseListNoDataFound);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics expenseStatistics = budgetSummaryService.GetExpenseStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, expenseStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, expenseStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetExpenseStatistics_WhenNoExpensesAndIncomesFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            expenseRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(expenseListNoDataFound);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics expenseStatistics = budgetSummaryService.GetExpenseStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, expenseStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, expenseStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetExpenseStatistics_WhenIncomesEqualZero_ReturnZeroExpensePercentage() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            expenseRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(expenseListWithData);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics expenseStatistics = budgetSummaryService.GetExpenseStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 1650;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, expenseStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, expenseStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetDebtStatistics_WhenDebtsFound_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            debtRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(debtListWithData);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics debtStatistics = budgetSummaryService.GetDebtStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 1100;
+            double expectedPercentage = 20;
+            Assert.AreEqual(expectedValue, debtStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, debtStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetDebtStatistics_WhenNoDebtsFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            debtRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(debtListNoDataFound);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics debtStatistics = budgetSummaryService.GetDebtStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, debtStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, debtStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetDebtStatistics_WhenNoDebtsAndIncomesFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            debtRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(debtListNoDataFound);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics debtStatistics = budgetSummaryService.GetDebtStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, debtStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, debtStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetDebtStatistics_WhenIncomesEqualZero_ReturnZeroDebtsPercentage() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            debtRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(debtListWithData);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics debtStatistics = budgetSummaryService.GetDebtStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 1100;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, debtStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, debtStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetSavingStatistics_WhenSavingsFound_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListWithData);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics savingStatistics = budgetSummaryService.GetSavingStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 2750;
+            double expectedPercentage = 50;
+            Assert.AreEqual(expectedValue, savingStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, savingStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetSavingStatistics_WhenNoSavingsFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListNoDataFound);
+
+            int totalIncomes = 5500;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics savingStatistics = budgetSummaryService.GetSavingStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, savingStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, savingStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetSavingStatistics_WhenNoSavingsAndIncomesFound_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListNoDataFound);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics savingStatistics = budgetSummaryService.GetSavingStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, savingStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, savingStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetSavingStatistics_WhenIncomesEqualZero_ReturnZeroSavingsPercentage() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListWithData);
+
+            int totalIncomes = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics savingStatistics = budgetSummaryService.GetSavingStatistics(validUserId, validStartDate, validEndDate, totalIncomes);
+
+            int expectedValue = 2750;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, savingStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, savingStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetTotalLeftToSpendStatistics_WhenPositiveIncomes_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListWithData);
+
+            int totalIncomes = 5500;
+            int totalExpenses = 1650;
+            int totalDebts = 1100;
+            int totalSavings = 2000;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics leftToSpendStatistics = budgetSummaryService.GetTotalLeftToSpendStatistics(totalIncomes, totalExpenses, totalDebts, totalSavings);
+
+            int expectedValue = 750;
+            double expectedPercentage = 13.64;
+            Assert.AreEqual(expectedValue, leftToSpendStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, leftToSpendStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetTotalLeftToSpendStatistics_WhenNothingLeftToSpend_ReturnComputedStatistics() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListWithData);
+
+            int totalIncomes = 5500;
+            int totalExpenses = 1650;
+            int totalDebts = 1100;
+            int totalSavings = 2750;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics leftToSpendStatistics = budgetSummaryService.GetTotalLeftToSpendStatistics(totalIncomes, totalExpenses, totalDebts, totalSavings);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, leftToSpendStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, leftToSpendStatistics.TotalPercentage);
+        }
+
+        [TestMethod]
+        public void GetTotalLeftToSpendStatistics_WhenIncomesEqualZero_ReturnDefaultValues() {
+            IIncomeRepository incomeRepository = Substitute.For<IIncomeRepository>();
+            IExpenseRepository expenseRepository = Substitute.For<IExpenseRepository>();
+            IDebtRepository debtRepository = Substitute.For<IDebtRepository>();
+            ISavingRepository savingRepository = Substitute.For<ISavingRepository>();
+            IUserRepository userRepository = Substitute.For<IUserRepository>();
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+
+            User user = new User(validUserId, validUserName, saltArray, validPasswordHash, validEmailAddress); ;
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+            userRepository.GetById(validUserId).Returns(user);
+            savingRepository.GetByUserIdAndDateInterval(validUserId, validStartDate, validEndDate).Returns(savingListWithData);
+
+            int totalIncomes = 0;
+            int totalExpenses = 0;
+            int totalDebts = 0;
+            int totalSavings = 0;
+            BudgetSummaryService budgetSummaryService = new BudgetSummaryService(incomeRepository, expenseRepository, debtRepository, savingRepository, userRepository, userSessionService);
+            BudgetItemStatistics leftToSpendStatistics = budgetSummaryService.GetTotalLeftToSpendStatistics(totalIncomes, totalExpenses, totalDebts, totalSavings);
+
+            int expectedValue = 0;
+            double expectedPercentage = 0;
+            Assert.AreEqual(expectedValue, leftToSpendStatistics.TotalValue);
+            Assert.AreEqual(expectedPercentage, leftToSpendStatistics.TotalPercentage);
+        }
     }
 }
