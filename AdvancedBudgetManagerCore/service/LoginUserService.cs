@@ -110,7 +110,7 @@ namespace AdvancedBudgetManagerCore.service {
 
 
         /// <summary>
-        /// Sets the <see cref="LoginResponse"/> of the <see cref="LoginViewModel"/>.
+        /// Sets the <see cref="LoginResponse"/> of the <see cref="LoginUserService"/>.
         /// </summary>
         public GenericResponse LoginResponse {
             get { return this.loginResponse; }

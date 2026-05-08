@@ -8,34 +8,47 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class used for managing the income operations that require databse interaction.
+    /// </summary>
     public class IncomeRepository : IIncomeRepository {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetIncomesByUserIdAndDateInterval = "SELECT incomeID, user_ID, name, incomeType, value, date FROM incomes WHERE user_ID = @userId AND date BETWEEN @startDate AND @endDate";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IncomeRepository"/> based on the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public IncomeRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Income> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Income> GetAllLikeName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Income GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Income GetByName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Income> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -87,10 +100,12 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public Income Insert(Income entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Income Update(Income entity) {
             throw new NotImplementedException();
         }

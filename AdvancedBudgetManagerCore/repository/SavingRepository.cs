@@ -8,34 +8,47 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class for managing the operations related to savings that require database interaction.
+    /// </summary>
     public class SavingRepository : ISavingRepository {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetSavingsByUserIdAnDateInterval = @"SELECT savingID, user_ID, name, value, date FROM savings WHERE user_ID = @userId AND date BETWEEN @startDate AND @endDate";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SavingRepository"/> based on the provided database connection. 
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public SavingRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Saving> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Saving> GetAllLikeName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Saving GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Saving GetByName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Saving> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -85,10 +98,12 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public Saving Insert(Saving entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Saving Update(Saving entity) {
             throw new NotImplementedException();
         }

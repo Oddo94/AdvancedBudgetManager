@@ -139,7 +139,7 @@ namespace AdvancedBudgetManagerTest.service {
             IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             AuthenticatedUser authenticatedUser = new AuthenticatedUser(invalidUserId, validEmailAddress);
 
-            User user = null;
+            User? user = null;
             userSessionService.AuthenticatedUser.Returns(authenticatedUser);
             userRepository.GetById(invalidUserId).Returns(user);
 

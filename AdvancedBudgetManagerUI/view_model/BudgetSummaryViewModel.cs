@@ -45,10 +45,6 @@ namespace AdvancedBudgetManagerCore.view_model {
         [ObservableProperty]
         public bool isValidDateSelection;
 
-        private DateTime normalizedStartDate;
-
-        private DateTime normalizedEndDate;
-
         private BudgetSummaryService budgetSummaryService;
 
         private DateTimeUtils dateTimeUtils;

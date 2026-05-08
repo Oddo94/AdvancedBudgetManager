@@ -16,10 +16,10 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// </summary>
     public partial class ResetPasswordViewModel : ObservableObject {
         [ObservableProperty]
-        private SecureString newPassword;
+        private SecureString newPassword = null!;
 
         [ObservableProperty]
-        private string emailAddress;
+        private string emailAddress = null!;
 
         private ResetPasswordService resetPasswordService;
 

@@ -13,10 +13,10 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// </summary>
     public partial class LoginViewModel : ObservableObject {
         [ObservableProperty]
-        private String userName;
+        private String userName = string.Empty;
 
         [ObservableProperty]
-        private SecureString password;
+        private SecureString password = new SecureString();
 
         /// <summary>
         /// The object that contains user credentials check result.
@@ -40,7 +40,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginViewModel"/> class with no arguments.
         /// </summary>
-        public LoginViewModel() { }
+        //public LoginViewModel() { }
 
         /// <summary>
         /// Logs in a new user based on the provided credentials.

@@ -9,7 +9,7 @@ using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
     /// <summary>
-    /// Repository class for managing the user operations that require database interaction.
+    /// Repository class used for managing the user operations that require database interaction.
     /// </summary>
     public class UserRepository : IUserRepository {
         private IDatabaseConnection dbConnection;
@@ -20,7 +20,7 @@ namespace AdvancedBudgetManagerCore.repository {
         private String sqlStatementUpdateUser = "UPDATE users SET username = @userName, salt = @salt, password = @hashCode, email = @emailAddress WHERE userID = @userId";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserRepository"/> with the provided database connection.
+        /// Initializes a new instance of the <see cref="UserRepository"/> based on the provided database connection.
         /// </summary>
         /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public UserRepository(IDatabaseConnection dbConnection) {

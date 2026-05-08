@@ -14,7 +14,7 @@ namespace AdvancedBudgetManagerCore.view_model {
         private RegisterUserViewModel registerUserViewModel;
 
         [ObservableProperty]
-        private string emailAddress;
+        private string emailAddress = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SharedPropertiesViewModelWrapper"/> based on the provided <see cref="EmailConfirmationViewModel"/> and <see cref="ResetPasswordViewModel"/> objects.
