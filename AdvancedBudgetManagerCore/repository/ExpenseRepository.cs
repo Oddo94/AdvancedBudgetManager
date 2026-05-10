@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class used for managing the expense operations that require database interaction.
+    /// </summary>
     public class ExpenseRepository : IExpenseRepository {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetExpensesByUserIdAndDateInterval = "SELECT expenseID, user_ID, name, type, value, date FROM expenses WHERE user_ID = @userId AND date BETWEEN @startDate AND @endDate";
@@ -18,30 +21,40 @@ namespace AdvancedBudgetManagerCore.repository {
                                                                             GROUP BY DAY(date)
                                                                             ORDER BY DAY(date)";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpenseRepository"/> based on the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public ExpenseRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Expense> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Expense> GetAllLikeName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Expense GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Expense GetByName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Expense> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -91,6 +104,7 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public List<DailyExpenseTotalDto> GetDailyExpenseTotalsForDateInterval(long userId, DateTime startDate, DateTime endDate) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -134,10 +148,12 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public Expense Insert(Expense entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Expense Update(Expense entity) {
             throw new NotImplementedException();
         }

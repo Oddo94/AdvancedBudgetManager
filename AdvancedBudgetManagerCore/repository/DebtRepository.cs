@@ -8,34 +8,47 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class used for managing the debt operations that require database interaction.
+    /// </summary>
     public class DebtRepository : IDebtRepository {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetDebtsByUserIdAndDateInterval = "SELECT debtID, user_ID, name, value, creditor_ID, date FROM debts WHERE user_ID = @userId AND date BETWEEN @startDate AND @endDate";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IncomeRepository"/> based on the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public DebtRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Debt> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Debt> GetAllLikeName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Debt GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Debt GetByName(long userId, string name) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public List<Debt> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -88,10 +101,12 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public Debt Insert(Debt entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Debt Update(Debt entity) {
             throw new NotImplementedException();
         }

@@ -8,14 +8,22 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class used for managing the expense type operations that require database interaction.
+    /// </summary>
     public class ExpenseTypeRepository : ICrudRepository<ExpenseType, long> {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetExpenseTypes = "SELECT categoryID, categoryName FROM expense_types ORDER BY categoryName";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpenseTypeRepository"/> based on the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public ExpenseTypeRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<ExpenseType> GetAll() {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
@@ -55,17 +63,22 @@ namespace AdvancedBudgetManagerCore.repository {
             }
         }
 
+        /// <inheritdoc/>
         public ExpenseType GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public ExpenseType Insert(ExpenseType entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public ExpenseType Update(ExpenseType entity) {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }

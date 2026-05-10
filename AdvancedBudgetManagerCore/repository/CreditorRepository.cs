@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
+    /// <summary>
+    /// Repository class used for managing the creditor operations that require database interaction.
+    /// </summary>
     public class CreditorRepository : ICreditorRepository {
         private IDatabaseConnection dbConnection;
         private string sqlStatementGetCreditorsByUserId =
@@ -15,31 +18,41 @@ namespace AdvancedBudgetManagerCore.repository {
             INNER JOIN users_creditors uc ON c.creditorID = uc.creditor_ID
             WHERE uc.user_ID = @userId";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreditorRepository"/> based on the provided database connection.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         public CreditorRepository(IDatabaseConnection dbConnection) {
             this.dbConnection = dbConnection;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Creditor> GetAll() {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Creditor GetById(long id) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Creditor Insert(Creditor entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Creditor Update(Creditor entity) {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public bool Delete(long id) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Creditor> getAllCreditorsByUserId(long userId) {
+        /// <inheritdoc/>
+        public List<Creditor> getAllCreditorsByUserId(long userId) {
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
                     MySqlCommand getAllCreditorsByUserIdCommand = new MySqlCommand(sqlStatementGetCreditorsByUserId, conn);

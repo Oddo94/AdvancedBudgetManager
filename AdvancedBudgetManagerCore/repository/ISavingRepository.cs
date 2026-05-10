@@ -25,7 +25,7 @@ namespace AdvancedBudgetManagerCore.repository {
         public List<Saving> GetAllLikeName(long userId, string name);
 
         /// <summary>
-        /// Retrieves a saving based on the provided name and user ID.
+        /// Retrieves a saving based on the user ID and provided name.
         /// </summary>
         /// <param name="userId">The user ID.</param>
         /// <param name="name">The exact name of the saving.</param>

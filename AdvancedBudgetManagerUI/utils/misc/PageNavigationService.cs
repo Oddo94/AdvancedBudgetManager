@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace AdvancedBudgetManager.utils.misc {
     public class PageNavigationService : IPageNavigationService {
         private Frame frame = new Frame();
-        private ILifetimeScope rootScope;
+        private readonly ILifetimeScope rootScope;
 
         public PageNavigationService(ILifetimeScope rootScope) {
             this.rootScope = rootScope;

@@ -36,6 +36,7 @@ namespace AdvancedBudgetManagerCore.service {
         /// </summary>
         /// <param name="userRepository">The repository used for retrieving user details</param>
         /// <param name="securityManager">The <see cref="PasswordSecurityManager"/> instance used for performing the data security operations.</param>
+        /// <param name="userSessionService">The <see cref="UserSessionService"/> instance used for retrieving data about the currently authenticated user.</param>
         public LoginUserService(IUserRepository userRepository, IUserSessionService userSessionService, PasswordSecurityManager securityManager) {
             this.userRepository = userRepository;
             this.userSessionService = userSessionService;

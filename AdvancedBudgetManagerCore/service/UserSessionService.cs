@@ -2,7 +2,7 @@
 
 namespace AdvancedBudgetManagerCore.service {
     /// <summary>
-    /// Service class used for performing used for performing operations related to the currently authenticated user.
+    /// Service class used for performing operations related to the currently authenticated user.
     /// </summary>
     public class UserSessionService : IUserSessionService {
         /// <inheritdoc/>

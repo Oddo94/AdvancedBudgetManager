@@ -8,15 +8,49 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace AdvancedBudgetManagerCore.service {
+    /// <summary>
+    /// Service class used for providing the aggregated data related to the budget summary.
+    /// </summary>
     public class BudgetSummaryService {
+        /// <summary>
+        /// The income repository.
+        /// </summary>
         private IIncomeRepository incomeRepository;
+
+        /// <summary>
+        /// The expense repository.
+        /// </summary>
         private IExpenseRepository expenseRepository;
+
+        /// <summary>
+        /// The debt repository.
+        /// </summary>
         private IDebtRepository debtRepository;
+
+        /// <summary>
+        /// The saving repository.
+        /// </summary>
         private ISavingRepository savingRepository;
+
+        /// <summary>
+        /// The user repository.
+        /// </summary>
         private IUserRepository userRepository;
 
+        /// <summary>
+        /// The user session service.
+        /// </summary>
         private IUserSessionService userSessionService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BudgetSummaryService"/> based on the provided parameters.
+        /// </summary>
+        /// <param name="incomeRepository">The income repository.</param>
+        /// <param name="expenseRepository">The expense repository.</param>
+        /// <param name="debtRepository">The debt repository.</param>
+        /// <param name="savingRepository">The saving repository.</param>
+        /// <param name="userRepository">The user repository.</param>
+        /// <param name="userSessionService">The user session service.</param>
         public BudgetSummaryService(IIncomeRepository incomeRepository,
             IExpenseRepository expenseRepository,
             IDebtRepository debtRepository,
@@ -31,6 +65,12 @@ namespace AdvancedBudgetManagerCore.service {
             this.userSessionService = userSessionService;
         }
 
+        /// <summary>
+        /// Retrieves the budget summary information for a specified date interval.
+        /// </summary>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <returns>A <see cref="BudgetSummaryDto"/> object containing the budget summary information.</returns>
         public BudgetSummaryDto GetBudgetSummaryInfo(DateTime startDate, DateTime endDate) {
             long userId = userSessionService.AuthenticatedUser.UserId;
             BudgetItemStatistics incomeStatistics = GetIncomeStatistics(userId, startDate, endDate);
@@ -54,6 +94,12 @@ namespace AdvancedBudgetManagerCore.service {
             return budgetSummaryDto;
         }
 
+        /// <summary>
+        /// Retrieves the daily expense totals for a specified date interval.
+        /// </summary>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <returns>A <see cref="Dictionary{TKey, TValue}"/> object whose keys represent the days of the month and whose values represent the daily total expenses.</returns>
         public Dictionary<int, double> GetDailyExpenseTotals(DateTime startDate, DateTime endDate) {
             long userId = userSessionService.AuthenticatedUser.UserId;
             ValidateInputParams(userId, startDate, endDate);
@@ -67,6 +113,14 @@ namespace AdvancedBudgetManagerCore.service {
 
             return dailyExpenseTotals;
         }
+
+        /// <summary>
+        /// Calculates the income statistics for a specified date interval, based on a user id.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <returns>A <see cref="BudgetItemStatistics"/> object containing the income statistics.</returns>
         public BudgetItemStatistics GetIncomeStatistics(long userId, DateTime startDate, DateTime endDate) {
             ValidateInputParams(userId, startDate, endDate);
 
@@ -86,6 +140,14 @@ namespace AdvancedBudgetManagerCore.service {
             return incomeStatistics;
         }
 
+        /// <summary>
+        /// Calculates the expense statistics for a specified date interval, based on a user id and total incomes.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <param name="totalIncomes">The total incomes.</param>
+        /// <returns>A <see cref="BudgetItemStatistics"/> object containing the expense statistics.</returns>
         public BudgetItemStatistics GetExpenseStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
@@ -100,6 +162,14 @@ namespace AdvancedBudgetManagerCore.service {
             return expenseStatistics;
         }
 
+        /// <summary>
+        /// Calculates the debt statistics for a specified date interval, based on a user id and total incomes.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <param name="totalIncomes">The total incomes.</param>
+        /// <returns>A <see cref="BudgetItemStatistics"/> object containing the debt statistics.</returns>
         public BudgetItemStatistics GetDebtStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
@@ -114,6 +184,14 @@ namespace AdvancedBudgetManagerCore.service {
             return debtStatistics;
         }
 
+        /// <summary>
+        /// Calculates the saving statistics for a specified date interval, based on a user id and total incomes.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="startDate">The start date of the interval.</param>
+        /// <param name="endDate">The end date of the interval.</param>
+        /// <param name="totalIncomes">The total incomes.</param>
+        /// <returns>A <see cref="BudgetItemStatistics"/> object containing the saving statistics.</returns>
         public BudgetItemStatistics GetSavingStatistics(long userId, DateTime startDate, DateTime endDate, int totalIncomes) {
             ValidateInputParams(userId, startDate, endDate);
 
@@ -128,6 +206,14 @@ namespace AdvancedBudgetManagerCore.service {
             return savingStatistics;
         }
 
+        /// <summary>
+        /// Calculates the total left to spend statistics based on the provided parameters.
+        /// </summary>
+        /// <param name="totalIncomes">The total incomes.</param>
+        /// <param name="totalExpenses">The total expenses.</param>
+        /// <param name="totalDebts">The total debst.</param>
+        /// <param name="totalSavings">The total savings.</param>
+        /// <returns>A <see cref="BudgetItemStatistics"/> object containing the total left to spend statistics.</returns>
         public BudgetItemStatistics GetTotalLeftToSpendStatistics(int totalIncomes, int totalExpenses, int totalDebts, int totalSavings) {
             if (totalIncomes <= 0) {
                 return new BudgetItemStatistics(0, 0);
@@ -139,6 +225,13 @@ namespace AdvancedBudgetManagerCore.service {
             return new BudgetItemStatistics(totalLeftToSpend, totalLeftToSpendPercentage);
         }
 
+        /// <summary>
+        /// Validates the provided input parameters.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
         private void ValidateInputParams(long userId, DateTime startDate, DateTime endDate) {
             User user = userRepository.GetById(userId);
             if (user == null) {

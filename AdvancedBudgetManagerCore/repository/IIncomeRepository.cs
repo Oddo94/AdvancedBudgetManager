@@ -11,9 +11,9 @@ namespace AdvancedBudgetManagerCore.repository {
         /// Retrieves a list of incomes based on a user ID and a date interval.
         /// </summary>
         /// <param name="userId">The user ID.</param>
-        /// <param name="startDate">The start date of the time interval.</param>
-        /// <param name="endDate">The end date of the time interval.</param>
-        /// <returns>A <see cref="List{Income}"/> that contains the retrieved incomes.</returns>
+        /// <param name="startDate">The start date of the date interval.</param>
+        /// <param name="endDate">The end date of the date interval.</param>
+        /// <returns>A list of <see cref="Income"/> objects.</returns>
         public List<Income> GetByUserIdAndDateInterval(long userId, DateTime startDate, DateTime endDate);
 
         /// <summary>
@@ -21,15 +21,15 @@ namespace AdvancedBudgetManagerCore.repository {
         /// </summary>
         /// <param name="userId">The user ID.</param>
         /// <param name="name">The approximate name of the income.</param>
-        /// <returns>A <see cref="List{Income}"/> that contains the retrieved incomes.</returns>
+        /// <returns>A list of <see cref="Income"/> objects.</returns>
         public List<Income> GetAllLikeName(long userId, string name);
 
         /// <summary>
-        /// Retrieves an income based on the provided name and user ID.
+        /// Retrieves an income based on the user ID and provided name.
         /// </summary>
         /// <param name="userId">The user ID.</param>
         /// <param name="name">The exact name of the income.</param>
-        /// <returns>The <see cref="Income"/> entity that was retrieved.</returns>
+        /// <returns>The <see cref="Income"/> object that was retrieved.</returns>
         public Income GetByName(long userId, string name);
     }
 }

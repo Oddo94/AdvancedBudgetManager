@@ -15,7 +15,7 @@ namespace AdvancedBudgetManagerUI.view.window {
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class UserDashboard : Window {
-        private readonly IPageNavigationService navigationService;
+        private IPageNavigationService? navigationService;
         public UserDashboard() {
             this.InitializeComponent();
 
@@ -26,15 +26,17 @@ namespace AdvancedBudgetManagerUI.view.window {
 
             appWindow.Hide();
 
-            this.navigationService = App.Container.Resolve<IPageNavigationService>();
-            navigationService.Initialize(this.userDashboardContentFrame);
+            if (App.Container != null) {
+                this.navigationService = App.Container.Resolve<IPageNavigationService>();
+                navigationService.Initialize(this.userDashboardContentFrame);
 
-            //Sets the default page on app startup
-            navigationService.Show(PageKey.BudgetSummaryPage);
+                //Sets the default page on app startup
+                navigationService.Show(PageKey.BudgetSummaryPage);
+            }
         }
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args) {
-            if (args.SelectedItem is NavigationViewItem selectedItem) {
+            if (args.SelectedItem is NavigationViewItem selectedItem && navigationService != null) {
                 String? pageName = selectedItem.Tag.ToString();
 
                 switch (pageName) {

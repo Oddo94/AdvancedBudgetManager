@@ -9,7 +9,7 @@ using System.Data;
 
 namespace AdvancedBudgetManagerCore.repository {
     /// <summary>
-    /// Repository class used for managing the income operations that require databse interaction.
+    /// Repository class used for managing the income operations that require database interaction.
     /// </summary>
     public class IncomeRepository : IIncomeRepository {
         private IDatabaseConnection dbConnection;

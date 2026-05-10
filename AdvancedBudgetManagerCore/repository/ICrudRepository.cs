@@ -10,7 +10,7 @@ namespace AdvancedBudgetManagerCore.repository {
         /// <summary>
         /// Retrieves the entire list of entities of a specific type from the database.
         /// </summary>
-        /// <returns>A <see cref="IEnumerable"/> collection of containing the retrieved entities.</returns>
+        /// <returns>A <see cref="IEnumerable"/> collection containing all the retrieved entities.</returns>
         /// <exception cref="SystemException"></exception>
         public IEnumerable<TEntity> GetAll();
 
@@ -32,12 +32,14 @@ namespace AdvancedBudgetManagerCore.repository {
         /// Updates the specified entity from the database.
         /// </summary>
         /// <param name="entity">The entity that needs to be updated.</param>
+        /// <returns>The updated entity.</returns>
         public TEntity Update(TEntity entity);
 
         /// <summary>
         /// Deletes the specified entity from the database.
         /// </summary>
         /// <param name="id">The ID of the entity that needs to be deleted.</param>
+        /// <returns>A <see cref="bool"/> indicating the result of the delete operation.</returns>
         public bool Delete(TKey id);
 
     }
