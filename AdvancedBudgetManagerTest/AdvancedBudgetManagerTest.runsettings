@@ -40,8 +40,14 @@
 
     
     <!--REPOSITORY TEST DATA-->
-    <Parameter name ="retrievedUserId" value="-1"/>
-    <Parameter name ="userName" value="WinUI3Test"/>
+    <Parameter name="retrievedUserId" value="-1"/>
+    <Parameter name="userName" value="WinUI3Test"/>
+    
+    <!--SERVICE TEST DATA-->
+    <Parameter name="validStartDate" value="2025-01-01"/>
+    <Parameter name="validEndDate" value="2025-12-31"/>
+    <Parameter name="invalidStartDate" value="2024-12-01"/>
+    <Parameter name="invalidEndDate" value="2024-06-01"/>
     
   </TestRunParameters>
 </RunSettings>

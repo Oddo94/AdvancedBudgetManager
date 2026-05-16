@@ -16,7 +16,7 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// </summary>
     public partial class EmailConfirmationViewModel : ObservableObject, IRecipient<EmailConfirmationSubmittedMessage> {
         [ObservableProperty]
-        private string emailAddress;
+        private string emailAddress = string.Empty;
 
         private EmailService emailService;
         private IErrorService errorService;

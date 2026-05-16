@@ -15,13 +15,13 @@ namespace AdvancedBudgetManagerCore.view_model {
     /// </summary>
     public partial class RegisterUserViewModel : ObservableObject {
         [ObservableProperty]
-        private string userName;
+        private string userName = string.Empty;
 
         [ObservableProperty]
-        private SecureString password;
+        private SecureString password = new SecureString();
 
         [ObservableProperty]
-        private string emailAddress;
+        private string emailAddress = string.Empty;
 
         private RegisterUserService registerUserService;
 

@@ -3,7 +3,7 @@
 namespace AdvancedBudgetManagerCore.model.entity {
 #pragma warning disable CS1591
     /// <summary>
-    /// Represents the user entity.
+    /// Represents the user entity from the database.
     /// </summary>
     public class User {
         /// <summary>

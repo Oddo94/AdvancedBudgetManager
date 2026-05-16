@@ -1,0 +1,25 @@
+﻿using AdvancedBudgetManager.utils.enums;
+using Autofac;
+using Microsoft.UI.Xaml.Controls;
+
+namespace AdvancedBudgetManager.utils.misc {
+    public class PageNavigationService : IPageNavigationService {
+        private Frame frame = new Frame();
+        private readonly ILifetimeScope rootScope;
+
+        public PageNavigationService(ILifetimeScope rootScope) {
+            this.rootScope = rootScope;
+        }
+
+        public void Initialize(Frame frame) {
+            this.frame = frame;
+        }
+
+        public void Show(PageKey pageKey) {
+            ILifetimeScope scope = rootScope.BeginLifetimeScope();
+            Page page = scope.ResolveKeyed<Page>(pageKey);
+
+            frame.Content = page;
+        }
+    }
+}
