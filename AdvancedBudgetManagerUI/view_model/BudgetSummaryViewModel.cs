@@ -62,6 +62,7 @@ namespace AdvancedBudgetManagerCore.view_model {
             this.dateTimeUtils = dateTimeUtils;
             this.dataValidator = dataValidator;
             this.uiComponentInitUtils = uiComponentInitUtils;
+
             this.budgetSummaryItems = new ObservableCollection<BudgetSummaryItem>();
             this.pieSeries = new ObservableCollection<ISeries>();
 

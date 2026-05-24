@@ -19,5 +19,8 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageReference Include="MySql.Data" Version="9.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="service\app\" />
+  </ItemGroup>
   
 </Project>
