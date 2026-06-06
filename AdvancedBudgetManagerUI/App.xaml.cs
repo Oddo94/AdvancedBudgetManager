@@ -4,9 +4,11 @@ using AdvancedBudgetManager.utils.misc;
 using AdvancedBudgetManager.view.dialog;
 using AdvancedBudgetManager.view.page;
 using AdvancedBudgetManager.view.window;
+using AdvancedBudgetManager.view_model;
 using AdvancedBudgetManagerCore.model.message;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.service;
+using AdvancedBudgetManagerCore.service.query;
 using AdvancedBudgetManagerCore.utils.database;
 using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.utils.security;
@@ -85,6 +87,8 @@ namespace AdvancedBudgetManager {
                 //Pages
                 container.RegisterType<BudgetSummaryPage>()
                          .Keyed<Page>(PageKey.BudgetSummaryPage);
+                container.RegisterType<IncomesPage>()
+                         .Keyed<Page>(PageKey.IncomesPage);
 
                 //NavigationServices
                 container.RegisterType<WindowNavigationService>()
@@ -136,6 +140,25 @@ namespace AdvancedBudgetManager {
 
                  );
 
+                container.RegisterType<IncomesViewModel>()
+                    .SingleInstance()
+                    .WithParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(IncomeQueryService),
+                        (pi, ctx) => ctx.Resolve<IncomeQueryService>()
+                        )
+                    .WithParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(DateTimeUtils),
+                        (pi, ctx) => ctx.Resolve<DateTimeUtils>()
+                        )
+                    .WithParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(InputDataValidator),
+                        (pi, ctx) => ctx.Resolve<InputDataValidator>()
+                        )
+                    .WithParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(UIComponentInitUtils),
+                        (pi, ctx) => ctx.Resolve<UIComponentInitUtils>()
+                     );
+
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -176,6 +199,13 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<DateTimeUtils>();
                 container.RegisterType<InputDataValidator>();
                 container.RegisterType<UIComponentInitUtils>();
+                container.RegisterType<IncomeQueryService>()
+               .WithParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                .WithParameter(
+                     (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
+                     (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"));
 
 
                 //Services

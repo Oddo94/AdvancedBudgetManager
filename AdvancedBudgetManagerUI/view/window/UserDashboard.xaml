@@ -16,6 +16,11 @@
                     <FontIcon Glyph="&#xEB05;"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
+            <NavigationViewItem Content="Incomes" Tag="incomesPage">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE825;"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
         </NavigationView.MenuItems>
         <NavigationView.Content>
             <Frame x:Name="userDashboardContentFrame"/>
