@@ -97,28 +97,7 @@ namespace AdvancedBudgetManager.view_model {
 
             retrievedIncomes.ForEach(income => IncomeList.Add(income));
 
-            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthRange.StartDate, monthRange.EndDate);
-
-            List<CategoryStatisticsDto> categoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
-            ObservableCollection<ISeries> pieSeriesCollection = new ObservableCollection<ISeries>();
-
-            foreach (CategoryStatisticsDto incomeCategory in categoriesStatisticsList) {
-                double[] incomeCategoryValue = new double[] { Convert.ToDouble(incomeCategory.Value) };
-
-                if (incomeCategoryValue[0] > 0) {
-                    pieSeriesCollection.Add(new PieSeries<double> {
-                        Values = incomeCategoryValue,
-                        DataLabelsPaint = new SolidColorPaint(SKColors.Black),
-                        DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
-                        DataLabelsFormatter = point => {
-                            double categoryValue = point.Coordinate.PrimaryValue;
-                            return $"{categoryValue} ({incomeCategory.Percentage})";
-                        }
-                    });
-                }
-            }
-
-            this.IncomeCategoriesPieSeries = pieSeriesCollection;
+            DisplayIncomeCategoryStatistics(monthRange);
         }
 
         [RelayCommand]
@@ -160,6 +139,37 @@ namespace AdvancedBudgetManager.view_model {
                     Fill = new SolidColorPaint(SKColors.DodgerBlue)
                 }
             };
+        }
+
+        private void DisplayIncomeCategoryStatistics(DateRange monthRange) {
+            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthRange.StartDate, monthRange.EndDate);
+
+            List<CategoryStatisticsDto> categoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
+            ObservableCollection<ISeries> pieSeriesCollection = new ObservableCollection<ISeries>();
+
+            foreach (CategoryStatisticsDto incomeCategory in categoriesStatisticsList) {
+                double[] incomeCategoryValue = new double[] { Convert.ToDouble(incomeCategory.Value) };
+
+                if (incomeCategoryValue[0] > 0) {
+                    pieSeriesCollection.Add(new PieSeries<double> {
+                        Values = incomeCategoryValue,
+                        Name = incomeCategory.Name,
+                        DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                        DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                        DataLabelsFormatter = point => {
+                            double categoryValue = point.Coordinate.PrimaryValue;
+                            return $"{categoryValue} ({incomeCategory.Percentage})";
+                        }
+                    });
+                }
+            }
+
+            //this.IncomeCategoriesPieSeries.Clear();
+            //foreach (PieSeries<double> item in pieSeriesCollection) {
+            //    IncomeCategoriesPieSeries.Add(item);
+            //}
+
+            this.IncomeCategoriesPieSeries = pieSeriesCollection;
         }
 
         partial void OnStartDateChanged(DateTimeOffset value) {

@@ -14,7 +14,7 @@ namespace AdvancedBudgetManagerCore.service.query {
         private string sqlStatementGetIncomesByUserIdAndDateInterval = @"SELECT inc.name, it.typeName, inc.value, inc.date
                                                                          FROM incomes inc
                                                                          INNER JOIN income_types it ON inc.incomeType = it.typeID
-                                                                         WHERE inc.user_ID = @userId inc.date BETWEEN @startDate AND @endDate";
+                                                                         WHERE inc.user_ID = @userId AND inc.date BETWEEN @startDate AND @endDate";
         private string sqlStatementGetAggregatedIncomesByCategory = @"WITH incomeCategoryStatistics AS (
                                                                       SELECT
 	                                                                        it.typeName,
@@ -79,14 +79,16 @@ namespace AdvancedBudgetManagerCore.service.query {
                         string name = string.Empty;
                         string incomeType = string.Empty;
                         int value = -1;
-                        DateTime date = DateTime.MinValue;
+                        DateTime incomeDate = DateTime.Now;
+                        //DateOnly date = DateOnly.MinValue;
 
                         name = incomeRow.ItemArray[0].ToString();
                         incomeType = incomeRow.ItemArray[1].ToString();
-                        int.TryParse(incomeRow.ItemArray[4].ToString(), out value);
-                        date = DateTime.Parse(incomeRow.ItemArray[5].ToString());
+                        int.TryParse(incomeRow.ItemArray[2].ToString(), out value);
+                        DateTime.TryParse(incomeRow.ItemArray[3].ToString(), out incomeDate);
 
-                        IncomeDto incomeDto = new IncomeDto(name, incomeType, value, date);
+
+                        IncomeDto incomeDto = new IncomeDto(name, incomeType, value, incomeDate.Date);
 
                         incomesList.Add(incomeDto);
                     }

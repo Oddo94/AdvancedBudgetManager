@@ -64,6 +64,17 @@
     <Folder Include="model\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Icons\acccount_balance.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Icons\account_balance.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Icons\money.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="view\page\IncomesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -18,7 +18,7 @@
             </NavigationViewItem>
             <NavigationViewItem Content="Incomes" Tag="incomesPage">
                 <NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xE825;"/>
+                    <BitmapIcon UriSource="Assets/Icons/account_balance.png"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>

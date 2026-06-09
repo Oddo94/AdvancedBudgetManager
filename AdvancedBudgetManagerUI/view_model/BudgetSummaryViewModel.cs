@@ -179,7 +179,8 @@ namespace AdvancedBudgetManagerCore.view_model {
                 //The elements whose value is equal to 0 will not be shown because they are irrelevant
                 if (budgetSummaryItemValue[0] > 0) {
                     pieSeriesCollection.Add(new PieSeries<double> {
-                        Values = budgetSummaryItemValue, Name = item.ItemName,
+                        Values = budgetSummaryItemValue,
+                        Name = item.ItemName,
                         DataLabelsPaint = new SolidColorPaint(SKColors.Black),
                         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
                         DataLabelsFormatter = point => {
