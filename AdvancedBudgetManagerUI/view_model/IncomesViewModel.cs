@@ -45,6 +45,9 @@ namespace AdvancedBudgetManager.view_model {
         [ObservableProperty]
         public bool isValidDateSelection;
 
+        [ObservableProperty]
+        public string totalIncomesMessage;
+
         private IncomeQueryService incomeQueryService;
 
         private DateTimeUtils dateTimeUtils;
@@ -82,21 +85,14 @@ namespace AdvancedBudgetManager.view_model {
             this.EndDate = new DateTimeOffset(lastDateOfMonth);
             this.MonthlyIncomeEvolutionDate = new DateTimeOffset(firstDateOfMonth);
 
+            this.totalIncomesMessage = string.Empty;
         }
 
         [RelayCommand]
         public void DisplayIncomeStatistics() {
             DateRange? monthRange = dateTimeUtils.GetMonthRange(StartDate, EndDate, IsMonthInterval);
 
-            if (monthRange == null) {
-                return;
-            }
-
-            List<IncomeDto> retrievedIncomes = incomeQueryService.GetIncomesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
-            IncomeList.Clear();
-
-            retrievedIncomes.ForEach(income => IncomeList.Add(income));
-
+            DisplayIncomeList(monthRange);
             DisplayIncomeCategoryStatistics(monthRange);
         }
 
@@ -109,6 +105,10 @@ namespace AdvancedBudgetManager.view_model {
             List<string> labels = new List<string>();
             List<int> values = new List<int>();
             foreach (Month currentMonth in Enum.GetValues<Month>()) {
+                if (currentMonth == Month.Undefined) {
+                    continue;
+                }
+
                 int totalIncomes = -1;
                 monthlyIncomeStatistics.TryGetValue(currentMonth, out totalIncomes);
 
@@ -141,7 +141,25 @@ namespace AdvancedBudgetManager.view_model {
             };
         }
 
+        private void DisplayIncomeList(DateRange monthRange) {
+            if (monthRange == null) {
+                return;
+            }
+
+            List<IncomeDto> retrievedIncomes = incomeQueryService.GetIncomesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
+            this.IncomeList.Clear();
+
+            this.IncomeList = new ObservableCollection<IncomeDto>(retrievedIncomes);
+            //retrievedIncomes.ForEach(income => IncomeList.Add(income));
+
+            this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
+        }
+
         private void DisplayIncomeCategoryStatistics(DateRange monthRange) {
+            if (monthRange == null) {
+                return;
+            }
+
             BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthRange.StartDate, monthRange.EndDate);
 
             List<CategoryStatisticsDto> categoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
@@ -163,11 +181,6 @@ namespace AdvancedBudgetManager.view_model {
                     });
                 }
             }
-
-            //this.IncomeCategoriesPieSeries.Clear();
-            //foreach (PieSeries<double> item in pieSeriesCollection) {
-            //    IncomeCategoriesPieSeries.Add(item);
-            //}
 
             this.IncomeCategoriesPieSeries = pieSeriesCollection;
         }

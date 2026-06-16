@@ -165,8 +165,7 @@ namespace AdvancedBudgetManagerCore.service.query {
                 try {
                     MySqlCommand getMonthlyIncomeEvolutionCommand = new MySqlCommand(sqlStatementGetMonthlyIncomeEvolution, conn);
                     getMonthlyIncomeEvolutionCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
-                    getMonthlyIncomeEvolutionCommand
-                        .Parameters.Add("@year", MySqlDbType.Date).Value = year;
+                    getMonthlyIncomeEvolutionCommand.Parameters.Add("@year", MySqlDbType.Int32).Value = year;
 
                     conn.Open();
                     MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getMonthlyIncomeEvolutionCommand);

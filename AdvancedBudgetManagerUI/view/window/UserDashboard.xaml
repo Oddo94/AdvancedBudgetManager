@@ -6,21 +6,26 @@
     xmlns:local="using:AdvancedBudgetManagerUI.view.window"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:icons="using:AdvancedBudgetManager.utils.misc"
     mc:Ignorable="d"
     Title="AdvancedBudgetManager">
 
     <NavigationView x:Name="userDashboardNavigationView" SelectionChanged="NavigationView_SelectionChanged">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Budget summary" Tag="budgetSummaryPage">
-                <NavigationViewItem.Icon>
+            <NavigationViewItem Content="Budget summary" Tag="budgetSummaryPage" Icon="{icons:AppIcon AppIcon=BudgetSummary}"/>
+            <!--<NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xEB05;"/>
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem Content="Incomes" Tag="incomesPage">
+                </NavigationViewItem.Icon>-->
+            <!--</NavigationViewItem>-->
+            <!--<NavigationViewItem Content="Incomes" Tag="incomesPage">
                 <NavigationViewItem.Icon>
                     <BitmapIcon UriSource="Assets/Icons/account_balance.png"/>
                 </NavigationViewItem.Icon>
-            </NavigationViewItem>
+            </NavigationViewItem>-->
+            <NavigationViewItem Content="Incomes" Tag="incomesPage" Icon="{icons:AppIcon AppIcon=Incomes}"/>
+            <NavigationViewItem Content="Expenses" Tag="expensesPage" Icon="{icons:AppIcon AppIcon=Expenses}"/>
+            <NavigationViewItem Content="Debts" Tag="debtsPage" Icon="{icons:AppIcon AppIcon=Debts}"/>
+            <NavigationViewItem Content="Savings" Tag="savingsPage" Icon="{icons:AppIcon AppIcon=Savings}"/>
         </NavigationView.MenuItems>
         <NavigationView.Content>
             <Frame x:Name="userDashboardContentFrame"/>

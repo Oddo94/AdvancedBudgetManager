@@ -40,7 +40,6 @@ namespace AdvancedBudgetManagerCore.utils.enums {
 
         [Description("Undefined")]
         Undefined
-
     }
 
     static class MonthExtensions {
