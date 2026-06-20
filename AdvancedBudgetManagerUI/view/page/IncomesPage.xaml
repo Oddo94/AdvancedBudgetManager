@@ -12,6 +12,7 @@
 
     <Page.Resources>
         <utils:DateTimeFormatConverter x:Key="DateConverter"/>
+        <utils:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid Padding="20" RowSpacing="20">
@@ -84,6 +85,7 @@
             <Button
                 Grid.Row="2"
                 Content="Display incomes"
+                x:Name="DisplayIncomesButton"
                 IsEnabled="{x:Bind incomesViewModel.IsValidDateSelection, Mode=TwoWay}"
                 Command="{x:Bind incomesViewModel.DisplayIncomeStatisticsCommand}"
                 Background="DodgerBlue"
@@ -101,32 +103,64 @@
                 <!-- LEFT: GridView -->
                 <StackPanel Grid.Column="0" Spacing="20">
                     <TextBlock Text="Incomes list" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-                    <tableView:TableView x:Name="incomesTableView"
+                    <Grid>
+                        <tableView:TableView x:Name="incomesTableView"
                                          ItemsSource="{x:Bind incomesViewModel.IncomeList, Mode=TwoWay}"
-                                         Height="235"
+                                         Width="540"
+                                             Height="235"                                         
                                          Grid.Column="0"
                                          AutoGenerateColumns="False"
                                          IsReadOnly="True"
                                          GridLinesVisibility="All"
                                          HorizontalAlignment="Left"
                                          VerticalAlignment="Center">
-                        <tableView:TableView.Columns>
-                        <tableView:TableViewTextColumn Header="Income name" Binding="{Binding Name}"/>
-                        <tableView:TableViewTextColumn Header="Income category" Binding="{Binding Type}"/>
-                        <tableView:TableViewTextColumn Header="Income value" Binding="{Binding Value}"/>
-                            <tableView:TableViewTextColumn Header="Creation date" Binding="{Binding Date, Converter={StaticResource DateConverter}}"/>
-                        </tableView:TableView.Columns>
-                    </tableView:TableView>
+                            <tableView:TableView.Columns>
+                                <tableView:TableViewTextColumn Header="Income name" Binding="{Binding Name}"/>
+                                <tableView:TableViewTextColumn Header="Income category" Binding="{Binding Type}"/>
+                                <tableView:TableViewTextColumn Header="Income value" Binding="{Binding Value}"/>
+                                <tableView:TableViewTextColumn Header="Creation date" Binding="{Binding Date, Converter={StaticResource DateConverter}}"/>
+                            </tableView:TableView.Columns>
+                        </tableView:TableView>
+                        <Border Background="#80000000"                            
+                                Visibility="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                                HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                                Width="540"
+                                Height="235">
+                            <TextBlock
+                        Text="No data available"
+                        Foreground="White"
+                        FontSize="18"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
                     <TextBlock Text="{x:Bind incomesViewModel.TotalIncomesMessage, Mode=TwoWay}" FontFamily="SegoeUI" FontSize="14" FontWeight="SemiBold"/>
+                    <TextBlock Text="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay}"/>
                 </StackPanel>
 
                 <!-- RIGHT: PieChart -->
                 <StackPanel Grid.Column="1" Spacing="20">
                     <TextBlock Text="Income categories chart" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-                    <lvc:PieChart x:Name="incomeCategoriesPieChart"
+                    <Grid>
+                        <lvc:PieChart x:Name="incomeCategoriesPieChart"
                                   Series="{x:Bind incomesViewModel.IncomeCategoriesPieSeries, Mode=TwoWay}"
                                   Width="500" Height="350"
                                   TooltipPosition="Hidden" LegendPosition="Right"/>
+                        <Border Background="#80000000"                            
+              Visibility="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+              HorizontalAlignment="Left"
+    VerticalAlignment="Center"
+              Width="500"
+              Height="350">
+                            <TextBlock
+      Text="No data available"
+      Foreground="White"
+      FontSize="18"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </StackPanel>
@@ -135,7 +169,7 @@
         <StackPanel Grid.Row="4"  Spacing="12" Margin="0,-100,0,100">
             <DatePicker x:Name="incomeEvolutionYearDatePicker" Date="{x:Bind incomesViewModel.MonthlyIncomeEvolutionDate, Mode=TwoWay}"
                                         Header="Select year" DayVisible="False" MonthVisible="False" YearVisible="True"/>
-            <Button Content="Display evolution" Background="DodgerBlue" Foreground="White" Margin="0,20,0,20" Command="{x:Bind incomesViewModel.DisplayMonthlyIncomeEvolutionCommand}"/>
+            <Button Content="Display evolution" x:Name="DisplayIncomeEvolutionButton" Background="DodgerBlue" Foreground="White" Margin="0,20,0,20" Command="{x:Bind incomesViewModel.DisplayMonthlyIncomeEvolutionCommand}"/>
 
             <TextBlock Text="Monthly incomes evolution" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
             <StackPanel Orientation="Horizontal" Spacing="20">

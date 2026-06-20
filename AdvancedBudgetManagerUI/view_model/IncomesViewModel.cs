@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AdvancedBudgetManager.view_model {
     public partial class IncomesViewModel : ObservableValidator {
@@ -46,7 +48,17 @@ namespace AdvancedBudgetManager.view_model {
         public bool isValidDateSelection;
 
         [ObservableProperty]
+        public bool isEmptyGeneralIncomeData;
+
+        [ObservableProperty]
+        public bool hasMonthlyEvolutionData;
+
+        [ObservableProperty]
         public string totalIncomesMessage;
+
+        public event EventHandler? NoGeneralIncomeDataFound;
+
+        public event EventHandler? NoMonthlyEvolutionDataFound;
 
         private IncomeQueryService incomeQueryService;
 
@@ -81,6 +93,9 @@ namespace AdvancedBudgetManager.view_model {
             DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
 
             this.isValidDateSelection = false;
+            this.isEmptyGeneralIncomeData = false;
+            this.hasMonthlyEvolutionData = false;
+
             this.StartDate = new DateTimeOffset(firstDateOfMonth);
             this.EndDate = new DateTimeOffset(lastDateOfMonth);
             this.MonthlyIncomeEvolutionDate = new DateTimeOffset(firstDateOfMonth);
@@ -94,10 +109,17 @@ namespace AdvancedBudgetManager.view_model {
 
             DisplayIncomeList(monthRange);
             DisplayIncomeCategoryStatistics(monthRange);
+
+            if (IncomeList.Count == 0 && IncomeCategoriesPieSeries.Count == 0) {
+                this.IsEmptyGeneralIncomeData = true;
+                this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
+            } else {
+                this.IsEmptyGeneralIncomeData = false;
+            }
         }
 
         [RelayCommand]
-        public void DisplayMonthlyIncomeEvolution() {
+        public async Task DisplayMonthlyIncomeEvolution() {
             int year = MonthlyIncomeEvolutionDate.Year;
             BudgetItemMonthlyEvolutionDto monthlyIncomeEvolutionDto = incomeQueryService.GetMonthlyIncomeEvolution(year);
             Dictionary<Month, int> monthlyIncomeStatistics = monthlyIncomeEvolutionDto.MonthlyStatistics;
@@ -122,23 +144,42 @@ namespace AdvancedBudgetManager.view_model {
                 }
             }
 
-            MonthlyIncomeEvolutionAxis.Clear();
-            MonthlyIncomeEvolutionSeries.Clear();
+            bool hasMonthlyEvolutionData = monthlyIncomeStatistics
+                .ToList()
+                .Select(monthRecord => monthRecord.Value > 0)
+                .Count() > 0;
 
-            MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
+            if (hasMonthlyEvolutionData) {
+                MonthlyIncomeEvolutionAxis.Clear();
+                MonthlyIncomeEvolutionSeries.Clear();
+
+                MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
                 new Axis {
                     Name = "Month",
                     Labels = labels.ToArray()
                 }
             };
 
-            MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> {
+                MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> {
                 new ColumnSeries<int> {
                     Name = "Total incomes",
                     Values = values.ToArray(),
                     Fill = new SolidColorPaint(SKColors.DodgerBlue)
                 }
             };
+            } else {
+                //MonthlyIncomeEvolutionAxis.Clear();
+                //MonthlyIncomeEvolutionSeries.Clear();
+
+                MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis> { };
+                MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> { };
+
+                this.HasMonthlyEvolutionData = false;
+
+                //await Task.Delay(250);
+
+                //this.NoMonthlyEvolutionDataFound?.Invoke(this, new CustomEventArgs("No monthly income evolution data was found for the specified year."));
+            }
         }
 
         private void DisplayIncomeList(DateRange monthRange) {
@@ -147,12 +188,18 @@ namespace AdvancedBudgetManager.view_model {
             }
 
             List<IncomeDto> retrievedIncomes = incomeQueryService.GetIncomesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
-            this.IncomeList.Clear();
+            //this.HasGeneralIncomeData = retrievedIncomes.Count > 0;
 
-            this.IncomeList = new ObservableCollection<IncomeDto>(retrievedIncomes);
-            //retrievedIncomes.ForEach(income => IncomeList.Add(income));
+            if (retrievedIncomes.Count > 0) {
+                this.IncomeList.Clear();
 
-            this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
+                this.IncomeList = new ObservableCollection<IncomeDto>(retrievedIncomes);
+
+                this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
+            } else {
+                this.IncomeList = new ObservableCollection<IncomeDto> { };
+                //this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
+            }
         }
 
         private void DisplayIncomeCategoryStatistics(DateRange monthRange) {
@@ -182,7 +229,13 @@ namespace AdvancedBudgetManager.view_model {
                 }
             }
 
-            this.IncomeCategoriesPieSeries = pieSeriesCollection;
+            if (pieSeriesCollection.Count > 0) {
+                this.IncomeCategoriesPieSeries.Clear();
+                this.IncomeCategoriesPieSeries = pieSeriesCollection;
+            } else {
+                this.IncomeCategoriesPieSeries = new ObservableCollection<ISeries> { };
+                //this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
+            }
         }
 
         partial void OnStartDateChanged(DateTimeOffset value) {
