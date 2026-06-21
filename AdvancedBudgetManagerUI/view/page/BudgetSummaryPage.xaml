@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Page
-    x:Class="AdvancedBudgetManager.view.page.BudgetSummaryPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AdvancedBudgetManager.view.page"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI" 
-    xmlns:tableView="using:WinUI.TableView"
-    mc:Ignorable="d">
-    
-    <Grid Padding="20" RowSpacing="20">
+<Page x:Class="AdvancedBudgetManager.view.page.BudgetSummaryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:AdvancedBudgetManager.view.page"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+      xmlns:tableView="using:WinUI.TableView"
+      mc:Ignorable="d">
+
+    <Grid Padding="20"
+          RowSpacing="20">
 
         <!-- ROW DEFINITIONS -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <!-- Title -->
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <!-- Filters -->
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <!-- Button -->
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
             <!-- Main content -->
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <!-- Bottom -->
         </Grid.RowDefinitions>
 
@@ -32,120 +32,180 @@
                 <!-- NARROW STATE -->
                 <VisualState x:Name="Narrow">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
+                        <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
                         <!-- Stack DatePickers -->
-                        <Setter Target="DatePickerGrid.ColumnDefinitions[0].Width" Value="*"/>
-                        <Setter Target="DatePickerGrid.ColumnDefinitions[1].Width" Value="*"/>
+                        <Setter Target="DatePickerGrid.ColumnDefinitions[0].Width"
+                                Value="*" />
+                        <Setter Target="DatePickerGrid.ColumnDefinitions[1].Width"
+                                Value="*" />
 
                         <!-- Stack main content -->
-                        <Setter Target="MainContentGrid.ColumnDefinitions[0].Width" Value="*"/>
-                        <Setter Target="MainContentGrid.ColumnDefinitions[1].Width" Value="0"/>
+                        <Setter Target="MainContentGrid.ColumnDefinitions[0].Width"
+                                Value="*" />
+                        <Setter Target="MainContentGrid.ColumnDefinitions[1].Width"
+                                Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <!-- WIDE STATE -->
                 <VisualState x:Name="Wide">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="900"/>
+                        <AdaptiveTrigger MinWindowWidth="900" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
                         <!-- Side-by-side layout -->
-                        <Setter Target="MainContentGrid.ColumnDefinitions[0].Width" Value="2*"/>
-                        <Setter Target="MainContentGrid.ColumnDefinitions[1].Width" Value="*"/>
+                        <Setter Target="MainContentGrid.ColumnDefinitions[0].Width"
+                                Value="2*" />
+                        <Setter Target="MainContentGrid.ColumnDefinitions[1].Width"
+                                Value="*" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <!-- 1. TITLE -->
-        <TextBlock
-            Text="Budget summary"
-            FontFamily="Segoe UI"
-            FontSize="28"
-            FontWeight="SemiBold"/>
+        <TextBlock Text="Budget summary"
+                   FontFamily="Segoe UI"
+                   FontSize="28"
+                   FontWeight="SemiBold" />
 
-        <StackPanel Grid.Row="1" Margin="0,100,100,0">
+        <StackPanel Grid.Row="1"
+                    Margin="0,100,100,0">
             <!-- 2. FILTERS -->
-            <StackPanel Grid.Row="1" Spacing="12">
+            <StackPanel Grid.Row="1"
+                        Spacing="12">
 
                 <!-- Checkbox -->
-                <CheckBox Content="Month interval" x:Name="monthIntervalCheckBox" IsChecked="{x:Bind budgetSummaryViewModel.isMonthInterval, Mode=TwoWay}"/>
+                <CheckBox Content="Month interval"
+                          x:Name="monthIntervalCheckBox"
+                          IsChecked="{x:Bind budgetSummaryViewModel.isMonthInterval, Mode=TwoWay}" />
 
                 <!-- DatePickers container -->
-                <Grid x:Name="DatePickerGrid" ColumnSpacing="12">
+                <Grid x:Name="DatePickerGrid"
+                      ColumnSpacing="12">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <DatePicker x:Name="startDatePicker" Header="Starting month" DayVisible="False" MonthVisible="True" YearVisible="True" Date="{x:Bind budgetSummaryViewModel.StartDate, Mode=TwoWay}" Grid.Column="0"/>
+                    <DatePicker x:Name="startDatePicker"
+                                Header="Starting month"
+                                DayVisible="False"
+                                MonthVisible="True"
+                                YearVisible="True"
+                                Date="{x:Bind budgetSummaryViewModel.StartDate, Mode=TwoWay}"
+                                Grid.Column="0" />
                     <!--<TextBlock Text="{x:Bind budgetSummaryViewModel.StartDateError}" Foreground="Red" Grid.Column="0"/>-->
-                    <DatePicker x:Name="endDatePicker" Header="Ending month" DayVisible="False" MonthVisible="True" YearVisible="True" Date="{x:Bind budgetSummaryViewModel.EndDate, Mode=TwoWay}" Visibility="{Binding IsChecked, ElementName=monthIntervalCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="1"/>
+                    <DatePicker x:Name="endDatePicker"
+                                Header="Ending month"
+                                DayVisible="False"
+                                MonthVisible="True"
+                                YearVisible="True"
+                                Date="{x:Bind budgetSummaryViewModel.EndDate, Mode=TwoWay}"
+                                Visibility="{Binding IsChecked, ElementName=monthIntervalCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Grid.Column="1" />
                     <!--<TextBlock Text="{x:Bind budgetSummaryViewModel.EndDateError}" Foreground="Red" Grid.Column="1"/>-->
                 </Grid>
             </StackPanel>
 
             <!-- 3. BUTTON ABOVE GRID -->
-            <Button
-            Grid.Row="2"
-            Content="Display statistics"
-            IsEnabled="{x:Bind budgetSummaryViewModel.IsValidDateSelection, Mode=TwoWay}"
-            Command="{x:Bind budgetSummaryViewModel.DisplayBudgetSummaryCommand}"
-            Background="Gold"
-            Foreground="Black"
-            HorizontalAlignment="Left"
-            Margin="0,20,0,20"/>
+            <Button Grid.Row="2"
+                    Content="Display statistics"
+                    IsEnabled="{x:Bind budgetSummaryViewModel.IsValidDateSelection, Mode=TwoWay}"
+                    Command="{x:Bind budgetSummaryViewModel.DisplayBudgetSummaryCommand}"
+                    Background="Gold"
+                    Foreground="Black"
+                    HorizontalAlignment="Left"
+                    Margin="0,20,0,20" />
 
             <!-- 4. MAIN CONTENT -->
-            <Grid Grid.Row="3" x:Name="MainContentGrid" ColumnSpacing="20">
+            <Grid Grid.Row="3"
+                  x:Name="MainContentGrid"
+                  ColumnSpacing="20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Spacing="20">
+                <StackPanel Grid.Column="0"
+                            Spacing="20">
                     <!-- LEFT: GridView -->
-                <!--<GridView Grid.Column="0"/>-->
-                <TextBlock Text="Budget summary categories" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-                <tableView:TableView x:Name="MyTableView"
-                 ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"
-                 Height="235"
-                 Grid.Column="0"
-                 AutoGenerateColumns="False"
-                 IsReadOnly="True"
-                 GridLinesVisibility="All"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Center">
-                    <tableView:TableView.Columns>
-                        <tableView:TableViewTextColumn Header="Category" Binding="{Binding ItemName}"/>
-                        <tableView:TableViewTextColumn Header="Total value" Binding="{Binding TotalValue}"/>
-                        <tableView:TableViewTextColumn Header="Percentage from total incomes(%)" Binding="{Binding TotalPercentage}"/>
-                    </tableView:TableView.Columns>
-                </tableView:TableView>
+                    <!--<GridView Grid.Column="0"/>-->
+                    <TextBlock Text="Budget summary categories"
+                               FontFamily="Segoe UI"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+                    <tableView:TableView x:Name="MyTableView"
+                                         ItemsSource="{x:Bind budgetSummaryViewModel.BudgetSummaryItems}"
+                                         Height="235"
+                                         Grid.Column="0"
+                                         AutoGenerateColumns="False"
+                                         IsReadOnly="True"
+                                         GridLinesVisibility="All"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center">
+                        <tableView:TableView.Columns>
+                            <tableView:TableViewTextColumn Header="Category"
+                                                           Binding="{Binding ItemName}" />
+                            <tableView:TableViewTextColumn Header="Total value"
+                                                           Binding="{Binding TotalValue}" />
+                            <tableView:TableViewTextColumn Header="Percentage from total incomes(%)"
+                                                           Binding="{Binding TotalPercentage}" />
+                        </tableView:TableView.Columns>
+                    </tableView:TableView>
                 </StackPanel>
 
                 <!-- RIGHT: PieChart -->
-                <StackPanel Grid.Column="1" Spacing="20">
-                    <TextBlock Text="Budget summary chart" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-                    <lvc:PieChart x:Name="budgetItemsPercentagePieChart" Series="{x:Bind budgetSummaryViewModel.PieSeries, Mode=TwoWay}" Width="500" Height="350" TooltipPosition="Hidden" LegendPosition="Right"/>
+                <StackPanel Grid.Column="1"
+                            Spacing="20">
+                    <TextBlock Text="Budget summary chart"
+                               FontFamily="Segoe UI"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+                    <lvc:PieChart x:Name="budgetItemsPercentagePieChart"
+                                  Series="{x:Bind budgetSummaryViewModel.PieSeries, Mode=TwoWay}"
+                                  Width="500"
+                                  Height="350"
+                                  TooltipPosition="Hidden"
+                                  LegendPosition="Right" />
                 </StackPanel>
             </Grid>
         </StackPanel>
 
         <!-- 5. BOTTOM SECTION -->
-        <StackPanel Grid.Row="4" Spacing="12" Margin="0,-100,0,100">
+        <StackPanel Grid.Row="4"
+                    Spacing="12"
+                    Margin="0,-100,0,100">
 
-            <DatePicker x:Name="yearDatePicker" Date="{x:Bind budgetSummaryViewModel.DailyExpenseTotalsDate, Mode=TwoWay}" Header="Select month"  DayVisible="False" MonthVisible="True" YearVisible="True"/>
+            <DatePicker x:Name="yearDatePicker"
+                        Date="{x:Bind budgetSummaryViewModel.DailyExpenseTotalsDate, Mode=TwoWay}"
+                        Header="Select month"
+                        DayVisible="False"
+                        MonthVisible="True"
+                        YearVisible="True" />
 
-            <Button Content="Display daily expense evolution" Command="{x:Bind budgetSummaryViewModel.DisplayDailyExpenseTotalsCommand}" Background="Gold" Foreground="Black" Margin="0,20,0,20"/>
+            <Button Content="Display daily expense evolution"
+                    Command="{x:Bind budgetSummaryViewModel.DisplayDailyExpenseTotalsCommand}"
+                    Background="Gold"
+                    Foreground="Black"
+                    Margin="0,20,0,20" />
 
-            <TextBlock Text="Daily expense evolution" FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"/>
-            <StackPanel Orientation="Horizontal" Spacing="20">
+            <TextBlock Text="Daily expense evolution"
+                       FontFamily="Segoe UI"
+                       FontSize="18"
+                       FontWeight="SemiBold" />
+            <StackPanel Orientation="Horizontal"
+                        Spacing="20">
                 <!-- ColumnChart -->
-                <lvc:CartesianChart XAxes="{x:Bind budgetSummaryViewModel.DailyExpenseTotalAxis, Mode=OneWay}" Series="{x:Bind budgetSummaryViewModel.DailyExpenseTotalSeries, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="1400" Height="300"/>
+                <lvc:CartesianChart XAxes="{x:Bind budgetSummaryViewModel.DailyExpenseTotalAxis, Mode=OneWay}"
+                                    Series="{x:Bind budgetSummaryViewModel.DailyExpenseTotalSeries, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Width="1400"
+                                    Height="300" />
             </StackPanel>
         </StackPanel>
     </Grid>

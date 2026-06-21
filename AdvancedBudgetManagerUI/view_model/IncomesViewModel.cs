@@ -51,7 +51,7 @@ namespace AdvancedBudgetManager.view_model {
         public bool isEmptyGeneralIncomeData;
 
         [ObservableProperty]
-        public bool hasMonthlyEvolutionData;
+        public bool isEmptyMonthlyEvolutionData;
 
         [ObservableProperty]
         public string totalIncomesMessage;
@@ -94,7 +94,7 @@ namespace AdvancedBudgetManager.view_model {
 
             this.isValidDateSelection = false;
             this.isEmptyGeneralIncomeData = false;
-            this.hasMonthlyEvolutionData = false;
+            this.isEmptyMonthlyEvolutionData = false;
 
             this.StartDate = new DateTimeOffset(firstDateOfMonth);
             this.EndDate = new DateTimeOffset(lastDateOfMonth);
@@ -144,42 +144,29 @@ namespace AdvancedBudgetManager.view_model {
                 }
             }
 
-            bool hasMonthlyEvolutionData = monthlyIncomeStatistics
+            this.IsEmptyMonthlyEvolutionData = monthlyIncomeStatistics
                 .ToList()
                 .Select(monthRecord => monthRecord.Value > 0)
-                .Count() > 0;
+                .Count() == 0;
 
-            if (hasMonthlyEvolutionData) {
-                MonthlyIncomeEvolutionAxis.Clear();
-                MonthlyIncomeEvolutionSeries.Clear();
+            //if (hasMonthlyEvolutionData) {
+            MonthlyIncomeEvolutionAxis.Clear();
+            MonthlyIncomeEvolutionSeries.Clear();
 
-                MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
+            MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
                 new Axis {
                     Name = "Month",
                     Labels = labels.ToArray()
                 }
             };
 
-                MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> {
+            MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> {
                 new ColumnSeries<int> {
                     Name = "Total incomes",
                     Values = values.ToArray(),
                     Fill = new SolidColorPaint(SKColors.DodgerBlue)
                 }
             };
-            } else {
-                //MonthlyIncomeEvolutionAxis.Clear();
-                //MonthlyIncomeEvolutionSeries.Clear();
-
-                MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis> { };
-                MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> { };
-
-                this.HasMonthlyEvolutionData = false;
-
-                //await Task.Delay(250);
-
-                //this.NoMonthlyEvolutionDataFound?.Invoke(this, new CustomEventArgs("No monthly income evolution data was found for the specified year."));
-            }
         }
 
         private void DisplayIncomeList(DateRange monthRange) {
@@ -188,7 +175,6 @@ namespace AdvancedBudgetManager.view_model {
             }
 
             List<IncomeDto> retrievedIncomes = incomeQueryService.GetIncomesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
-            //this.HasGeneralIncomeData = retrievedIncomes.Count > 0;
 
             if (retrievedIncomes.Count > 0) {
                 this.IncomeList.Clear();
@@ -198,7 +184,6 @@ namespace AdvancedBudgetManager.view_model {
                 this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
             } else {
                 this.IncomeList = new ObservableCollection<IncomeDto> { };
-                //this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
             }
         }
 
@@ -234,7 +219,6 @@ namespace AdvancedBudgetManager.view_model {
                 this.IncomeCategoriesPieSeries = pieSeriesCollection;
             } else {
                 this.IncomeCategoriesPieSeries = new ObservableCollection<ISeries> { };
-                //this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
             }
         }
 
