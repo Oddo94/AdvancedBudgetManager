@@ -160,6 +160,7 @@
 
                 <!-- RIGHT: PieChart -->
                 <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Center"
                             Spacing="20">
                     <TextBlock Text="Budget summary chart"
                                FontFamily="Segoe UI"

@@ -135,8 +135,8 @@
                     <Grid>
                         <tableView:TableView x:Name="incomesTableView"
                                              ItemsSource="{x:Bind incomesViewModel.IncomeList, Mode=TwoWay}"
-                                             Width="540"
-                                             Height="235"
+                                             Width="600"
+                                             Height="300"
                                              Grid.Column="0"
                                              AutoGenerateColumns="False"
                                              IsReadOnly="True"
@@ -158,8 +158,8 @@
                                 Visibility="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Width="540"
-                                Height="235">
+                                Width="600"
+                                Height="300">
                             <TextBlock Text="No data available"
                                        Foreground="White"
                                        FontSize="18"
@@ -171,11 +171,11 @@
                                FontFamily="SegoeUI"
                                FontSize="14"
                                FontWeight="SemiBold" />
-                    <TextBlock Text="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay}" />
                 </StackPanel>
 
                 <!-- RIGHT: PieChart -->
                 <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Center"
                             Spacing="20">
                     <TextBlock Text="Income categories chart"
                                FontFamily="Segoe UI"
