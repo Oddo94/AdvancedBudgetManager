@@ -3,7 +3,7 @@
   <TestRunParameters>
     <!--REPOSITORY TEST DATA-->
     <!--1.USER REPOSITORY-->
-    <Parameter name ="validUserId" value="1"/>
+    <Parameter name ="validUserId" value="20"/>
     <Parameter name ="invalidUserId" value="-1"/>
     <Parameter name="validUserName" value="WinUI3Test"/>
     <Parameter name="invalidUserName" value="Winui4Test"/>
@@ -48,6 +48,14 @@
     <Parameter name="validEndDate" value="2025-12-31"/>
     <Parameter name="invalidStartDate" value="2024-12-01"/>
     <Parameter name="invalidEndDate" value="2024-06-01"/>
+    <Parameter name="singleMonthValidStartDate" value="2025-01-01"/>
+    <Parameter name="singleMonthValidEndDate" value="2025-01-31"/>
+    <Parameter name="monthIntervalValidStartDate" value="2025-01-01"/>
+    <Parameter name="monthIntervalValidEndDate" value="2025-06-30"/>
+    <Parameter name="singleMonthInvalidStartDate" value="2026-01-01"/>
+    <Parameter name="singleMonthInvalidEndDate" value="2026-01-31"/>
+    <Parameter name="monthIntervalInvalidStartDate" value="2026-01-01"/>
+    <Parameter name="monthIntervalInvalidEndDate" value="2026-06-30"/>
     
   </TestRunParameters>
 </RunSettings>

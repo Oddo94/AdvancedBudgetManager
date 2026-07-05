@@ -9,10 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\scripts\insert_incomes_data.sql" />
     <None Remove="resources\scripts\mysql_schema.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="resources\scripts\insert_incomes_data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\scripts\mysql_schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

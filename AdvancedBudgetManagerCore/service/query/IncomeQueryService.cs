@@ -68,7 +68,10 @@ namespace AdvancedBudgetManagerCore.service.query {
                     getIncomesByUserIdAndDateIntervalCommand
                         .Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
 
-                    conn.Open();
+                    if (conn.State != ConnectionState.Open) {
+                        conn.Open();
+                    }
+
                     MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getIncomesByUserIdAndDateIntervalCommand);
                     DataTable retrievedIncomes = new DataTable();
 

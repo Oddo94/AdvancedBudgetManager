@@ -2,7 +2,7 @@
 
 namespace AdvancedBudgetManagerTest.integration.utils {
     public class IntegrationTestBase {
-        protected MySqlContainer mySqlDbContainer;
+        private static MySqlContainer mySqlDbContainer;
 
         public IntegrationTestBase() { }
         public async Task Initialize() {
@@ -19,8 +19,8 @@ namespace AdvancedBudgetManagerTest.integration.utils {
         }
 
         public MySqlContainer MySqlDbContainer {
-            get { return this.mySqlDbContainer; }
-            set { this.mySqlDbContainer = value; }
+            get { return mySqlDbContainer; }
+            set { mySqlDbContainer = value; }
         }
     }
 }
