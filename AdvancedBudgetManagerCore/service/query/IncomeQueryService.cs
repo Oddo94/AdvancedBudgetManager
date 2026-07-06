@@ -18,8 +18,7 @@ namespace AdvancedBudgetManagerCore.service.query {
         private string sqlStatementGetAggregatedIncomesByCategory = @"WITH incomeCategoryStatistics AS (
                                                                       SELECT
 	                                                                        it.typeName,
-	                                                                        sum(inc.value) AS totalValue,
-	                                                                        inc.date
+	                                                                        sum(inc.value) AS totalValue
                                                                       FROM
 	                                                                        incomes inc
                                                                       INNER JOIN income_types it ON
@@ -68,6 +67,7 @@ namespace AdvancedBudgetManagerCore.service.query {
                     getIncomesByUserIdAndDateIntervalCommand
                         .Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
 
+                    //TO DO: Check if it can be removed as integration tests now use a new connection for each test
                     if (conn.State != ConnectionState.Open) {
                         conn.Open();
                     }

@@ -23,6 +23,22 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static DateTime singleMonthInvalidEndDate = DateTime.Now;
         private static DateTime monthIntervalInvalidStartDate = DateTime.Now;
         private static DateTime monthIntervalInvalidEndDate = DateTime.Now;
+        private static double singleMonthSalaryPercentage = 0;
+        private static int singleMonthSalaryValue = 0;
+        private static double singleMonthDividendsPercentage = 0;
+        private static int singleMonthDividendsValue = 0;
+        private static double singleMonthCopyrightPercentage = 0;
+        private static int singleMonthCopyrightValue = 0;
+        private static double monthIntervalSalaryPercentage = 0;
+        private static int monthIntervalSalaryValue = 0;
+        private static double monthIntervalDividendsPercentage = 0;
+        private static int monthIntervalDividendsValue = 0;
+        private static double monthIntervalCopyrightPercentage = 0;
+        private static int monthIntervalCopyrightValue = 0;
+        private static double monthIntervalGoodsSalePercentage = 0;
+        private static int monthIntervalGoodsSaleValue = 0;
+        private static double monthIntervalRentalIncomePercentage = 0;
+        private static int monthIntervalRentalIncomeValue = 0;
 
         private static MySqlContainer mySqlDbContainer;
         private static IncomeQueryService incomeQueryService;
@@ -75,6 +91,22 @@ namespace AdvancedBudgetManagerTest.integration.service {
             DateTime.TryParse(testContext.Properties["singleMonthInvalidEndDate"]?.ToString() ?? String.Empty, out singleMonthInvalidEndDate);
             DateTime.TryParse(testContext.Properties["monthIntervalInvalidStartDate"]?.ToString() ?? String.Empty, out monthIntervalInvalidStartDate);
             DateTime.TryParse(testContext.Properties["monthIntervalInvalidEndDate"]?.ToString() ?? String.Empty, out monthIntervalInvalidEndDate);
+            singleMonthSalaryPercentage = Convert.ToDouble(testContext.Properties["singleMonthSalaryPercentage"]?.ToString() ?? String.Empty);
+            singleMonthSalaryValue = Convert.ToInt32(testContext.Properties["singleMonthSalaryValue"]?.ToString() ?? String.Empty);
+            singleMonthDividendsPercentage = Convert.ToDouble(testContext.Properties["singleMonthDividendsPercentage"]?.ToString() ?? String.Empty);
+            singleMonthDividendsValue = Convert.ToInt32(testContext.Properties["singleMonthDividendsValue"]?.ToString() ?? String.Empty);
+            singleMonthCopyrightPercentage = Convert.ToDouble(testContext.Properties["singleMonthCopyrightPercentage"]?.ToString() ?? String.Empty);
+            singleMonthCopyrightValue = Convert.ToInt32(testContext.Properties["singleMonthCopyrightValue"]?.ToString() ?? String.Empty);
+            monthIntervalSalaryPercentage = Convert.ToDouble(testContext.Properties["monthIntervalSalaryPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalSalaryValue = Convert.ToInt32(testContext.Properties["monthIntervalSalaryValue"]?.ToString() ?? String.Empty);
+            monthIntervalDividendsPercentage = Convert.ToDouble(testContext.Properties["monthIntervalDividendsPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalDividendsValue = Convert.ToInt32(testContext.Properties["monthIntervalDividendsValue"]?.ToString() ?? String.Empty);
+            monthIntervalCopyrightPercentage = Convert.ToDouble(testContext.Properties["monthIntervalCopyrightPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalCopyrightValue = Convert.ToInt32(testContext.Properties["monthIntervalCopyrightValue"]?.ToString() ?? String.Empty);
+            monthIntervalGoodsSalePercentage = Convert.ToDouble(testContext.Properties["monthIntervalGoodsSalePercentage"]?.ToString() ?? String.Empty);
+            monthIntervalGoodsSaleValue = Convert.ToInt32(testContext.Properties["monthIntervalGoodsSaleValue"]?.ToString() ?? String.Empty);
+            monthIntervalRentalIncomePercentage = Convert.ToDouble(testContext.Properties["monthIntervalRentalIncomePercentage"]?.ToString() ?? String.Empty);
+            monthIntervalRentalIncomeValue = Convert.ToInt32(testContext.Properties["monthIntervalRentalIncomeValue"]?.ToString() ?? String.Empty);
         }
 
         //[TestMethod]
@@ -96,7 +128,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
 
 
         [TestMethod]
-        public void GetMonthIncomeList_WhenDataFound_DateMustMatchInput() {
+        public void GetMonthIncomeList_WhenDataFound_DateMatchesInput() {
             IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             MySqlConnection mySqlTestConnection =
                     new MySqlConnection(mySqlDbContainer.GetConnectionString());
@@ -146,7 +178,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
         }
 
         [TestMethod]
-        public void GetMonthIntervalIncomeList_WhenDataFound_DateMustMatchInput() {
+        public void GetMonthIntervalIncomeList_WhenDataFound_DateMatchesInput() {
             IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
             MySqlConnection mySqlTestConnection =
                     new MySqlConnection(mySqlDbContainer.GetConnectionString());
@@ -194,6 +226,123 @@ namespace AdvancedBudgetManagerTest.integration.service {
             Assert.IsEmpty(incomesList);
         }
 
+        [TestMethod]
+        public void GetSingleMonthIncomeStatistics_WhenDataFound_StatisticsDataMatches() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            IncomeQueryService incomeQueryService = new IncomeQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(singleMonthValidStartDate, singleMonthValidEndDate);
+
+            foreach (CategoryStatisticsDto categoryStatisticsDto in incomeCategoriesStatistics.CategoriesStatistics) {
+                switch (categoryStatisticsDto.Name) {
+                    case "Salary":
+                        Assert.AreEqual(singleMonthSalaryPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthSalaryValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Dividends":
+                        Assert.AreEqual(singleMonthDividendsPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthDividendsValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Copyright":
+                        Assert.AreEqual(singleMonthCopyrightPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthCopyrightValue, categoryStatisticsDto.Value);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetSingleMonthIncomeStatistics_WhenNoDataFound_CategoriesListIsEmpty() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            IncomeQueryService incomeQueryService = new IncomeQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(singleMonthInvalidStartDate, singleMonthInvalidEndDate);
+
+            List<CategoryStatisticsDto> incomeCategoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
+
+            Assert.IsEmpty(incomeCategoriesStatisticsList);
+        }
+
+        [TestMethod]
+        public void GetMonthIntervalIncomeStatistics_WhenDataFound_StatisticsDataMatches() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            IncomeQueryService incomeQueryService = new IncomeQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthIntervalValidStartDate, monthIntervalValidEndDate);
+
+            foreach (CategoryStatisticsDto categoryStatisticsDto in incomeCategoriesStatistics.CategoriesStatistics) {
+                switch (categoryStatisticsDto.Name) {
+                    case "Salary":
+                        Assert.AreEqual(monthIntervalSalaryPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalSalaryValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Dividends":
+                        Assert.AreEqual(monthIntervalDividendsPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalDividendsValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Copyright":
+                        Assert.AreEqual(monthIntervalCopyrightPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalCopyrightValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Goods sale":
+                        Assert.AreEqual(monthIntervalGoodsSalePercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalGoodsSaleValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Rental income":
+                        Assert.AreEqual(monthIntervalRentalIncomePercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalRentalIncomeValue, categoryStatisticsDto.Value);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetMonthIntervalIncomeStatistics_WhenNoDataFound_CategoriesListIsEmpty() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            IncomeQueryService incomeQueryService = new IncomeQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthIntervalInvalidStartDate, monthIntervalInvalidEndDate);
+
+            List<CategoryStatisticsDto> incomeCategoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
+
+            Assert.IsEmpty(incomeCategoriesStatisticsList);
+        }
 
 
         //[TestMethod]
