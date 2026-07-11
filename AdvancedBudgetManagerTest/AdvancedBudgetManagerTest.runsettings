@@ -73,5 +73,19 @@
     <Parameter name="monthIntervalGoodsSaleValue" value="1600"/>
     <Parameter name="monthIntervalRentalIncomePercentage" value="5.59"/>
     <Parameter name="monthIntervalRentalIncomeValue" value="4100"/>
+    <Parameter name="validMonthlyIncomeEvolutionYear" value ="2025"/>
+    <Parameter name="invalidMonthlyIncomeEvolutionYear" value ="2026"/>
+    <Parameter name="januaryMonthlyTotalIncomes" value="12000"/>
+    <Parameter name="februaryMonthlyTotalIncomes" value="11800"/>
+    <Parameter name="marchMonthlyTotalIncomes" value="12500"/>
+    <Parameter name="aprilMonthlyTotalIncomes" value="12200"/>
+    <Parameter name="mayMonthlyTotalIncomes" value="12700"/>
+    <Parameter name="juneMonthlyTotalIncomes" value="12200"/>
+    <Parameter name="julyMonthlyTotalIncomes" value="12900"/>
+    <Parameter name="augustMonthlyTotalIncomes" value="12900"/>
+    <Parameter name="septemberMonthlyTotalIncomes" value="12400"/>
+    <Parameter name="octoberMonthlyTotalIncomes" value="13100"/>
+    <Parameter name="novemberMonthlyTotalIncomes" value="12400"/>
+    <Parameter name="decemberMonthlyTotalIncomes" value="13300"/>
   </TestRunParameters>
 </RunSettings>

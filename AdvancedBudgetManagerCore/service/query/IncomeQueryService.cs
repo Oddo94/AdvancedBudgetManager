@@ -43,10 +43,10 @@ namespace AdvancedBudgetManagerCore.service.query {
 	                                                                   user_ID = @userId
 	                                                             AND YEAR(date) = @year
                                                                  GROUP BY
-	                                                                   MONTH(date)
-                                                                 ORDER BY
 	                                                                   MONTH(date),
-	                                                                   YEAR(date)";
+                                                                       DATE_FORMAT(date, '%M')
+                                                                 ORDER BY
+	                                                                   MONTH(date)";
         private IUserSessionService userSessionService;
 
         public IncomeQueryService([NotNull] IDatabaseConnection dbConnection,
