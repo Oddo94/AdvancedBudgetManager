@@ -4,7 +4,7 @@ using System.Security;
 namespace AdvancedBudgetManagerCore.model.dto {
 #pragma warning disable CS1591
     /// <summary>
-    /// Represents the data transfer object used for sending the information related to user insertion.
+    /// Represents the data transfer object used for storing the information related to user insertion.
     /// </summary>
     public class UserInsertDto {
         /// <summary>
@@ -28,7 +28,7 @@ namespace AdvancedBudgetManagerCore.model.dto {
         public UserInsertDto() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserInsertDto"/> based on the provided parameters.
+        /// Initializes a new instance of the <see cref="UserInsertDto"/> based on the provided arguments.
         /// </summary>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>

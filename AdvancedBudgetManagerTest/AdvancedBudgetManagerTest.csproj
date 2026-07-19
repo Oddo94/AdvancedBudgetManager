@@ -9,10 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\scripts\insert_incomes_data.sql" />
+    <None Remove="resources\scripts\mysql_schema.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="resources\scripts\insert_incomes_data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\scripts\mysql_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
     <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <PackageReference Include="Testcontainers.MySql" Version="4.12.0" />
   </ItemGroup>
 
   <ItemGroup>

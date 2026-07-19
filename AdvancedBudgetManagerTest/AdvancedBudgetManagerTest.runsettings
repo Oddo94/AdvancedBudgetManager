@@ -3,7 +3,7 @@
   <TestRunParameters>
     <!--REPOSITORY TEST DATA-->
     <!--1.USER REPOSITORY-->
-    <Parameter name ="validUserId" value="1"/>
+    <Parameter name ="validUserId" value="20"/>
     <Parameter name ="invalidUserId" value="-1"/>
     <Parameter name="validUserName" value="WinUI3Test"/>
     <Parameter name="invalidUserName" value="Winui4Test"/>
@@ -15,7 +15,7 @@
     <Parameter name="validEmailAddress" value="valid_email@yahoo.com"/>
     <Parameter name="invalidEmailAddress" value="invalid_email@yahoo.com"/>
     <Parameter name="updatedEmailAddress" value = "WinUI3TestUpdated"/>
-    
+
     <!--INPUT VALIDATION TEST DATA-->
     <Parameter name="validPasswordInput" value="Eu2%Tn8+Cs1!Hx$"/>
     <Parameter name="passwordMissingLowercase" value="J3$E9,L4(S8+6'P"/>
@@ -38,16 +38,54 @@
     <Parameter name="newSalt" value="wI/+jYFcURFagUqkMYrCIU92Pc1Npocz27ytkllYRWY="/>
     <Parameter name="newPasswordHash" value="iU/67qsljajLsDny/fHsBjlWgaQnnoGU0YKfJ0oiRJM0aTBBrqhI6yZ0A+oqwoHK18B2zJ3MeVJ4bniq/HpImg=="/>
 
-    
+
     <!--REPOSITORY TEST DATA-->
     <Parameter name="retrievedUserId" value="-1"/>
     <Parameter name="userName" value="WinUI3Test"/>
-    
+
     <!--SERVICE TEST DATA-->
+    <!--INCOME QUERY SERVICE-->
     <Parameter name="validStartDate" value="2025-01-01"/>
     <Parameter name="validEndDate" value="2025-12-31"/>
     <Parameter name="invalidStartDate" value="2024-12-01"/>
     <Parameter name="invalidEndDate" value="2024-06-01"/>
-    
+    <Parameter name="singleMonthValidStartDate" value="2025-01-01"/>
+    <Parameter name="singleMonthValidEndDate" value="2025-01-31"/>
+    <Parameter name="monthIntervalValidStartDate" value="2025-01-01"/>
+    <Parameter name="monthIntervalValidEndDate" value="2025-06-30"/>
+    <Parameter name="singleMonthInvalidStartDate" value="2026-01-01"/>
+    <Parameter name="singleMonthInvalidEndDate" value="2026-01-31"/>
+    <Parameter name="monthIntervalInvalidStartDate" value="2026-01-01"/>
+    <Parameter name="monthIntervalInvalidEndDate" value="2026-06-30"/>
+    <Parameter name="singleMonthSalaryPercentage" value="75"/>
+    <Parameter name="singleMonthSalaryValue" value="9000"/>
+    <Parameter name="singleMonthDividendsPercentage" value="12.5"/>
+    <Parameter name="singleMonthDividendsValue" value="1500"/>
+    <Parameter name="singleMonthCopyrightPercentage" value="12.5"/>
+    <Parameter name="singleMonthCopyrightValue" value="1500"/>
+    <Parameter name="monthIntervalSalaryPercentage" value="74.93"/>
+    <Parameter name="monthIntervalSalaryValue" value="55000"/>
+    <Parameter name="monthIntervalDividendsPercentage" value="10.76"/>
+    <Parameter name="monthIntervalDividendsValue" value="7900"/>
+    <Parameter name="monthIntervalCopyrightPercentage" value="6.54"/>
+    <Parameter name="monthIntervalCopyrightValue" value="4800"/>
+    <Parameter name="monthIntervalGoodsSalePercentage" value="2.18"/>
+    <Parameter name="monthIntervalGoodsSaleValue" value="1600"/>
+    <Parameter name="monthIntervalRentalIncomePercentage" value="5.59"/>
+    <Parameter name="monthIntervalRentalIncomeValue" value="4100"/>
+    <Parameter name="validMonthlyIncomeEvolutionYear" value ="2025"/>
+    <Parameter name="invalidMonthlyIncomeEvolutionYear" value ="2026"/>
+    <Parameter name="januaryMonthlyTotalIncomes" value="12000"/>
+    <Parameter name="februaryMonthlyTotalIncomes" value="11800"/>
+    <Parameter name="marchMonthlyTotalIncomes" value="12500"/>
+    <Parameter name="aprilMonthlyTotalIncomes" value="12200"/>
+    <Parameter name="mayMonthlyTotalIncomes" value="12700"/>
+    <Parameter name="juneMonthlyTotalIncomes" value="12200"/>
+    <Parameter name="julyMonthlyTotalIncomes" value="12900"/>
+    <Parameter name="augustMonthlyTotalIncomes" value="12900"/>
+    <Parameter name="septemberMonthlyTotalIncomes" value="12400"/>
+    <Parameter name="octoberMonthlyTotalIncomes" value="13100"/>
+    <Parameter name="novemberMonthlyTotalIncomes" value="12400"/>
+    <Parameter name="decemberMonthlyTotalIncomes" value="13300"/>
   </TestRunParameters>
 </RunSettings>

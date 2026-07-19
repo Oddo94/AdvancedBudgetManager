@@ -1,0 +1,254 @@
+﻿using AdvancedBudgetManagerCore.model.dto;
+using AdvancedBudgetManagerCore.utils.database;
+using AdvancedBudgetManagerCore.utils.enums;
+using AdvancedBudgetManagerCore.utils.exception;
+using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
+
+namespace AdvancedBudgetManagerCore.service.query {
+    /// <summary>
+    /// Service class used for providing the aggregated data related to the user's incomes.
+    /// </summary>
+    public class IncomeQueryService {
+        /// <summary>
+        /// The database connection used for retrieving the data.
+        /// </summary>
+        private IDatabaseConnection dbConnection;
+
+        /// <summary>
+        /// The query used for retrieving the income list.
+        /// </summary>
+        private string getIncomesByUserIdAndDateIntervalQuery = @"SELECT inc.name, it.typeName, inc.value, inc.date
+                                                                         FROM incomes inc
+                                                                         INNER JOIN income_types it ON inc.incomeType = it.typeID
+                                                                         WHERE inc.user_ID = @userId AND inc.date BETWEEN @startDate AND @endDate";
+
+        /// <summary>
+        /// The query used for retrieving the total incomes by category.
+        /// </summary>
+        private string getAggregatedIncomesByCategoryQuery = @"WITH incomeCategoryStatistics AS (
+                                                                      SELECT
+	                                                                        it.typeName,
+	                                                                        sum(inc.value) AS totalValue
+                                                                      FROM
+	                                                                        incomes inc
+                                                                      INNER JOIN income_types it ON
+	                                                                        inc.incomeType = it.typeID
+                                                                      WHERE
+	                                                                        inc.user_ID = @userId
+	                                                                  AND inc.date BETWEEN @startDate AND @endDate
+                                                                      GROUP BY
+	                                                                        it.typeName) 
+                                                                      SELECT
+	                                                                        incomeCategoryStatistics.typeName,
+	                                                                        incomeCategoryStatistics.totalValue,
+	                                                                        ROUND((incomeCategoryStatistics.totalValue * 100) / SUM(incomeCategoryStatistics.totalValue) OVER (), 2) AS totalPercentage
+                                                                      FROM
+	                                                                        incomeCategoryStatistics";
+
+        /// <summary>
+        /// The query used for retrieving the monthly income evolution for a specified year.
+        /// </summary>
+        private string getMonthlyIncomeEvolutionQuery = @"SELECT
+	                                                                   DATE_FORMAT(date, '%M') AS 'Month',
+	                                                                   SUM(value) AS 'Total incomes'
+                                                                 FROM
+	                                                                   incomes
+                                                                 WHERE
+	                                                                   user_ID = @userId
+	                                                             AND YEAR(date) = @year
+                                                                 GROUP BY
+	                                                                   MONTH(date),
+                                                                       DATE_FORMAT(date, '%M')
+                                                                 ORDER BY
+	                                                                   MONTH(date)";
+        /// <summary>
+        /// The user session service used for retrieving the curent user's data.
+        /// </summary>
+        private IUserSessionService userSessionService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IncomeQueryService"/> based on the provided <see cref="IDatabaseConnection"/> and <see cref="IUserSessionService"/>.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
+        /// <param name="userSessionService">The user session service used for retrieving the curent user's data.</param>
+        public IncomeQueryService([NotNull] IDatabaseConnection dbConnection,
+            [NotNull] IUserSessionService userSessionService) {
+            this.dbConnection = dbConnection;
+            this.userSessionService = userSessionService;
+        }
+
+        /// <summary>
+        /// Retrieves the list of incomes for the time interval specified by the start date and end date.
+        /// </summary>
+        /// <param name="startDate">The start date of the time interval.</param>
+        /// <param name="endDate">The end date of the time interval.</param>
+        /// <returns>A list of <see cref="IncomeDto"/> objects.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
+        public List<IncomeDto> GetIncomesByUserIdAndDateInterval(DateTime startDate, DateTime endDate) {
+            long userId = userSessionService.AuthenticatedUser.UserId;
+
+            using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
+                try {
+                    MySqlCommand getIncomesByUserIdAndDateIntervalCommand = new MySqlCommand(getIncomesByUserIdAndDateIntervalQuery, conn);
+                    getIncomesByUserIdAndDateIntervalCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+                    getIncomesByUserIdAndDateIntervalCommand
+                        .Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
+                    getIncomesByUserIdAndDateIntervalCommand
+                        .Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
+
+                    //TO DO: Check if it can be removed as integration tests now use a new connection for each test
+                    if (conn.State != ConnectionState.Open) {
+                        conn.Open();
+                    }
+
+                    MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getIncomesByUserIdAndDateIntervalCommand);
+                    DataTable retrievedIncomes = new DataTable();
+
+                    dataAdapter.Fill(retrievedIncomes);
+
+                    List<IncomeDto> incomesList = new List<IncomeDto>();
+                    foreach (DataRow incomeRow in retrievedIncomes.Rows) {
+                        string name = string.Empty;
+                        string incomeType = string.Empty;
+                        int value = -1;
+                        DateTime incomeDate = DateTime.Now;
+                        //DateOnly date = DateOnly.MinValue;
+
+                        name = incomeRow.ItemArray[0].ToString();
+                        incomeType = incomeRow.ItemArray[1].ToString();
+                        int.TryParse(incomeRow.ItemArray[2].ToString(), out value);
+                        DateTime.TryParse(incomeRow.ItemArray[3].ToString(), out incomeDate);
+
+
+                        IncomeDto incomeDto = new IncomeDto(name, incomeType, value, incomeDate.Date);
+
+                        incomesList.Add(incomeDto);
+                    }
+
+                    return incomesList;
+                } catch (MySqlException ex) {
+                    int errorCode = ex.Number;
+                    String message;
+
+                    if (errorCode == 1042) {
+                        message = "Unable to connect to the database! Please check the connection and try again.";
+                    } else {
+                        message = "An error occurred while retrieving data! Please try again.";
+                    }
+
+                    throw new AdvancedBudgetManagerException(ExceptionCategory.Persistence, message, ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the aggregated total incomes by category for the time interval specified by the start date and end date.
+        /// </summary>
+        /// <param name="startDate">The start date of the time interval.</param>
+        /// <param name="endDate">The end date of the time interval.</param>
+        /// <returns>A <see cref="BudgetItemCategoriesStatisticsDto"/> object.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
+        public BudgetItemCategoriesStatisticsDto GetAggregatedIncomesByCategory(DateTime startDate, DateTime endDate) {
+            long userId = userSessionService.AuthenticatedUser.UserId;
+
+            using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
+                try {
+                    MySqlCommand getAggregatedIncomesByCategoryCommand = new MySqlCommand(getAggregatedIncomesByCategoryQuery, conn);
+                    getAggregatedIncomesByCategoryCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+                    getAggregatedIncomesByCategoryCommand
+                        .Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
+                    getAggregatedIncomesByCategoryCommand
+                        .Parameters.Add("@endDate", MySqlDbType.Date).Value = endDate;
+
+                    conn.Open();
+                    MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getAggregatedIncomesByCategoryCommand);
+                    DataTable retrievedCategoryStatistics = new DataTable();
+
+                    dataAdapter.Fill(retrievedCategoryStatistics);
+
+                    List<CategoryStatisticsDto> categoryStatisticsList = new List<CategoryStatisticsDto>();
+                    foreach (DataRow categoryStatisticsRow in retrievedCategoryStatistics.Rows) {
+                        string name = string.Empty;
+                        int value = -1;
+                        double percentage = 0.0;
+
+                        name = categoryStatisticsRow.ItemArray[0].ToString();
+                        int.TryParse(categoryStatisticsRow.ItemArray[1].ToString(), out value);
+                        double.TryParse(categoryStatisticsRow.ItemArray[2].ToString(), out percentage);
+
+                        CategoryStatisticsDto categoryStatisticsDto = new CategoryStatisticsDto(name, value, percentage);
+
+                        categoryStatisticsList.Add(categoryStatisticsDto);
+                    }
+
+                    return new BudgetItemCategoriesStatisticsDto(BudgetItem.Income, categoryStatisticsList);
+                } catch (MySqlException ex) {
+                    int errorCode = ex.Number;
+                    String message;
+
+                    if (errorCode == 1042) {
+                        message = "Unable to connect to the database! Please check the connection and try again.";
+                    } else {
+                        message = "An error occurred while retrieving data! Please try again.";
+                    }
+
+                    throw new AdvancedBudgetManagerException(ExceptionCategory.Persistence, message, ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the monthly income evolution data for a specified year.
+        /// </summary>
+        /// <param name="year">The year.</param>
+        /// <returns>A <see cref="BudgetItemMonthlyEvolutionDto"/> object.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
+        public BudgetItemMonthlyEvolutionDto GetMonthlyIncomeEvolution(int year) {
+            long userId = userSessionService.AuthenticatedUser.UserId;
+
+            using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
+                try {
+                    MySqlCommand getMonthlyIncomeEvolutionCommand = new MySqlCommand(getMonthlyIncomeEvolutionQuery, conn);
+                    getMonthlyIncomeEvolutionCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
+                    getMonthlyIncomeEvolutionCommand.Parameters.Add("@year", MySqlDbType.Int32).Value = year;
+
+                    conn.Open();
+                    MySqlDataAdapter dataAdapter = new MySqlDataAdapter(getMonthlyIncomeEvolutionCommand);
+                    DataTable retrievedIncomeEvolution = new DataTable();
+
+                    dataAdapter.Fill(retrievedIncomeEvolution);
+
+                    Dictionary<Month, int> monthlyIncomeStatistics = new Dictionary<Month, int>();
+                    foreach (DataRow incomeEvolutionRow in retrievedIncomeEvolution.Rows) {
+                        Month month = Month.Undefined;
+                        int totalIncomes = -1;
+
+                        month = MonthExtensions.GetTypeByDescription(incomeEvolutionRow.ItemArray[0].ToString());
+                        int.TryParse(incomeEvolutionRow.ItemArray[1].ToString(), out totalIncomes);
+
+                        MonthlyStatisticsDto monthlyStatisticsDto = new MonthlyStatisticsDto(month, totalIncomes);
+
+                        monthlyIncomeStatistics.Add(month, totalIncomes);
+                    }
+
+                    return new BudgetItemMonthlyEvolutionDto(BudgetItem.Income, monthlyIncomeStatistics);
+                } catch (MySqlException ex) {
+                    int errorCode = ex.Number;
+                    String message;
+
+                    if (errorCode == 1042) {
+                        message = "Unable to connect to the database! Please check the connection and try again.";
+                    } else {
+                        message = "An error occurred while retrieving data! Please try again.";
+                    }
+
+                    throw new AdvancedBudgetManagerException(ExceptionCategory.Persistence, message, ex);
+                }
+            }
+        }
+    }
+}

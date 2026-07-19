@@ -40,9 +40,9 @@ namespace AdvancedBudgetManagerUI.view.window {
                 String? pageName = selectedItem.Tag.ToString();
 
                 switch (pageName) {
-                    //case "incomesPage":
-                    //    userDashboardContentFrame.Navigate(typeof(IncomesPage), null);
-                    //    break;
+                    case "incomesPage":
+                        navigationService.Show(PageKey.IncomesPage);
+                        break;
 
                     //case "expensesPage":
                     //    userDashboardContentFrame.Navigate(typeof(ExpensesPage), null);
