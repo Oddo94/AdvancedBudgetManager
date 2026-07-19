@@ -57,8 +57,6 @@ namespace AdvancedBudgetManagerTest.integration.service {
 
 
         private static MySqlContainer mySqlDbContainer;
-        private static IncomeQueryService incomeQueryService;
-        private static IUserSessionService userSessionService;
 
         public TestContext TestContext { get; set; }
 

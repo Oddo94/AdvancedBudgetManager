@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManager.view_model {
     public partial class IncomesViewModel : ObservableValidator {
@@ -57,8 +56,6 @@ namespace AdvancedBudgetManager.view_model {
         public string totalIncomesMessage;
 
         public event EventHandler? NoGeneralIncomeDataFound;
-
-        public event EventHandler? NoMonthlyEvolutionDataFound;
 
         private IncomeQueryService incomeQueryService;
 
@@ -119,7 +116,7 @@ namespace AdvancedBudgetManager.view_model {
         }
 
         [RelayCommand]
-        public async Task DisplayMonthlyIncomeEvolution() {
+        public void DisplayMonthlyIncomeEvolution() {
             int year = MonthlyIncomeEvolutionDate.Year;
             BudgetItemMonthlyEvolutionDto monthlyIncomeEvolutionDto = incomeQueryService.GetMonthlyIncomeEvolution(year);
             Dictionary<Month, int> monthlyIncomeStatistics = monthlyIncomeEvolutionDto.MonthlyStatistics;
@@ -169,7 +166,7 @@ namespace AdvancedBudgetManager.view_model {
             };
         }
 
-        private void DisplayIncomeList(DateRange monthRange) {
+        private void DisplayIncomeList(DateRange? monthRange) {
             if (monthRange == null) {
                 return;
             }
@@ -187,7 +184,7 @@ namespace AdvancedBudgetManager.view_model {
             }
         }
 
-        private void DisplayIncomeCategoryStatistics(DateRange monthRange) {
+        private void DisplayIncomeCategoryStatistics(DateRange? monthRange) {
             if (monthRange == null) {
                 return;
             }

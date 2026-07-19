@@ -9,13 +9,27 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service.query {
+    /// <summary>
+    /// Service class used for providing the aggregated data related to the user's incomes.
+    /// </summary>
     public class IncomeQueryService {
+        /// <summary>
+        /// The database connection used for retrieving the data.
+        /// </summary>
         private IDatabaseConnection dbConnection;
-        private string sqlStatementGetIncomesByUserIdAndDateInterval = @"SELECT inc.name, it.typeName, inc.value, inc.date
+
+        /// <summary>
+        /// The query used for retrieving the income list.
+        /// </summary>
+        private string getIncomesByUserIdAndDateIntervalQuery = @"SELECT inc.name, it.typeName, inc.value, inc.date
                                                                          FROM incomes inc
                                                                          INNER JOIN income_types it ON inc.incomeType = it.typeID
                                                                          WHERE inc.user_ID = @userId AND inc.date BETWEEN @startDate AND @endDate";
-        private string sqlStatementGetAggregatedIncomesByCategory = @"WITH incomeCategoryStatistics AS (
+
+        /// <summary>
+        /// The query used for retrieving the total incomes by category.
+        /// </summary>
+        private string getAggregatedIncomesByCategoryQuery = @"WITH incomeCategoryStatistics AS (
                                                                       SELECT
 	                                                                        it.typeName,
 	                                                                        sum(inc.value) AS totalValue
@@ -34,7 +48,11 @@ namespace AdvancedBudgetManagerCore.service.query {
 	                                                                        ROUND((incomeCategoryStatistics.totalValue * 100) / SUM(incomeCategoryStatistics.totalValue) OVER (), 2) AS totalPercentage
                                                                       FROM
 	                                                                        incomeCategoryStatistics";
-        private string sqlStatementGetMonthlyIncomeEvolution = @"SELECT
+
+        /// <summary>
+        /// The query used for retrieving the monthly income evolution for a specified year.
+        /// </summary>
+        private string getMonthlyIncomeEvolutionQuery = @"SELECT
 	                                                                   DATE_FORMAT(date, '%M') AS 'Month',
 	                                                                   SUM(value) AS 'Total incomes'
                                                                  FROM
@@ -47,20 +65,35 @@ namespace AdvancedBudgetManagerCore.service.query {
                                                                        DATE_FORMAT(date, '%M')
                                                                  ORDER BY
 	                                                                   MONTH(date)";
+        /// <summary>
+        /// The user session service used for retrieving the curent user's data.
+        /// </summary>
         private IUserSessionService userSessionService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IncomeQueryService"/> based on the provided <see cref="IDatabaseConnection"/> and <see cref="IUserSessionService"/>.
+        /// </summary>
+        /// <param name="dbConnection">The database connection used for retrieving the data.</param>
+        /// <param name="userSessionService">The user session service used for retrieving the curent user's data.</param>
         public IncomeQueryService([NotNull] IDatabaseConnection dbConnection,
             [NotNull] IUserSessionService userSessionService) {
             this.dbConnection = dbConnection;
             this.userSessionService = userSessionService;
         }
 
+        /// <summary>
+        /// Retrieves the list of incomes for the time interval specified by the start date and end date.
+        /// </summary>
+        /// <param name="startDate">The start date of the time interval.</param>
+        /// <param name="endDate">The end date of the time interval.</param>
+        /// <returns>A list of <see cref="IncomeDto"/> objects.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
         public List<IncomeDto> GetIncomesByUserIdAndDateInterval(DateTime startDate, DateTime endDate) {
             long userId = userSessionService.AuthenticatedUser.UserId;
 
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
-                    MySqlCommand getIncomesByUserIdAndDateIntervalCommand = new MySqlCommand(sqlStatementGetIncomesByUserIdAndDateInterval, conn);
+                    MySqlCommand getIncomesByUserIdAndDateIntervalCommand = new MySqlCommand(getIncomesByUserIdAndDateIntervalQuery, conn);
                     getIncomesByUserIdAndDateIntervalCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
                     getIncomesByUserIdAndDateIntervalCommand
                         .Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
@@ -112,12 +145,19 @@ namespace AdvancedBudgetManagerCore.service.query {
             }
         }
 
+        /// <summary>
+        /// Retrieves the aggregated total incomes by category for the time interval specified by the start date and end date.
+        /// </summary>
+        /// <param name="startDate">The start date of the time interval.</param>
+        /// <param name="endDate">The end date of the time interval.</param>
+        /// <returns>A <see cref="BudgetItemCategoriesStatisticsDto"/> object.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
         public BudgetItemCategoriesStatisticsDto GetAggregatedIncomesByCategory(DateTime startDate, DateTime endDate) {
             long userId = userSessionService.AuthenticatedUser.UserId;
 
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
-                    MySqlCommand getAggregatedIncomesByCategoryCommand = new MySqlCommand(sqlStatementGetAggregatedIncomesByCategory, conn);
+                    MySqlCommand getAggregatedIncomesByCategoryCommand = new MySqlCommand(getAggregatedIncomesByCategoryQuery, conn);
                     getAggregatedIncomesByCategoryCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
                     getAggregatedIncomesByCategoryCommand
                         .Parameters.Add("@startDate", MySqlDbType.Date).Value = startDate;
@@ -161,12 +201,18 @@ namespace AdvancedBudgetManagerCore.service.query {
             }
         }
 
+        /// <summary>
+        /// Retrieves the monthly income evolution data for a specified year.
+        /// </summary>
+        /// <param name="year">The year.</param>
+        /// <returns>A <see cref="BudgetItemMonthlyEvolutionDto"/> object.</returns>
+        /// <exception cref="AdvancedBudgetManagerException"></exception>
         public BudgetItemMonthlyEvolutionDto GetMonthlyIncomeEvolution(int year) {
             long userId = userSessionService.AuthenticatedUser.UserId;
 
             using (MySqlConnection conn = (MySqlConnection)dbConnection.GetConnection()) {
                 try {
-                    MySqlCommand getMonthlyIncomeEvolutionCommand = new MySqlCommand(sqlStatementGetMonthlyIncomeEvolution, conn);
+                    MySqlCommand getMonthlyIncomeEvolutionCommand = new MySqlCommand(getMonthlyIncomeEvolutionQuery, conn);
                     getMonthlyIncomeEvolutionCommand.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
                     getMonthlyIncomeEvolutionCommand.Parameters.Add("@year", MySqlDbType.Int32).Value = year;
 

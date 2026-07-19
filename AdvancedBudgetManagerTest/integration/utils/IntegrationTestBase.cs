@@ -14,7 +14,7 @@ namespace AdvancedBudgetManagerTest.integration.utils {
             await mySqlDbContainer.StartAsync();
         }
 
-        public async Task Cleanup() {
+        public async Task CleanupDbContainer() {
             await mySqlDbContainer.DisposeAsync();
         }
 

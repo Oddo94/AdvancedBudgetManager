@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace AdvancedBudgetManagerCore.service {
     /// <summary>
-    /// Service class used for providing the aggregated data related to the budget summary.
+    /// Service class used for providing the aggregated data related to the user's budget summary.
     /// </summary>
     public class BudgetSummaryService {
         /// <summary>

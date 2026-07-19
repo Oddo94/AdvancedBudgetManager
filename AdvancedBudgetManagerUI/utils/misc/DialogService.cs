@@ -11,7 +11,8 @@ namespace AdvancedBudgetManager.utils.misc {
 
         private XamlRoot xamlRoot;
 
-        public DialogService() { }
+        //public DialogService() { }
+
         public DialogService(XamlRoot xamlRoot) {
             this.xamlRoot = xamlRoot;
         }
