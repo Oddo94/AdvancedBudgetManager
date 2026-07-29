@@ -44,9 +44,9 @@ namespace AdvancedBudgetManagerUI.view.window {
                         navigationService.Show(PageKey.IncomesPage);
                         break;
 
-                    //case "expensesPage":
-                    //    userDashboardContentFrame.Navigate(typeof(ExpensesPage), null);
-                    //    break;
+                    case "expensesPage":
+                        navigationService.Show(PageKey.ExpensesPage);
+                        break;
 
                     case "budgetSummaryPage":
                         navigationService.Show(PageKey.BudgetSummaryPage);

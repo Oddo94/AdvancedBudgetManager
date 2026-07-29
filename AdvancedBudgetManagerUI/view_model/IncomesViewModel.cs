@@ -181,6 +181,7 @@ namespace AdvancedBudgetManager.view_model {
                 this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
             } else {
                 this.IncomeList = new ObservableCollection<IncomeDto> { };
+                this.TotalIncomesMessage = String.Empty;
             }
         }
 

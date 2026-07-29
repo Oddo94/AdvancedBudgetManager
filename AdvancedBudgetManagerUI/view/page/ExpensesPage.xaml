@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Page x:Class="AdvancedBudgetManager.view.page.IncomesPage"
+<Page x:Class="AdvancedBudgetManager.view.page.ExpensesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:AdvancedBudgetManager.view.page"
-      xmlns:utils="using:AdvancedBudgetManager.utils.misc"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tableView="using:WinUI.TableView"
       xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+      xmlns:utils="using:AdvancedBudgetManager.utils.misc"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -35,15 +35,15 @@
 
                     <VisualState.Setters>
                         <!-- Stack DatePickers -->
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[0].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[0].Width"
                                 Value="*" />
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[1].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[1].Width"
                                 Value="*" />
 
                         <!-- Stack main content -->
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[0].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[0].Width"
                                 Value="*" />
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[1].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[1].Width"
                                 Value="0" />
                     </VisualState.Setters>
                 </VisualState>
@@ -56,9 +56,9 @@
 
                     <VisualState.Setters>
                         <!-- Side-by-side layout -->
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[0].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[0].Width"
                                 Value="2*" />
-                        <Setter Target="incomesMainContentGrid.ColumnDefinitions[0].Width"
+                        <Setter Target="expensesMainContentGrid.ColumnDefinitions[0].Width"
                                 Value="*" />
                     </VisualState.Setters>
                 </VisualState>
@@ -66,7 +66,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <!-- 1. TITLE -->
-        <TextBlock Text="Incomes"
+        <TextBlock Text="Expenses"
                    FontFamily="SegoeUI"
                    FontSize="28"
                    FontWeight="SemiBold" />
@@ -78,10 +78,10 @@
                 <!-- Checkbox -->
                 <CheckBox Content="Month interval"
                           x:Name="monthIntervalCheckBox"
-                          IsChecked="{x:Bind incomesViewModel.isMonthInterval, Mode=TwoWay}" />
+                          IsChecked="{x:Bind expensesViewModel.isMonthInterval, Mode=TwoWay}" />
 
                 <!-- DatePickers container -->
-                <Grid x:Name="incomesDatePickerGrid"
+                <Grid x:Name="expensesDatePickerGrid"
                       ColumnSpacing="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -92,14 +92,14 @@
                                 DayVisible="False"
                                 MonthVisible="True"
                                 YearVisible="True"
-                                Date="{x:Bind incomesViewModel.StartDate, Mode=TwoWay}"
+                                Date="{x:Bind expensesViewModel.StartDate, Mode=TwoWay}"
                                 Grid.Column="0" />
                     <DatePicker x:Name="endDatePicker"
                                 Header="Ending month"
                                 DayVisible="False"
                                 MonthVisible="True"
                                 YearVisible="True"
-                                Date="{x:Bind incomesViewModel.EndDate, Mode=TwoWay}"
+                                Date="{x:Bind expensesViewModel.EndDate, Mode=TwoWay}"
                                 Visibility="{Binding IsChecked, ElementName=monthIntervalCheckBox, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Grid.Column="1" />
                 </Grid>
@@ -107,18 +107,18 @@
 
             <!-- 3. BUTTON ABOVE GRID -->
             <Button Grid.Row="2"
-                    Content="Display incomes"
-                    x:Name="DisplayIncomesButton"
-                    IsEnabled="{x:Bind incomesViewModel.IsValidDateSelection, Mode=TwoWay}"
-                    Command="{x:Bind incomesViewModel.DisplayIncomeStatisticsCommand}"
-                    Background="DodgerBlue"
+                    Content="Display expenses"
+                    x:Name="displayExpensesButton"
+                    IsEnabled="{x:Bind expensesViewModel.IsValidDateSelection, Mode=TwoWay}"
+                    Command="{x:Bind expensesViewModel.DisplayExpenseStatisticsCommand}"
+                    Background="Red"
                     Foreground="White"
                     HorizontalAlignment="Left"
                     Margin="0,20,0,20" />
 
             <!-- 4. MAIN CONTENT -->
             <Grid Grid.Row="3"
-                  x:Name="incomesMainContentGrid"
+                  x:Name="expensesMainContentGrid"
                   ColumnSpacing="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
@@ -128,13 +128,13 @@
                 <!-- LEFT: GridView -->
                 <StackPanel Grid.Column="0"
                             Spacing="20">
-                    <TextBlock Text="Incomes list"
+                    <TextBlock Text="Expense list"
                                FontFamily="Segoe UI"
                                FontSize="18"
                                FontWeight="SemiBold" />
                     <Grid>
-                        <tableView:TableView x:Name="incomesTableView"
-                                             ItemsSource="{x:Bind incomesViewModel.IncomeList, Mode=TwoWay}"
+                        <tableView:TableView x:Name="expensesTableView"
+                                             ItemsSource="{x:Bind expensesViewModel.ExpenseList, Mode=TwoWay}"
                                              Width="600"
                                              Height="300"
                                              Grid.Column="0"
@@ -144,18 +144,18 @@
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center">
                             <tableView:TableView.Columns>
-                                <tableView:TableViewTextColumn Header="Income name"
+                                <tableView:TableViewTextColumn Header="Expense name"
                                                                Binding="{Binding Name}" />
-                                <tableView:TableViewTextColumn Header="Income category"
+                                <tableView:TableViewTextColumn Header="Expense category"
                                                                Binding="{Binding Type}" />
-                                <tableView:TableViewTextColumn Header="Income value"
+                                <tableView:TableViewTextColumn Header="Expense value"
                                                                Binding="{Binding Value}" />
                                 <tableView:TableViewTextColumn Header="Creation date"
                                                                Binding="{Binding Date, Converter={StaticResource DateConverter}}" />
                             </tableView:TableView.Columns>
                         </tableView:TableView>
                         <Border Background="#80000000"
-                                Visibility="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Visibility="{x:Bind expensesViewModel.IsEmptyGeneralExpenseData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Width="600"
@@ -167,7 +167,7 @@
                                        VerticalAlignment="Center" />
                         </Border>
                     </Grid>
-                    <TextBlock Text="{x:Bind incomesViewModel.TotalIncomesMessage, Mode=TwoWay}"
+                    <TextBlock Text="{x:Bind expensesViewModel.TotalExpensesMessage, Mode=TwoWay}"
                                FontFamily="SegoeUI"
                                FontSize="14"
                                FontWeight="SemiBold" />
@@ -177,19 +177,19 @@
                 <StackPanel Grid.Column="1"
                             HorizontalAlignment="Center"
                             Spacing="20">
-                    <TextBlock Text="Income categories chart"
+                    <TextBlock Text="Expense categories chart"
                                FontFamily="Segoe UI"
                                FontSize="18"
                                FontWeight="SemiBold" />
                     <Grid>
-                        <lvc:PieChart x:Name="incomeCategoriesPieChart"
-                                      Series="{x:Bind incomesViewModel.IncomeCategoriesPieSeries, Mode=TwoWay}"
+                        <lvc:PieChart x:Name="expenseCategoriesPieChart"
+                                      Series="{x:Bind expensesViewModel.ExpenseCategoriesPieSeries, Mode=TwoWay}"
                                       Width="700"
                                       Height="500"
                                       TooltipPosition="Hidden"
                                       LegendPosition="Right" />
                         <Border Background="#80000000"
-                                Visibility="{x:Bind incomesViewModel.IsEmptyGeneralIncomeData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Visibility="{x:Bind expensesViewModel.IsEmptyGeneralExpenseData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Width="500"
@@ -210,33 +210,33 @@
                     Spacing="12"
                     Margin="0,-100,0,100">
             <DatePicker x:Name="incomeEvolutionYearDatePicker"
-                        Date="{x:Bind incomesViewModel.MonthlyIncomeEvolutionDate, Mode=TwoWay}"
+                        Date="{x:Bind expensesViewModel.MonthlyExpensesEvolutionDate, Mode=TwoWay}"
                         Header="Select year"
                         DayVisible="False"
                         MonthVisible="False"
                         YearVisible="True" />
             <Button Content="Display evolution"
                     x:Name="DisplayIncomeEvolutionButton"
-                    Background="DodgerBlue"
+                    Background="Red"
                     Foreground="White"
                     Margin="0,20,0,20"
-                    Command="{x:Bind incomesViewModel.DisplayMonthlyIncomeEvolutionCommand}" />
+                    Command="{x:Bind expensesViewModel.DisplayMonthlyExpensesEvolutionCommand}" />
 
-            <TextBlock Text="Monthly incomes evolution"
+            <TextBlock Text="Monthly expenses evolution"
                        FontFamily="Segoe UI"
                        FontSize="18"
                        FontWeight="SemiBold" />
             <StackPanel Orientation="Horizontal"
                         Spacing="20">
                 <Grid>
-                    <lvc:CartesianChart XAxes="{x:Bind incomesViewModel.MonthlyIncomeEvolutionAxis, Mode=TwoWay}"
-                                        Series="{x:Bind incomesViewModel.MonthlyIncomeEvolutionSeries, Mode=TwoWay}"
+                    <lvc:CartesianChart XAxes="{x:Bind expensesViewModel.MonthlyExpensesEvolutionAxis, Mode=TwoWay}"
+                                        Series="{x:Bind expensesViewModel.MonthlyExpensesEvolutionSeries, Mode=TwoWay}"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
                                         Width="1400"
                                         Height="300" />
                     <Border Background="#80000000"
-                            Visibility="{x:Bind incomesViewModel.IsEmptyMonthlyEvolutionData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Visibility="{x:Bind expensesViewModel.IsEmptyMonthlyEvolutionData, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Width="1400"

@@ -89,6 +89,8 @@ namespace AdvancedBudgetManager {
                          .Keyed<Page>(PageKey.BudgetSummaryPage);
                 container.RegisterType<IncomesPage>()
                          .Keyed<Page>(PageKey.IncomesPage);
+                container.RegisterType<ExpensesPage>()
+                         .Keyed<Page>(PageKey.ExpensesPage);
 
                 //NavigationServices
                 container.RegisterType<WindowNavigationService>()
@@ -159,6 +161,25 @@ namespace AdvancedBudgetManager {
                         (pi, ctx) => ctx.Resolve<UIComponentInitUtils>()
                      );
 
+                container.RegisterType<ExpensesViewModel>()
+                     .SingleInstance()
+                     .WithParameter(
+                         (pi, ctx) => pi.ParameterType == typeof(ExpenseQueryService),
+                         (pi, ctx) => ctx.Resolve<ExpenseQueryService>()
+                         )
+                     .WithParameter(
+                         (pi, ctx) => pi.ParameterType == typeof(DateTimeUtils),
+                         (pi, ctx) => ctx.Resolve<DateTimeUtils>()
+                         )
+                     .WithParameter(
+                         (pi, ctx) => pi.ParameterType == typeof(InputDataValidator),
+                         (pi, ctx) => ctx.Resolve<InputDataValidator>()
+                         )
+                     .WithParameter(
+                         (pi, ctx) => pi.ParameterType == typeof(UIComponentInitUtils),
+                         (pi, ctx) => ctx.Resolve<UIComponentInitUtils>()
+                     );
+
 
                 //Registers object with default constructor
                 container.RegisterType<EmailConfirmationViewModel>()
@@ -200,12 +221,20 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<InputDataValidator>();
                 container.RegisterType<UIComponentInitUtils>();
                 container.RegisterType<IncomeQueryService>()
-               .WithParameter(
-                    (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
-                    (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
-                .WithParameter(
-                     (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
-                     (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"));
+                        .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                            (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                        .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
+                            (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"));
+                container.RegisterType<ExpenseQueryService>()
+                        .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
+                            (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))
+                        .WithParameter(
+                            (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
+                            (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"));
+
 
 
                 //Services
