@@ -44,7 +44,7 @@
     <Parameter name="userName" value="WinUI3Test"/>
 
     <!--SERVICE TEST DATA-->
-    <!--INCOME QUERY SERVICE-->
+    <!--SHARED DATA FOR TIME INTERVALS-->
     <Parameter name="validStartDate" value="2025-01-01"/>
     <Parameter name="validEndDate" value="2025-12-31"/>
     <Parameter name="invalidStartDate" value="2024-12-01"/>
@@ -57,6 +57,8 @@
     <Parameter name="singleMonthInvalidEndDate" value="2026-01-31"/>
     <Parameter name="monthIntervalInvalidStartDate" value="2026-01-01"/>
     <Parameter name="monthIntervalInvalidEndDate" value="2026-06-30"/>
+
+    <!--INCOME QUERY SERVICE-->
     <Parameter name="singleMonthSalaryPercentage" value="75"/>
     <Parameter name="singleMonthSalaryValue" value="9000"/>
     <Parameter name="singleMonthDividendsPercentage" value="12.5"/>
@@ -87,5 +89,25 @@
     <Parameter name="octoberMonthlyTotalIncomes" value="13100"/>
     <Parameter name="novemberMonthlyTotalIncomes" value="12400"/>
     <Parameter name="decemberMonthlyTotalIncomes" value="13300"/>
+
+    <!--EXPENSE QUERY SERVICE-->
+    <Parameter name="singleMonthClothingPercentage" value="11.11"/>
+    <Parameter name="singleMonthClothingValue" value="400"/>
+    <Parameter name="singleMonthEntertainmentPercentage" value="5.56"/>
+    <Parameter name="singleMonthEntertainmentValue" value="200"/>
+    <Parameter name="singleMonthFoodPercentage" value="22.22"/>
+    <Parameter name="singleMonthFoodValue" value="800"/>
+    <Parameter name="singleMonthHealthcarePercentage" value="6.94"/>
+    <Parameter name="singleMonthHealthcareValue" value="250"/>
+    <Parameter name="singleMonthITCPercentage" value="4.17"/>
+    <Parameter name="singleMonthITCValue" value="150"/>
+    <Parameter name="singleMonthRestaurantsPercentage" value="13.89"/>
+    <Parameter name="singleMonthRestaurantsValue" value="500"/>
+    <Parameter name="singleMonthSportPercentage" value="5.56"/>
+    <Parameter name="singleMonthSportValue" value="200"/>
+    <Parameter name="singleMonthTransportPercentage" value="12.5"/>
+    <Parameter name="singleMonthTransportValue" value="450"/>
+    <Parameter name="singleMonthUtilitiesPercentage" value="18.06"/>
+    <Parameter name="singleMonthUtilitiesValue" value="650"/>
   </TestRunParameters>
 </RunSettings>
