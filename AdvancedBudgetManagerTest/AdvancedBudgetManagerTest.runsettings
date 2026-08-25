@@ -109,5 +109,25 @@
     <Parameter name="singleMonthTransportValue" value="450"/>
     <Parameter name="singleMonthUtilitiesPercentage" value="18.06"/>
     <Parameter name="singleMonthUtilitiesValue" value="650"/>
+    <Parameter name="monthIntervalClothingPercentage" value="11.67"/>
+    <Parameter name="monthIntervalClothingValue" value="2800"/>
+    <Parameter name="monthIntervalEducationPercentage" value="4.5"/>
+    <Parameter name="monthIntervalEducationValue" value="1080"/>
+    <Parameter name="monthIntervalEntertainmentPercentage" value="4.79"/>
+    <Parameter name="monthIntervalEntertainmentValue" value="1150"/>
+    <Parameter name="monthIntervalFoodPercentage" value="20.22"/>
+    <Parameter name="monthIntervalFoodValue" value="4850"/>
+    <Parameter name="monthIntervalHealthcarePercentage" value="6.88"/>
+    <Parameter name="monthIntervalHealthcareValue" value="1650"/>
+    <Parameter name="monthIntervalITCPercentage" value="3.83"/>
+    <Parameter name="monthIntervalITCValue" value="920"/>
+    <Parameter name="monthIntervalRestaurantsPercentage" value="15.51"/>
+    <Parameter name="monthIntervalRestaurantsValue" value="3720"/>
+    <Parameter name="monthIntervalSportPercentage" value="5.46"/>
+    <Parameter name="monthIntervalSportValue" value="1310"/>
+    <Parameter name="monthIntervalTransportPercentage" value="10.88"/>
+    <Parameter name="monthIntervalTransportValue" value="2610"/>
+    <Parameter name="monthIntervalUtilitiesPercentage" value="16.26"/>
+    <Parameter name="monthIntervalUtilitiesValue" value="3900"/>
   </TestRunParameters>
 </RunSettings>

@@ -42,6 +42,26 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static int singleMonthTransportValue = 0;
         private static double singleMonthUtilitiesPercentage = 0;
         private static int singleMonthUtilitiesValue = 0;
+        private static double monthIntervalClothingPercentage = 0;
+        private static int monthIntervalClothingValue = 0;
+        private static double monthIntervalEducationPercentage = 0;
+        private static int monthIntervalEducationValue = 0;
+        private static double monthIntervalEntertainmentPercentage = 0;
+        private static int monthIntervalEntertainmentValue = 0;
+        private static double monthIntervalFoodPercentage = 0;
+        private static int monthIntervalFoodValue = 0;
+        private static double monthIntervalHealthcarePercentage = 0;
+        private static int monthIntervalHealthcareValue = 0;
+        private static double monthIntervalITCPercentage = 0;
+        private static int monthIntervalITCValue = 0;
+        private static double monthIntervalRestaurantsPercentage = 0;
+        private static int monthIntervalRestaurantsValue = 0;
+        private static double monthIntervalSportPercentage = 0;
+        private static int monthIntervalSportValue = 0;
+        private static double monthIntervalTransportPercentage = 0;
+        private static int monthIntervalTransportValue = 0;
+        private static double monthIntervalUtilitiesPercentage = 0;
+        private static int monthIntervalUtilitiesValue = 0;
 
 
         private static MySqlContainer mySqlDbContainer;
@@ -107,6 +127,26 @@ namespace AdvancedBudgetManagerTest.integration.service {
             singleMonthTransportValue = Convert.ToInt32(testContext.Properties["singleMonthTransportValue"]?.ToString() ?? String.Empty);
             singleMonthUtilitiesPercentage = Convert.ToDouble(testContext.Properties["singleMonthUtilitiesPercentage"]?.ToString() ?? String.Empty);
             singleMonthUtilitiesValue = Convert.ToInt32(testContext.Properties["singleMonthUtilitiesValue"]?.ToString() ?? String.Empty);
+            monthIntervalClothingPercentage = Convert.ToDouble(testContext.Properties["monthIntervalClothingPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalClothingValue = Convert.ToInt32(testContext.Properties["monthIntervalClothingValue"]?.ToString() ?? String.Empty);
+            monthIntervalEducationPercentage = Convert.ToDouble(testContext.Properties["monthIntervalEducationPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalEducationValue = Convert.ToInt32(testContext.Properties["monthIntervalEducationValue"]?.ToString() ?? String.Empty);
+            monthIntervalEntertainmentPercentage = Convert.ToDouble(testContext.Properties["monthIntervalEntertainmentPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalEntertainmentValue = Convert.ToInt32(testContext.Properties["monthIntervalEntertainmentValue"]?.ToString() ?? String.Empty);
+            monthIntervalFoodPercentage = Convert.ToDouble(testContext.Properties["monthIntervalFoodPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalFoodValue = Convert.ToInt32(testContext.Properties["monthIntervalFoodValue"]?.ToString() ?? String.Empty);
+            monthIntervalHealthcarePercentage = Convert.ToDouble(testContext.Properties["monthIntervalHealthcarePercentage"]?.ToString() ?? String.Empty);
+            monthIntervalHealthcareValue = Convert.ToInt32(testContext.Properties["monthIntervalHealthcareValue"]?.ToString() ?? String.Empty);
+            monthIntervalITCPercentage = Convert.ToDouble(testContext.Properties["monthIntervalITCPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalITCValue = Convert.ToInt32(testContext.Properties["monthIntervalITCValue"]?.ToString() ?? String.Empty);
+            monthIntervalRestaurantsPercentage = Convert.ToDouble(testContext.Properties["monthIntervalRestaurantsPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalRestaurantsValue = Convert.ToInt32(testContext.Properties["monthIntervalRestaurantsValue"]?.ToString() ?? String.Empty);
+            monthIntervalSportPercentage = Convert.ToDouble(testContext.Properties["monthIntervalSportPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalSportValue = Convert.ToInt32(testContext.Properties["monthIntervalSportValue"]?.ToString() ?? String.Empty);
+            monthIntervalTransportPercentage = Convert.ToDouble(testContext.Properties["monthIntervalTransportPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalTransportValue = Convert.ToInt32(testContext.Properties["monthIntervalTransportValue"]?.ToString() ?? String.Empty);
+            monthIntervalUtilitiesPercentage = Convert.ToDouble(testContext.Properties["monthIntervalUtilitiesPercentage"]?.ToString() ?? String.Empty);
+            monthIntervalUtilitiesValue = Convert.ToInt32(testContext.Properties["monthIntervalUtilitiesValue"]?.ToString() ?? String.Empty);
         }
 
         [TestMethod]
@@ -206,6 +246,181 @@ namespace AdvancedBudgetManagerTest.integration.service {
             List<ExpenseDto> expensesList = expenseQueryService.GetExpensesByUserIdAndDateInterval(monthIntervalInvalidStartDate, monthIntervalInvalidEndDate);
 
             Assert.IsEmpty(expensesList);
+        }
+
+        [TestMethod]
+        public void GetSingleMonthExpenseStatistics_WhenDataFound_StatisticsDataMatches() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto expenseCategoriesStatistics = expenseQueryService.GetAggregatedExpensesByCategory(singleMonthValidStartDate, singleMonthValidEndDate);
+
+            foreach (CategoryStatisticsDto categoryStatisticsDto in expenseCategoriesStatistics.CategoriesStatistics) {
+                switch (categoryStatisticsDto.Name) {
+                    case "Clothing":
+                        Assert.AreEqual(singleMonthClothingPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthClothingValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Entertainment":
+                        Assert.AreEqual(singleMonthEntertainmentPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthEntertainmentValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Food":
+                        Assert.AreEqual(singleMonthFoodPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthFoodValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Healthcare":
+                        Assert.AreEqual(singleMonthHealthcarePercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthHealthcareValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "IT&C":
+                        Assert.AreEqual(singleMonthITCPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthITCValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Restaurants/bars/cafes":
+                        Assert.AreEqual(singleMonthRestaurantsPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthRestaurantsValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Sport":
+                        Assert.AreEqual(singleMonthSportPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthSportValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Transport":
+                        Assert.AreEqual(singleMonthTransportPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthTransportValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Utilities":
+                        Assert.AreEqual(singleMonthUtilitiesPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(singleMonthUtilitiesValue, categoryStatisticsDto.Value);
+                        break;
+
+                    default:
+                        Assert.Fail($"Unknown expense category found:{categoryStatisticsDto.Name}");
+                        break;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetSingleMonthExpenseStatistics_WhenNoDataFound_CategoriesListIsEmpty() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto expenseCategoriesStatistics = expenseQueryService.GetAggregatedExpensesByCategory(singleMonthInvalidStartDate, singleMonthInvalidEndDate);
+
+            List<CategoryStatisticsDto> expenseCategoriesStatisticsList = expenseCategoriesStatistics.CategoriesStatistics;
+
+            Assert.IsEmpty(expenseCategoriesStatisticsList);
+        }
+
+        [TestMethod]
+        public void GetMonthIntervalExpenseStatistics_WhenDataFound_StatisticsDataMatches() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto expenseCategoriesStatistics = expenseQueryService.GetAggregatedExpensesByCategory(monthIntervalValidStartDate, monthIntervalValidEndDate);
+
+            foreach (CategoryStatisticsDto categoryStatisticsDto in expenseCategoriesStatistics.CategoriesStatistics) {
+                switch (categoryStatisticsDto.Name) {
+                    case "Clothing":
+                        Assert.AreEqual(monthIntervalClothingPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalClothingValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Education":
+                        Assert.AreEqual(monthIntervalEducationPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalEducationValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Entertainment":
+                        Assert.AreEqual(monthIntervalEntertainmentPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalEntertainmentValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Food":
+                        Assert.AreEqual(monthIntervalFoodPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalFoodValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Healthcare":
+                        Assert.AreEqual(monthIntervalHealthcarePercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalHealthcareValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "IT&C":
+                        Assert.AreEqual(monthIntervalITCPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalITCValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Restaurants/bars/cafes":
+                        Assert.AreEqual(monthIntervalRestaurantsPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalRestaurantsValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Sport":
+                        Assert.AreEqual(monthIntervalSportPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalSportValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Transport":
+                        Assert.AreEqual(monthIntervalTransportPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalTransportValue, categoryStatisticsDto.Value);
+                        break;
+
+                    case "Utilities":
+                        Assert.AreEqual(monthIntervalUtilitiesPercentage, categoryStatisticsDto.Percentage);
+                        Assert.AreEqual(monthIntervalUtilitiesValue, categoryStatisticsDto.Value);
+                        break;
+
+                    default:
+                        Assert.Fail($"Unknown expense category found:{categoryStatisticsDto.Name}");
+                        break;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetMonthIntervalExpenseStatistics_WhenNoDataFound_CategoriesListIsEmpty() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemCategoriesStatisticsDto expenseCategoriesStatistics = expenseQueryService.GetAggregatedExpensesByCategory(monthIntervalInvalidStartDate, monthIntervalInvalidEndDate);
+
+            List<CategoryStatisticsDto> expenseCategoriesStatisticsList = expenseCategoriesStatistics.CategoriesStatistics;
+
+            Assert.IsEmpty(expenseCategoriesStatisticsList);
         }
     }
 }
