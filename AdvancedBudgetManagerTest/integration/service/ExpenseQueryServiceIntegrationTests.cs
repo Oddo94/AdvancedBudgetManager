@@ -3,6 +3,7 @@ using AdvancedBudgetManagerCore.model.misc;
 using AdvancedBudgetManagerCore.service;
 using AdvancedBudgetManagerCore.service.query;
 using AdvancedBudgetManagerCore.utils.database;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerTest.integration.utils;
 using MySql.Data.MySqlClient;
 using NSubstitute;
@@ -22,8 +23,8 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static DateTime singleMonthInvalidEndDate = DateTime.Now;
         private static DateTime monthIntervalInvalidStartDate = DateTime.Now;
         private static DateTime monthIntervalInvalidEndDate = DateTime.Now;
-        private static int validMonthlyIncomeEvolutionYear = 0;
-        private static int invalidMonthlyIncomeEvolutionYear = 0;
+        private static int validMonthlyExpenseEvolutionYear = 0;
+        private static int invalidMonthlyExpenseEvolutionYear = 0;
         private static double singleMonthClothingPercentage = 0;
         private static int singleMonthClothingValue = 0;
         private static double singleMonthEntertainmentPercentage = 0;
@@ -62,6 +63,18 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static int monthIntervalTransportValue = 0;
         private static double monthIntervalUtilitiesPercentage = 0;
         private static int monthIntervalUtilitiesValue = 0;
+        private static int januaryMonthlyTotalExpenses = 0;
+        private static int februaryMonthlyTotalExpenses = 0;
+        private static int marchMonthlyTotalExpenses = 0;
+        private static int aprilMonthlyTotalExpenses = 0;
+        private static int mayMonthlyTotalExpenses = 0;
+        private static int juneMonthlyTotalExpenses = 0;
+        private static int julyMonthlyTotalExpenses = 0;
+        private static int augustMonthlyTotalExpenses = 0;
+        private static int septemberMonthlyTotalExpenses = 0;
+        private static int octoberMonthlyTotalExpenses = 0;
+        private static int novemberMonthlyTotalExpenses = 0;
+        private static int decemberMonthlyTotalExpenses = 0;
 
 
         private static MySqlContainer mySqlDbContainer;
@@ -107,8 +120,8 @@ namespace AdvancedBudgetManagerTest.integration.service {
             DateTime.TryParse(testContext.Properties["singleMonthInvalidEndDate"]?.ToString() ?? String.Empty, out singleMonthInvalidEndDate);
             DateTime.TryParse(testContext.Properties["monthIntervalInvalidStartDate"]?.ToString() ?? String.Empty, out monthIntervalInvalidStartDate);
             DateTime.TryParse(testContext.Properties["monthIntervalInvalidEndDate"]?.ToString() ?? String.Empty, out monthIntervalInvalidEndDate);
-            validMonthlyIncomeEvolutionYear = Convert.ToInt32(testContext.Properties["validMonthlyIncomeEvolutionYear"]?.ToString() ?? String.Empty);
-            invalidMonthlyIncomeEvolutionYear = Convert.ToInt32(testContext.Properties["invalidMonthlyIncomeEvolutionYear"]?.ToString() ?? String.Empty);
+            validMonthlyExpenseEvolutionYear = Convert.ToInt32(testContext.Properties["validMonthlyIncomeEvolutionYear"]?.ToString() ?? String.Empty);
+            invalidMonthlyExpenseEvolutionYear = Convert.ToInt32(testContext.Properties["invalidMonthlyIncomeEvolutionYear"]?.ToString() ?? String.Empty);
             singleMonthClothingPercentage = Convert.ToDouble(testContext.Properties["singleMonthClothingPercentage"]?.ToString() ?? String.Empty);
             singleMonthClothingValue = Convert.ToInt32(testContext.Properties["singleMonthClothingValue"]?.ToString() ?? String.Empty);
             singleMonthEntertainmentPercentage = Convert.ToDouble(testContext.Properties["singleMonthEntertainmentPercentage"]?.ToString() ?? String.Empty);
@@ -147,6 +160,18 @@ namespace AdvancedBudgetManagerTest.integration.service {
             monthIntervalTransportValue = Convert.ToInt32(testContext.Properties["monthIntervalTransportValue"]?.ToString() ?? String.Empty);
             monthIntervalUtilitiesPercentage = Convert.ToDouble(testContext.Properties["monthIntervalUtilitiesPercentage"]?.ToString() ?? String.Empty);
             monthIntervalUtilitiesValue = Convert.ToInt32(testContext.Properties["monthIntervalUtilitiesValue"]?.ToString() ?? String.Empty);
+            januaryMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["januaryMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            februaryMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["februaryMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            marchMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["marchMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            aprilMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["aprilMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            mayMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["mayMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            juneMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["juneMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            julyMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["julyMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            augustMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["augustMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            septemberMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["septemberMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            octoberMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["octoberMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            novemberMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["novemberMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
+            decemberMonthlyTotalExpenses = Convert.ToInt32(testContext.Properties["decemberMonthlyTotalExpenses"]?.ToString() ?? String.Empty);
         }
 
         [TestMethod]
@@ -421,6 +446,103 @@ namespace AdvancedBudgetManagerTest.integration.service {
             List<CategoryStatisticsDto> expenseCategoriesStatisticsList = expenseCategoriesStatistics.CategoriesStatistics;
 
             Assert.IsEmpty(expenseCategoriesStatisticsList);
+        }
+
+        [TestMethod]
+        public void GetMonthlyExpenseEvolution_WhenDataFound_MonthlyExpenseValuesMatch() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemMonthlyEvolutionDto monthlyExpenseEvolutionDto = expenseQueryService.GetMonthlyExpensesEvolution(validMonthlyExpenseEvolutionYear);
+
+            Dictionary<Month, int> monthlyExpenseStatistics = monthlyExpenseEvolutionDto.MonthlyStatistics;
+            foreach (KeyValuePair<Month, int> monthlyExpenses in monthlyExpenseStatistics.ToList()) {
+                switch (monthlyExpenses.Key) {
+                    case Month.January:
+                        Assert.AreEqual(januaryMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.February:
+                        Assert.AreEqual(februaryMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.March:
+                        Assert.AreEqual(marchMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.April:
+                        Assert.AreEqual(aprilMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.May:
+                        Assert.AreEqual(mayMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.June:
+                        Assert.AreEqual(juneMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.July:
+                        Assert.AreEqual(julyMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.August:
+                        Assert.AreEqual(augustMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.September:
+                        Assert.AreEqual(septemberMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.October:
+                        Assert.AreEqual(octoberMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.November:
+                        Assert.AreEqual(novemberMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    case Month.December:
+                        Assert.AreEqual(decemberMonthlyTotalExpenses, monthlyExpenses.Value);
+                        break;
+
+                    default:
+                        Assert.Fail("Invalid month value retrieved from the response object.");
+                        break;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GetMonthlyExpenseEvolution_WhenNoDataFound_MonthlyExpenseStatisticsIsEmpty() {
+            IUserSessionService userSessionService = Substitute.For<IUserSessionService>();
+            MySqlConnection mySqlTestConnection =
+                    new MySqlConnection(mySqlDbContainer.GetConnectionString());
+            MySqlTestDatabaseConnection mySqlTestDatabaseConnection = new MySqlTestDatabaseConnection(mySqlTestConnection);
+            ExpenseQueryService expenseQueryService = new ExpenseQueryService(mySqlTestDatabaseConnection, userSessionService);
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser(validUserId, validEmailAddress);
+            userSessionService.AuthenticatedUser.Returns(authenticatedUser);
+
+            BudgetItemMonthlyEvolutionDto monthlyExpenseEvolutionDto = expenseQueryService.GetMonthlyExpensesEvolution(invalidMonthlyExpenseEvolutionYear);
+
+            Dictionary<Month, int> monthlyExpenseStatistics = monthlyExpenseEvolutionDto.MonthlyStatistics;
+
+            Assert.IsEmpty(monthlyExpenseStatistics);
+        }
+
+        [ClassCleanup]
+        public static async Task Cleanup() {
+            if (mySqlDbContainer != null) {
+                await mySqlDbContainer.StopAsync();
+                await mySqlDbContainer.DisposeAsync();
+            }
         }
     }
 }
