@@ -107,7 +107,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
                 .GetResult();
 
             //Note
-            //Each test retrieves its own connection from the container because once this is used inside the test class it will automatically disposed inside the using block. Using a shared connection in this case would break the tests.
+            //Each test retrieves its own connection from the container because once this is used inside the test class it will automatically be disposed inside the using block. Using a shared connection in this case would break the tests.
 
             validUserId = Convert.ToInt32(testContext.Properties["validUserId"]?.ToString() ?? String.Empty);
             invalidUserId = Convert.ToInt32(testContext.Properties["invalidUserId"]?.ToString() ?? String.Empty);
