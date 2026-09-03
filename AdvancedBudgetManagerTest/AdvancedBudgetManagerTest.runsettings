@@ -44,7 +44,7 @@
     <Parameter name="userName" value="WinUI3Test"/>
 
     <!--SERVICE TEST DATA-->
-    <!--INCOME QUERY SERVICE-->
+    <!--SHARED DATA FOR TIME INTERVALS-->
     <Parameter name="validStartDate" value="2025-01-01"/>
     <Parameter name="validEndDate" value="2025-12-31"/>
     <Parameter name="invalidStartDate" value="2024-12-01"/>
@@ -57,6 +57,8 @@
     <Parameter name="singleMonthInvalidEndDate" value="2026-01-31"/>
     <Parameter name="monthIntervalInvalidStartDate" value="2026-01-01"/>
     <Parameter name="monthIntervalInvalidEndDate" value="2026-06-30"/>
+
+    <!--INCOME QUERY SERVICE-->
     <Parameter name="singleMonthSalaryPercentage" value="75"/>
     <Parameter name="singleMonthSalaryValue" value="9000"/>
     <Parameter name="singleMonthDividendsPercentage" value="12.5"/>
@@ -87,5 +89,59 @@
     <Parameter name="octoberMonthlyTotalIncomes" value="13100"/>
     <Parameter name="novemberMonthlyTotalIncomes" value="12400"/>
     <Parameter name="decemberMonthlyTotalIncomes" value="13300"/>
+
+    <!--EXPENSE QUERY SERVICE-->
+    <Parameter name="singleMonthClothingPercentage" value="11.11"/>
+    <Parameter name="singleMonthClothingValue" value="400"/>
+    <Parameter name="singleMonthEntertainmentPercentage" value="5.56"/>
+    <Parameter name="singleMonthEntertainmentValue" value="200"/>
+    <Parameter name="singleMonthFoodPercentage" value="22.22"/>
+    <Parameter name="singleMonthFoodValue" value="800"/>
+    <Parameter name="singleMonthHealthcarePercentage" value="6.94"/>
+    <Parameter name="singleMonthHealthcareValue" value="250"/>
+    <Parameter name="singleMonthITCPercentage" value="4.17"/>
+    <Parameter name="singleMonthITCValue" value="150"/>
+    <Parameter name="singleMonthRestaurantsPercentage" value="13.89"/>
+    <Parameter name="singleMonthRestaurantsValue" value="500"/>
+    <Parameter name="singleMonthSportPercentage" value="5.56"/>
+    <Parameter name="singleMonthSportValue" value="200"/>
+    <Parameter name="singleMonthTransportPercentage" value="12.5"/>
+    <Parameter name="singleMonthTransportValue" value="450"/>
+    <Parameter name="singleMonthUtilitiesPercentage" value="18.06"/>
+    <Parameter name="singleMonthUtilitiesValue" value="650"/>
+    <Parameter name="monthIntervalClothingPercentage" value="11.67"/>
+    <Parameter name="monthIntervalClothingValue" value="2800"/>
+    <Parameter name="monthIntervalEducationPercentage" value="4.5"/>
+    <Parameter name="monthIntervalEducationValue" value="1080"/>
+    <Parameter name="monthIntervalEntertainmentPercentage" value="4.79"/>
+    <Parameter name="monthIntervalEntertainmentValue" value="1150"/>
+    <Parameter name="monthIntervalFoodPercentage" value="20.22"/>
+    <Parameter name="monthIntervalFoodValue" value="4850"/>
+    <Parameter name="monthIntervalHealthcarePercentage" value="6.88"/>
+    <Parameter name="monthIntervalHealthcareValue" value="1650"/>
+    <Parameter name="monthIntervalITCPercentage" value="3.83"/>
+    <Parameter name="monthIntervalITCValue" value="920"/>
+    <Parameter name="monthIntervalRestaurantsPercentage" value="15.51"/>
+    <Parameter name="monthIntervalRestaurantsValue" value="3720"/>
+    <Parameter name="monthIntervalSportPercentage" value="5.46"/>
+    <Parameter name="monthIntervalSportValue" value="1310"/>
+    <Parameter name="monthIntervalTransportPercentage" value="10.88"/>
+    <Parameter name="monthIntervalTransportValue" value="2610"/>
+    <Parameter name="monthIntervalUtilitiesPercentage" value="16.26"/>
+    <Parameter name="monthIntervalUtilitiesValue" value="3900"/>
+    <Parameter name="validMonthlyIncomeEvolutionYear" value ="2025"/>
+    <Parameter name="invalidMonthlyIncomeEvolutionYear" value ="2026"/>
+    <Parameter name="januaryMonthlyTotalExpenses" value="3600"/>
+    <Parameter name="februaryMonthlyTotalExpenses" value="3840"/>
+    <Parameter name="marchMonthlyTotalExpenses" value="4300"/>
+    <Parameter name="aprilMonthlyTotalExpenses" value="3950"/>
+    <Parameter name="mayMonthlyTotalExpenses" value="4310"/>
+    <Parameter name="juneMonthlyTotalExpenses" value="3990"/>
+    <Parameter name="julyMonthlyTotalExpenses" value="4310"/>
+    <Parameter name="augustMonthlyTotalExpenses" value="4310"/>
+    <Parameter name="septemberMonthlyTotalExpenses" value="4060"/>
+    <Parameter name="octoberMonthlyTotalExpenses" value="4350"/>
+    <Parameter name="novemberMonthlyTotalExpenses" value="4030"/>
+    <Parameter name="decemberMonthlyTotalExpenses" value="4480"/>
   </TestRunParameters>
 </RunSettings>

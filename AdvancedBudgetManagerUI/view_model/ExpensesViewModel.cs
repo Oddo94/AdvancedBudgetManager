@@ -18,7 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace AdvancedBudgetManager.view_model {
-    public partial class IncomesViewModel : ObservableValidator {
+    public partial class ExpensesViewModel : ObservableValidator {
         [ObservableProperty]
         public DateTimeOffset startDate;
 
@@ -26,19 +26,19 @@ namespace AdvancedBudgetManager.view_model {
         public DateTimeOffset endDate;
 
         [ObservableProperty]
-        public DateTimeOffset monthlyIncomeEvolutionDate;
+        public DateTimeOffset monthlyExpensesEvolutionDate;
 
         [ObservableProperty]
-        public ObservableCollection<IncomeDto> incomeList;
+        public ObservableCollection<ExpenseDto> expenseList;
 
         [ObservableProperty]
-        public ObservableCollection<ISeries> incomeCategoriesPieSeries;
+        public ObservableCollection<ISeries> expenseCategoriesPieSeries;
 
         [ObservableProperty]
-        public ObservableCollection<ICartesianAxis> monthlyIncomeEvolutionAxis;
+        public ObservableCollection<ICartesianAxis> monthlyExpensesEvolutionAxis;
 
         [ObservableProperty]
-        public ObservableCollection<ISeries> monthlyIncomeEvolutionSeries;
+        public ObservableCollection<ISeries> monthlyExpensesEvolutionSeries;
 
         [ObservableProperty]
         public bool isMonthInterval;
@@ -47,17 +47,17 @@ namespace AdvancedBudgetManager.view_model {
         public bool isValidDateSelection;
 
         [ObservableProperty]
-        public bool isEmptyGeneralIncomeData;
+        public bool isEmptyGeneralExpenseData;
 
         [ObservableProperty]
         public bool isEmptyMonthlyEvolutionData;
 
         [ObservableProperty]
-        public string totalIncomesMessage;
+        public string totalExpensesMessage;
 
-        public event EventHandler? NoGeneralIncomeDataFound;
+        //public event EventHandler? NoGeneralExpenseDataFound;
 
-        private IncomeQueryService incomeQueryService;
+        private ExpenseQueryService expenseQueryService;
 
         private DateTimeUtils dateTimeUtils;
 
@@ -65,61 +65,61 @@ namespace AdvancedBudgetManager.view_model {
 
         private UIComponentInitUtils uiComponentInitUtils;
 
-        public IncomesViewModel([NotNull] IncomeQueryService incomeQueryService,
-            [NotNull] DateTimeUtils dateTimeUtils,
-            [NotNull] InputDataValidator inputDataValidator,
-            [NotNull] UIComponentInitUtils uiComponentInitUtils) {
-            this.incomeQueryService = incomeQueryService;
+        public ExpensesViewModel([NotNull] ExpenseQueryService expenseQueryService,
+        [NotNull] DateTimeUtils dateTimeUtils,
+        [NotNull] InputDataValidator inputDataValidator,
+        [NotNull] UIComponentInitUtils uiComponentInitUtils) {
+            this.expenseQueryService = expenseQueryService;
             this.dateTimeUtils = dateTimeUtils;
             this.dataValidator = inputDataValidator;
             this.uiComponentInitUtils = uiComponentInitUtils;
 
-            this.incomeList = new ObservableCollection<IncomeDto>();
-            this.incomeCategoriesPieSeries = new ObservableCollection<ISeries>();
+            this.expenseList = new ObservableCollection<ExpenseDto>();
+            this.expenseCategoriesPieSeries = new ObservableCollection<ISeries>();
 
             List<string> defaultLabels = uiComponentInitUtils.InitColumnChartLabels(TimeUnit.Month);
-            this.monthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
+            this.monthlyExpensesEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
                new Axis {
                    Labels = defaultLabels
                }
             };
-            this.monthlyIncomeEvolutionSeries = new ObservableCollection<ISeries>();
+            this.monthlyExpensesEvolutionSeries = new ObservableCollection<ISeries>();
 
             DateTime currentDate = DateTime.Now;
             DateTime firstDateOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime lastDateOfMonth = firstDateOfMonth.AddMonths(1).AddDays(-1);
 
             this.isValidDateSelection = false;
-            this.isEmptyGeneralIncomeData = false;
+            this.isEmptyGeneralExpenseData = false;
             this.isEmptyMonthlyEvolutionData = false;
 
             this.StartDate = new DateTimeOffset(firstDateOfMonth);
             this.EndDate = new DateTimeOffset(lastDateOfMonth);
-            this.MonthlyIncomeEvolutionDate = new DateTimeOffset(firstDateOfMonth);
+            this.MonthlyExpensesEvolutionDate = new DateTimeOffset(firstDateOfMonth);
 
-            this.totalIncomesMessage = string.Empty;
+            this.totalExpensesMessage = string.Empty;
         }
 
         [RelayCommand]
-        public void DisplayIncomeStatistics() {
+        public void DisplayExpenseStatistics() {
             DateRange? monthRange = dateTimeUtils.GetMonthRange(StartDate, EndDate, IsMonthInterval);
 
-            DisplayIncomeList(monthRange);
-            DisplayIncomeCategoryStatistics(monthRange);
+            DisplayExpenseList(monthRange);
+            DisplayExpenseCategoryStatistics(monthRange);
 
-            if (IncomeList.Count == 0 && IncomeCategoriesPieSeries.Count == 0) {
-                this.IsEmptyGeneralIncomeData = true;
-                this.NoGeneralIncomeDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
+            if (ExpenseList.Count == 0 && ExpenseCategoriesPieSeries.Count == 0) {
+                this.IsEmptyGeneralExpenseData = true;
+                //this.NoGeneralExpenseDataFound?.Invoke(this, new CustomEventArgs("No income data was found for the specified time interval."));
             } else {
-                this.IsEmptyGeneralIncomeData = false;
+                this.IsEmptyGeneralExpenseData = false;
             }
         }
 
         [RelayCommand]
-        public void DisplayMonthlyIncomeEvolution() {
-            int year = MonthlyIncomeEvolutionDate.Year;
-            BudgetItemMonthlyEvolutionDto monthlyIncomeEvolutionDto = incomeQueryService.GetMonthlyIncomeEvolution(year);
-            Dictionary<Month, int> monthlyIncomeStatistics = monthlyIncomeEvolutionDto.MonthlyStatistics;
+        public void DisplayMonthlyExpensesEvolution() {
+            int year = MonthlyExpensesEvolutionDate.Year;
+            BudgetItemMonthlyEvolutionDto monthlyExpensesEvolutionDto = expenseQueryService.GetMonthlyExpensesEvolution(year);
+            Dictionary<Month, int> monthlyExpensesStatistics = monthlyExpensesEvolutionDto.MonthlyStatistics;
 
             List<string> labels = new List<string>();
             List<int> values = new List<int>();
@@ -128,95 +128,95 @@ namespace AdvancedBudgetManager.view_model {
                     continue;
                 }
 
-                int totalIncomes = -1;
-                monthlyIncomeStatistics.TryGetValue(currentMonth, out totalIncomes);
+                int totalExpenses = -1;
+                monthlyExpensesStatistics.TryGetValue(currentMonth, out totalExpenses);
 
                 string monthDescription = EnumExtensions.GetEnumDescription(currentMonth).Substring(0, 3);
-                if (totalIncomes != -1) {
+                if (totalExpenses != -1) {
                     labels.Add(monthDescription);
-                    values.Add(totalIncomes);
+                    values.Add(totalExpenses);
                 } else {
                     labels.Add(monthDescription);
                     values.Add(0);
                 }
             }
 
-            this.IsEmptyMonthlyEvolutionData = monthlyIncomeStatistics
+            this.IsEmptyMonthlyEvolutionData = monthlyExpensesStatistics
                 .ToList()
                 .Select(monthRecord => monthRecord.Value > 0)
                 .Count() == 0;
 
             //if (hasMonthlyEvolutionData) {
-            MonthlyIncomeEvolutionAxis.Clear();
-            MonthlyIncomeEvolutionSeries.Clear();
+            MonthlyExpensesEvolutionAxis.Clear();
+            MonthlyExpensesEvolutionSeries.Clear();
 
-            MonthlyIncomeEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
+            MonthlyExpensesEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
                 new Axis {
                     Name = "Month",
                     Labels = labels.ToArray()
                 }
             };
 
-            MonthlyIncomeEvolutionSeries = new ObservableCollection<ISeries> {
+            MonthlyExpensesEvolutionSeries = new ObservableCollection<ISeries> {
                 new ColumnSeries<int> {
-                    Name = "Total incomes",
+                    Name = "Total expenses",
                     Values = values.ToArray(),
-                    Fill = new SolidColorPaint(SKColors.DodgerBlue)
+                    Fill = new SolidColorPaint(SKColors.Red)
                 }
             };
         }
 
-        private void DisplayIncomeList(DateRange? monthRange) {
+        private void DisplayExpenseList(DateRange? monthRange) {
             if (monthRange == null) {
                 return;
             }
 
-            List<IncomeDto> retrievedIncomes = incomeQueryService.GetIncomesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
+            List<ExpenseDto> retrievedExpenses = expenseQueryService.GetExpensesByUserIdAndDateInterval(monthRange.StartDate, monthRange.EndDate);
 
-            if (retrievedIncomes.Count > 0) {
-                this.IncomeList.Clear();
+            if (retrievedExpenses.Count > 0) {
+                this.ExpenseList.Clear();
 
-                this.IncomeList = new ObservableCollection<IncomeDto>(retrievedIncomes);
+                this.ExpenseList = new ObservableCollection<ExpenseDto>(retrievedExpenses);
 
-                this.TotalIncomesMessage = $"Displaying {retrievedIncomes.Count} incomes";
+                this.TotalExpensesMessage = $"Displaying {retrievedExpenses.Count} expenses";
             } else {
-                this.IncomeList = new ObservableCollection<IncomeDto> { };
-                this.TotalIncomesMessage = String.Empty;
+                this.ExpenseList = new ObservableCollection<ExpenseDto> { };
+                this.TotalExpensesMessage = String.Empty;
             }
         }
 
-        private void DisplayIncomeCategoryStatistics(DateRange? monthRange) {
+        private void DisplayExpenseCategoryStatistics(DateRange? monthRange) {
             if (monthRange == null) {
                 return;
             }
 
-            BudgetItemCategoriesStatisticsDto incomeCategoriesStatistics = incomeQueryService.GetAggregatedIncomesByCategory(monthRange.StartDate, monthRange.EndDate);
+            BudgetItemCategoriesStatisticsDto expenseCategoriesStatistics = expenseQueryService.GetAggregatedExpensesByCategory(monthRange.StartDate, monthRange.EndDate);
 
-            List<CategoryStatisticsDto> categoriesStatisticsList = incomeCategoriesStatistics.CategoriesStatistics;
+            List<CategoryStatisticsDto> categoriesStatisticsList = expenseCategoriesStatistics.CategoriesStatistics;
             ObservableCollection<ISeries> pieSeriesCollection = new ObservableCollection<ISeries>();
 
-            foreach (CategoryStatisticsDto incomeCategory in categoriesStatisticsList) {
-                double[] incomeCategoryValue = new double[] { Convert.ToDouble(incomeCategory.Value) };
+            foreach (CategoryStatisticsDto expenseCategory in categoriesStatisticsList) {
+                double[] expenseCategoryValue = new double[] { Convert.ToDouble(expenseCategory.Value) };
 
-                if (incomeCategoryValue[0] > 0) {
+                if (expenseCategoryValue[0] > 0) {
                     pieSeriesCollection.Add(new PieSeries<double> {
-                        Values = incomeCategoryValue,
-                        Name = incomeCategory.Name,
+                        Values = expenseCategoryValue,
+                        Name = expenseCategory.Name,
                         DataLabelsPaint = new SolidColorPaint(SKColors.Black),
                         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
                         DataLabelsFormatter = point => {
                             double categoryValue = point.Coordinate.PrimaryValue;
-                            return $"{categoryValue} ({incomeCategory.Percentage})";
+                            return $"{categoryValue} ({expenseCategory.Percentage})";
                         }
                     });
                 }
             }
 
             if (pieSeriesCollection.Count > 0) {
-                this.IncomeCategoriesPieSeries.Clear();
-                this.IncomeCategoriesPieSeries = pieSeriesCollection;
+                this.ExpenseCategoriesPieSeries.Clear();
+                this.ExpenseCategoriesPieSeries = pieSeriesCollection;
             } else {
-                this.IncomeCategoriesPieSeries = new ObservableCollection<ISeries> { };
+                this.ExpenseCategoriesPieSeries = new ObservableCollection<ISeries> { };
             }
         }
 
