@@ -40,6 +40,10 @@ namespace AdvancedBudgetManagerUI.view.window {
                 String? pageName = selectedItem.Tag.ToString();
 
                 switch (pageName) {
+                    case "budgetSummaryPage":
+                        navigationService.Show(PageKey.BudgetSummaryPage);
+                        break;
+
                     case "incomesPage":
                         navigationService.Show(PageKey.IncomesPage);
                         break;
@@ -48,8 +52,8 @@ namespace AdvancedBudgetManagerUI.view.window {
                         navigationService.Show(PageKey.ExpensesPage);
                         break;
 
-                    case "budgetSummaryPage":
-                        navigationService.Show(PageKey.BudgetSummaryPage);
+                    case "debtsPage":
+                        navigationService.Show(PageKey.DebtsPage);
                         break;
 
                     default:

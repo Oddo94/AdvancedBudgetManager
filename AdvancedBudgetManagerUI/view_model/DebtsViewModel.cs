@@ -157,7 +157,7 @@ namespace AdvancedBudgetManager.view_model {
                 new ColumnSeries<int> {
                     Name = "Total debts",
                     Values = values.ToArray(),
-                    Fill = new SolidColorPaint(SKColors.Red)
+                    Fill = new SolidColorPaint(SKColors.MediumPurple)
                 }
             };
         }
