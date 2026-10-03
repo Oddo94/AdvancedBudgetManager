@@ -186,8 +186,8 @@ namespace AdvancedBudgetManager {
                 container.RegisterType<DebtsViewModel>()
                      .SingleInstance()
                      .WithParameter(
-                         (pi, ctx) => pi.ParameterType == typeof(DebtsQueryService),
-                         (pi, ctx) => ctx.Resolve<DebtsQueryService>()
+                         (pi, ctx) => pi.ParameterType == typeof(DebtQueryService),
+                         (pi, ctx) => ctx.Resolve<DebtQueryService>()
                          )
                      .WithParameter(
                          (pi, ctx) => pi.ParameterType == typeof(DateTimeUtils),
@@ -256,7 +256,7 @@ namespace AdvancedBudgetManager {
                         .WithParameter(
                             (pi, ctx) => pi.ParameterType == typeof(IUserSessionService),
                             (pi, ctx) => ctx.ResolveKeyed<IUserSessionService>("UserSessionService"));
-                container.RegisterType<DebtsQueryService>()
+                container.RegisterType<DebtQueryService>()
                         .WithParameter(
                             (pi, ctx) => pi.ParameterType == typeof(IDatabaseConnection),
                             (pi, ctx) => ctx.ResolveKeyed<IDatabaseConnection>("MySqlDbConnection"))

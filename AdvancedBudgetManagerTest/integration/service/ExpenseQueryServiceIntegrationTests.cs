@@ -13,7 +13,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
     [TestClass]
     public class ExpenseQueryServiceIntegrationTests {
         private static long validUserId = -1;
-        private static long invalidUserId = -1;
+        //private static long invalidUserId = -1;
         private static String validEmailAddress = String.Empty;
         private static DateTime singleMonthValidStartDate = DateTime.Now;
         private static DateTime singleMonthValidEndDate = DateTime.Now;
@@ -110,7 +110,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
             //Each test retrieves its own connection from the container because once this is used inside the test class it will automatically be disposed inside the using block. Using a shared connection in this case would break the tests.
 
             validUserId = Convert.ToInt32(testContext.Properties["validUserId"]?.ToString() ?? String.Empty);
-            invalidUserId = Convert.ToInt32(testContext.Properties["invalidUserId"]?.ToString() ?? String.Empty);
+            //invalidUserId = Convert.ToInt32(testContext.Properties["invalidUserId"]?.ToString() ?? String.Empty);
             validEmailAddress = testContext.Properties["validEmailAddress"]?.ToString() ?? String.Empty;
             DateTime.TryParse(testContext.Properties["singleMonthValidStartDate"]?.ToString() ?? String.Empty, out singleMonthValidStartDate);
             DateTime.TryParse(testContext.Properties["singleMonthValidEndDate"]?.ToString() ?? String.Empty, out singleMonthValidEndDate);

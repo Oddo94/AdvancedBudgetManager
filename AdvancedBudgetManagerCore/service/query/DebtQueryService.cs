@@ -9,7 +9,7 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service.query {
-    public class DebtsQueryService {
+    public class DebtQueryService {
         /// <summary>
         /// The database connection used for retrieving the data.
         /// </summary>
@@ -69,11 +69,11 @@ namespace AdvancedBudgetManagerCore.service.query {
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DebtsQueryService"/> based on the provided <see cref="IDatabaseConnection"/> and <see cref="IUserSessionService"/>.
+        /// Initializes a new instance of the <see cref="DebtQueryService"/> based on the provided <see cref="IDatabaseConnection"/> and <see cref="IUserSessionService"/>.
         /// </summary>
         /// <param name="dbConnection">The database connection used for retrieving the data.</param>
         /// <param name="userSessionService">The user session service used for retrieving the curent user's data.</param>
-        public DebtsQueryService([NotNull] IDatabaseConnection dbConnection, [NotNull] IUserSessionService userSessionService) {
+        public DebtQueryService([NotNull] IDatabaseConnection dbConnection, [NotNull] IUserSessionService userSessionService) {
             this.dbConnection = dbConnection;
             this.userSessionService = userSessionService;
         }

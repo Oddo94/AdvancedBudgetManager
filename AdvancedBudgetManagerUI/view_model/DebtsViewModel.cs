@@ -55,7 +55,7 @@ namespace AdvancedBudgetManager.view_model {
         [ObservableProperty]
         public string totalDebtsMessage;
 
-        private DebtsQueryService debtsQueryService;
+        private DebtQueryService debtsQueryService;
 
         private DateTimeUtils dateTimeUtils;
 
@@ -63,7 +63,7 @@ namespace AdvancedBudgetManager.view_model {
 
         private UIComponentInitUtils uiComponentInitUtils;
 
-        public DebtsViewModel([NotNull] DebtsQueryService debtsQueryService,
+        public DebtsViewModel([NotNull] DebtQueryService debtsQueryService,
   [NotNull] DateTimeUtils dateTimeUtils,
   [NotNull] InputDataValidator inputDataValidator,
   [NotNull] UIComponentInitUtils uiComponentInitUtils) {
