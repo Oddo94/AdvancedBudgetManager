@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Remove="view\dialog\ConfirmationCodeInputDialog.xaml" />
     <None Remove="view\page\BudgetSummaryPage.xaml" />
+    <None Remove="view\page\DebtsPage.xaml" />
     <None Remove="view\page\EmailInputPage.xaml" />
     <None Remove="view\page\ExpensesPage.xaml" />
     <None Remove="view\page\IncomesPage.xaml" />
@@ -89,6 +90,11 @@
     <Content Update="Assets\Icons\savings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="view\page\DebtsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="view\page\ExpensesPage.xaml">

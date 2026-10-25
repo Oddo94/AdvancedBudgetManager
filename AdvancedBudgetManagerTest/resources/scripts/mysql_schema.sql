@@ -48,3 +48,24 @@ CREATE TABLE expenses (
   CONSTRAINT expenses_ibfk_1 FOREIGN KEY (type) REFERENCES expense_types (categoryID),
   CONSTRAINT expenses_ibfk_2 FOREIGN KEY (user_ID) REFERENCES users (userID)
 );
+
+CREATE TABLE creditors (
+  creditorID int(10) NOT NULL AUTO_INCREMENT,
+  creditorName varchar(50) NOT NULL,
+  PRIMARY KEY (creditorID)
+);
+
+CREATE TABLE debts (
+  debtID int(10) NOT NULL AUTO_INCREMENT,
+  user_ID int(10) NOT NULL,
+  name varchar(50) NOT NULL,
+  value int(20) NOT NULL,
+  creditor_ID int(10) NOT NULL,
+  date date NOT NULL,
+  PRIMARY KEY (debtID),
+  KEY user_ID (user_ID),
+  KEY creditor_ID (creditor_ID),
+  CONSTRAINT debts_ibfk_1 FOREIGN KEY (user_ID) REFERENCES users (userID),
+  CONSTRAINT debts_ibfk_2 FOREIGN KEY (creditor_ID) REFERENCES creditors (creditorID)
+);
+
