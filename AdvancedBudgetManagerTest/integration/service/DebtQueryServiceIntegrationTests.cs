@@ -48,7 +48,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static int decemberMonthlyTotalDebts = 0;
 
 
-        private static MySqlContainer mySqlDbContainer;
+        private static MySqlContainer mySqlDbContainer = null!;
 
         public TestContext TestContext { get; set; }
 

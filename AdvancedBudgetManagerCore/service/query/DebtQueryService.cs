@@ -9,6 +9,9 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AdvancedBudgetManagerCore.service.query {
+    /// <summary>
+    /// Service class used for providing the aggregated data related to the user's debts.
+    /// </summary>
     public class DebtQueryService {
         /// <summary>
         /// The database connection used for retrieving the data.
