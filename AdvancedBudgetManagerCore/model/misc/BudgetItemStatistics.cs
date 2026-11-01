@@ -1,9 +1,16 @@
-﻿namespace AdvancedBudgetManagerCore.model.misc {
+﻿using AdvancedBudgetManagerCore.utils.enums;
+
+namespace AdvancedBudgetManagerCore.model.misc {
 #pragma warning disable CS1591
     /// <summary>
     /// Represents the object used to store the statistics for a specific budget item (income, expense, debt, saving).
     /// </summary>
     public class BudgetItemStatistics {
+        /// <summary>
+        /// The budget item.
+        /// </summary>
+        private BudgetItem budgetItem;
+
         /// <summary>
         /// The total value.
         /// </summary>
@@ -19,9 +26,15 @@
         /// </summary>
         /// <param name="totalValue">The total value.</param>
         /// <param name="totalPercentage">The total percentage.</param>
-        public BudgetItemStatistics(int totalValue, double totalPercentage) {
+        public BudgetItemStatistics(BudgetItem budgetItem, int totalValue, double totalPercentage) {
+            this.budgetItem = budgetItem;
             this.totalValue = totalValue;
             this.totalPercentage = totalPercentage;
+        }
+
+        public BudgetItem BudgetItem {
+            get { return this.budgetItem; }
+            set { this.budgetItem = value; }
         }
 
         public int TotalValue {
