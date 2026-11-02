@@ -16,8 +16,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManager.view_model {
     public partial class SavingsViewModel : ObservableValidator {
@@ -34,7 +32,7 @@ namespace AdvancedBudgetManager.view_model {
         public ObservableCollection<SavingDto> savingList;
 
         [ObservableProperty]
-        public ObservableCollection<ISeries> savingPercentageFromIncomesPieSeries;
+        public ObservableCollection<ISeries> savingsPercentageFromIncomesPieSeries;
 
         [ObservableProperty]
         public ObservableCollection<ICartesianAxis> monthlySavingsEvolutionAxis;
@@ -75,7 +73,7 @@ namespace AdvancedBudgetManager.view_model {
             this.uiComponentInitUtils = uiComponentInitUtils;
 
             this.savingList = new ObservableCollection<SavingDto>();
-            this.savingPercentageFromIncomesPieSeries = new ObservableCollection<ISeries>();
+            this.savingsPercentageFromIncomesPieSeries = new ObservableCollection<ISeries>();
 
             List<string> defaultLabels = uiComponentInitUtils.InitColumnChartLabels(TimeUnit.Month);
             this.monthlySavingsEvolutionAxis = new ObservableCollection<ICartesianAxis>() {
@@ -107,7 +105,7 @@ namespace AdvancedBudgetManager.view_model {
             DisplaySavingList(monthRange);
             DisplaySavingPercentageStatistics(monthRange);
 
-            if (SavingList.Count == 0 && SavingPercentageFromIncomesPieSeries.Count == 0) {
+            if (SavingList.Count == 0 && SavingsPercentageFromIncomesPieSeries.Count == 0) {
                 this.IsEmptyGeneralSavingData = true;
             } else {
                 this.IsEmptyGeneralSavingData = false;
@@ -157,9 +155,9 @@ namespace AdvancedBudgetManager.view_model {
 
             MonthlySavingsEvolutionSeries = new ObservableCollection<ISeries> {
                 new ColumnSeries<int> {
-                    Name = "Total expenses",
+                    Name = "Total savings",
                     Values = values.ToArray(),
-                    Fill = new SolidColorPaint(SKColors.Red)
+                    Fill = new SolidColorPaint(SKColors.LimeGreen)
                 }
             };
         }
@@ -176,7 +174,7 @@ namespace AdvancedBudgetManager.view_model {
 
                 this.SavingList = new ObservableCollection<SavingDto>(retrievedSavings);
 
-                this.TotalSavingsMessage = $"Displaying {retrievedSavings.Count} expenses";
+                this.TotalSavingsMessage = $"Displaying {retrievedSavings.Count} savings";
             } else {
                 this.SavingList = new ObservableCollection<SavingDto> { };
                 this.TotalSavingsMessage = String.Empty;
@@ -211,10 +209,10 @@ namespace AdvancedBudgetManager.view_model {
             }
 
             if (pieSeriesCollection.Count > 0) {
-                this.SavingPercentageFromIncomesPieSeries.Clear();
-                this.SavingPercentageFromIncomesPieSeries = pieSeriesCollection;
+                this.SavingsPercentageFromIncomesPieSeries.Clear();
+                this.SavingsPercentageFromIncomesPieSeries = pieSeriesCollection;
             } else {
-                this.SavingPercentageFromIncomesPieSeries = new ObservableCollection<ISeries> { };
+                this.SavingsPercentageFromIncomesPieSeries = new ObservableCollection<ISeries> { };
             }
         }
 
