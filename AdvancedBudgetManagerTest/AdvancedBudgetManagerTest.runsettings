@@ -45,10 +45,10 @@
 
     <!--SERVICE TEST DATA-->
     <!--SHARED DATA FOR TIME INTERVALS-->
-    <Parameter name="validStartDate" value="2025-01-01"/>
+    <!--<Parameter name="validStartDate" value="2025-01-01"/>
     <Parameter name="validEndDate" value="2025-12-31"/>
     <Parameter name="invalidStartDate" value="2024-12-01"/>
-    <Parameter name="invalidEndDate" value="2024-06-01"/>
+    <Parameter name="invalidEndDate" value="2024-06-01"/>-->
     <Parameter name="validMonthlyEvolutionYear" value ="2025"/>
     <Parameter name="invalidMonthlyEvolutionYear" value ="2026"/>
     <Parameter name="singleMonthValidStartDate" value="2025-01-01"/>
@@ -169,5 +169,26 @@
     <Parameter name="octoberMonthlyTotalDebts" value="1800"/>
     <Parameter name="novemberMonthlyTotalDebts" value="2200"/>
     <Parameter name="decemberMonthlyTotalDebts" value="2000"/>
+    
+    <!--SAVINGS QUERY SERVICE-->
+    <Parameter name="incomesPercentage" value="100"/>
+    <Parameter name="singleMonthIncomesTotalValue" value="12000"/>
+    <Parameter name="singleMonthSavingsTotalValue" value="6700"/>
+    <Parameter name="singleMonthSavingsPercentageFromTotalIncomes" value="55.83"/>
+    <Parameter name="multipleMonthsIncomesTotalValue" value="73400"/>
+    <Parameter name="multipleMonthsSavingsTotalValue" value="39810"/>
+    <Parameter name="multipleMonthsSavingsPercentageFromTotalIncomes" value="54.24"/>
+    <Parameter name="januaryMonthlyTotalSavings" value="6700"/>
+    <Parameter name="februaryMonthlyTotalSavings" value="6760"/>
+    <Parameter name="marchMonthlyTotalSavings" value="6500"/>
+    <Parameter name="aprilMonthlyTotalSavings" value="6750"/>
+    <Parameter name="mayMonthlyTotalSavings" value="6490"/>
+    <Parameter name="juneMonthlyTotalSavings" value="6610"/>
+    <Parameter name="julyMonthlyTotalSavings" value="6390"/>
+    <Parameter name="augustMonthlyTotalSavings" value="6590"/>
+    <Parameter name="septemberMonthlyTotalSavings" value="6140"/>
+    <Parameter name="octoberMonthlyTotalSavings" value="6350"/>
+    <Parameter name="novemberMonthlyTotalSavings" value="6170"/>
+    <Parameter name="decemberMonthlyTotalSavings" value="6820"/>
   </TestRunParameters>
 </RunSettings>

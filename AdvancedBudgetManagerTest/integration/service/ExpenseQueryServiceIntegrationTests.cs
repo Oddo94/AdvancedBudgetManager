@@ -13,7 +13,6 @@ namespace AdvancedBudgetManagerTest.integration.service {
     [TestClass]
     public class ExpenseQueryServiceIntegrationTests {
         private static long validUserId = -1;
-        //private static long invalidUserId = -1;
         private static String validEmailAddress = String.Empty;
         private static DateTime singleMonthValidStartDate = DateTime.Now;
         private static DateTime singleMonthValidEndDate = DateTime.Now;
@@ -76,9 +75,7 @@ namespace AdvancedBudgetManagerTest.integration.service {
         private static int novemberMonthlyTotalExpenses = 0;
         private static int decemberMonthlyTotalExpenses = 0;
 
-
         private static MySqlContainer mySqlDbContainer = null!;
-
         public TestContext TestContext { get; set; }
 
         [ClassInitialize]
@@ -101,8 +98,8 @@ namespace AdvancedBudgetManagerTest.integration.service {
                 .GetResult();
 
             //Populates the database with data using the specified script file
-            string incomeDataScriptPath = ".\\resources\\scripts\\insert_expenses_data.sql";
-            DatabaseSeed.PopulateDb(incomeDataScriptPath, mySqlTestConnection)
+            string expenseDataScriptPath = ".\\resources\\scripts\\insert_expenses_data.sql";
+            DatabaseSeed.PopulateDb(expenseDataScriptPath, mySqlTestConnection)
                 .GetAwaiter()
                 .GetResult();
 

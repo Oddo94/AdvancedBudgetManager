@@ -8,9 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdvancedBudgetManagerCore.service.query {
     /// <summary>
@@ -181,12 +178,14 @@ namespace AdvancedBudgetManagerCore.service.query {
                     int.TryParse(retrievedSavingsAndIncomesStatistics.Rows[0].ItemArray[2].ToString(), out savingsValue);
                     double.TryParse(retrievedSavingsAndIncomesStatistics.Rows[0].ItemArray[3].ToString(), out savingsPercentage);
 
-                    BudgetItemStatistics incomesStatistics = new BudgetItemStatistics(BudgetItem.Income, incomesValue, incomesPercentage);
-                    BudgetItemStatistics savingsStatistics = new BudgetItemStatistics(BudgetItem.Saving,savingsValue, savingsPercentage);
+                    //Populates the list only if incomes and savings were found
+                    if (incomesValue > 0 && savingsValue > 0) {
+                        BudgetItemStatistics incomesStatistics = new BudgetItemStatistics(BudgetItem.Income, incomesValue, incomesPercentage);
+                        BudgetItemStatistics savingsStatistics = new BudgetItemStatistics(BudgetItem.Saving, savingsValue, savingsPercentage);
 
-                    savingsAndIncomesPercentageStatisticsList.Add(incomesStatistics);
-                    savingsAndIncomesPercentageStatisticsList.Add(savingsStatistics);
-
+                        savingsAndIncomesPercentageStatisticsList.Add(incomesStatistics);
+                        savingsAndIncomesPercentageStatisticsList.Add(savingsStatistics);
+                    }
 
                     return savingsAndIncomesPercentageStatisticsList;
                 } catch (MySqlException ex) {
@@ -239,7 +238,7 @@ namespace AdvancedBudgetManagerCore.service.query {
                         monthlySavingsStatistics.Add(month, totalSavings);
                     }
 
-                    return new BudgetItemMonthlyEvolutionDto(BudgetItem.Income, monthlySavingsStatistics);
+                    return new BudgetItemMonthlyEvolutionDto(BudgetItem.Saving, monthlySavingsStatistics);
                 } catch (MySqlException ex) {
                     int errorCode = ex.Number;
                     String message;

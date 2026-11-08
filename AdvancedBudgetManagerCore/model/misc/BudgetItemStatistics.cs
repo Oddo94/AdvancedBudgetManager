@@ -24,6 +24,7 @@ namespace AdvancedBudgetManagerCore.model.misc {
         /// <summary>
         /// Initializes a new instance of the <see cref="BudgetItemStatistics"/> object based on the provided parameters.
         /// </summary>
+        /// <param name="budgetItem">The budget item.</param>
         /// <param name="totalValue">The total value.</param>
         /// <param name="totalPercentage">The total percentage.</param>
         public BudgetItemStatistics(BudgetItem budgetItem, int totalValue, double totalPercentage) {
