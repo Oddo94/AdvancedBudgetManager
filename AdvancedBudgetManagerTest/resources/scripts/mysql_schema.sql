@@ -69,3 +69,16 @@ CREATE TABLE debts (
   CONSTRAINT debts_ibfk_2 FOREIGN KEY (creditor_ID) REFERENCES creditors (creditorID)
 );
 
+CREATE TABLE savings (
+  savingID int(10) NOT NULL AUTO_INCREMENT,
+  user_ID int(10) NOT NULL,
+  name varchar(50) NOT NULL,
+  value int(20) NOT NULL,
+  date date NOT NULL,
+  PRIMARY KEY (savingID),
+  UNIQUE KEY name (name),
+  UNIQUE KEY date (date),
+  KEY user_ID (user_ID),
+  CONSTRAINT savings_ibfk_1 FOREIGN KEY (user_ID) REFERENCES users (userID)
+);
+

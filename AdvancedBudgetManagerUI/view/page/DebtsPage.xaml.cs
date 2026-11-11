@@ -13,6 +13,7 @@ namespace AdvancedBudgetManager.view.page {
         private DebtsViewModel debtsViewModel;
         public DebtsPage([NotNull] DebtsViewModel debtsViewModel) {
             this.debtsViewModel = debtsViewModel;
+
             InitializeComponent();
         }
     }

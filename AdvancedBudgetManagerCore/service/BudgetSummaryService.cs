@@ -1,5 +1,6 @@
 ﻿using AdvancedBudgetManagerCore.model.dto;
 using AdvancedBudgetManagerCore.model.entity;
+using AdvancedBudgetManagerCore.utils.enums;
 using AdvancedBudgetManagerCore.model.misc;
 using AdvancedBudgetManagerCore.repository;
 using AdvancedBudgetManagerCore.utils.exception;
@@ -130,11 +131,11 @@ namespace AdvancedBudgetManagerCore.service {
             if (incomesList.Count > 0) {
                 int incomeSum = incomesList.Sum(income => income.Value);
                 double totalPercentage = 100;
-                incomeStatistics = new BudgetItemStatistics(incomeSum, totalPercentage);
+                incomeStatistics = new BudgetItemStatistics(BudgetItem.Income, incomeSum, totalPercentage);
             } else {
                 int incomeSum = 0;
                 double totalPercentage = 100;
-                incomeStatistics = new BudgetItemStatistics(incomeSum, totalPercentage);
+                incomeStatistics = new BudgetItemStatistics(BudgetItem.Income, incomeSum, totalPercentage);
             }
 
             return incomeStatistics;
@@ -157,7 +158,7 @@ namespace AdvancedBudgetManagerCore.service {
                 .Sum();
 
             double totalPercentage = totalIncomes > 0 ? expenseSum * 100 / totalIncomes : 0;
-            BudgetItemStatistics expenseStatistics = new BudgetItemStatistics(expenseSum, totalPercentage);
+            BudgetItemStatistics expenseStatistics = new BudgetItemStatistics(BudgetItem.Expense, expenseSum, totalPercentage);
 
             return expenseStatistics;
         }
@@ -179,7 +180,7 @@ namespace AdvancedBudgetManagerCore.service {
                 .Sum();
 
             double totalPercentage = totalIncomes > 0 ? debtSum * 100 / totalIncomes : 0;
-            BudgetItemStatistics debtStatistics = new BudgetItemStatistics(debtSum, totalPercentage);
+            BudgetItemStatistics debtStatistics = new BudgetItemStatistics(BudgetItem.Debt, debtSum, totalPercentage);
 
             return debtStatistics;
         }
@@ -201,7 +202,7 @@ namespace AdvancedBudgetManagerCore.service {
                 .Sum();
 
             double totalPercentage = totalIncomes > 0 ? savingSum * 100 / totalIncomes : 0;
-            BudgetItemStatistics savingStatistics = new BudgetItemStatistics(savingSum, totalPercentage);
+            BudgetItemStatistics savingStatistics = new BudgetItemStatistics(BudgetItem.Saving, savingSum, totalPercentage);
 
             return savingStatistics;
         }
@@ -216,13 +217,13 @@ namespace AdvancedBudgetManagerCore.service {
         /// <returns>A <see cref="BudgetItemStatistics"/> object containing the total left to spend statistics.</returns>
         public BudgetItemStatistics GetTotalLeftToSpendStatistics(int totalIncomes, int totalExpenses, int totalDebts, int totalSavings) {
             if (totalIncomes <= 0) {
-                return new BudgetItemStatistics(0, 0);
+                return new BudgetItemStatistics(BudgetItem.Undefined, 0, 0);
             }
 
             int totalLeftToSpend = totalIncomes - (totalExpenses + totalDebts + totalSavings);
             double totalLeftToSpendPercentage = Math.Round(totalLeftToSpend * 100 / (double)totalIncomes, 2);
 
-            return new BudgetItemStatistics(totalLeftToSpend, totalLeftToSpendPercentage);
+            return new BudgetItemStatistics(BudgetItem.Undefined, totalLeftToSpend, totalLeftToSpendPercentage);
         }
 
         /// <summary>

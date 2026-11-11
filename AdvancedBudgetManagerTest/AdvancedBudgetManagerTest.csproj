@@ -12,6 +12,7 @@
     <None Remove="resources\scripts\insert_debts_data.sql" />
     <None Remove="resources\scripts\insert_expenses_data.sql" />
     <None Remove="resources\scripts\insert_incomes_data.sql" />
+    <None Remove="resources\scripts\insert_savings_data.sql" />
     <None Remove="resources\scripts\mysql_schema.sql" />
   </ItemGroup>
 
@@ -23,6 +24,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\scripts\insert_incomes_data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\scripts\insert_savings_data.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\scripts\mysql_schema.sql">

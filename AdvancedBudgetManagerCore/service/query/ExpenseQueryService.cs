@@ -119,9 +119,9 @@ namespace AdvancedBudgetManagerCore.service.query {
                         DateTime.TryParse(expenseRow.ItemArray[3].ToString(), out expenseDate);
 
 
-                        ExpenseDto incomeDto = new ExpenseDto(name, expenseType, value, expenseDate.Date);
+                        ExpenseDto expenseDto = new ExpenseDto(name, expenseType, value, expenseDate.Date);
 
-                        expensesList.Add(incomeDto);
+                        expensesList.Add(expenseDto);
                     }
 
                     return expensesList;
@@ -246,6 +246,5 @@ namespace AdvancedBudgetManagerCore.service.query {
                 }
             }
         }
-
     }
 }

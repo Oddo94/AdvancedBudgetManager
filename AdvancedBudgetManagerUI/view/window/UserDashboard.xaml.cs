@@ -56,6 +56,10 @@ namespace AdvancedBudgetManagerUI.view.window {
                         navigationService.Show(PageKey.DebtsPage);
                         break;
 
+                    case "savingsPage":
+                        navigationService.Show(PageKey.SavingsPage);
+                        break;
+
                     default:
                         break;
                 }
