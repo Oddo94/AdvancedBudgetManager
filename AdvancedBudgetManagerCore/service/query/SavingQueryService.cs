@@ -233,8 +233,6 @@ namespace AdvancedBudgetManagerCore.service.query {
                         month = MonthExtensions.GetTypeByDescription(savingsEvolutionRow.ItemArray[0].ToString());
                         int.TryParse(savingsEvolutionRow.ItemArray[1].ToString(), out totalSavings);
 
-                        MonthlyStatisticsDto monthlyStatisticsDto = new MonthlyStatisticsDto(month, totalSavings);
-
                         monthlySavingsStatistics.Add(month, totalSavings);
                     }
 

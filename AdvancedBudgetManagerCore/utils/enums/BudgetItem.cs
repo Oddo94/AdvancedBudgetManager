@@ -35,4 +35,34 @@ namespace AdvancedBudgetManagerCore.utils.enums {
         [Description("Undefined")]
         Undefined,
     }
+
+    static class BudgetItemExtensions {
+        public static BudgetItem GetTypeByDescription(string enumDescription) {
+            BudgetItem budgetItem;
+            switch (enumDescription) {
+                case "Income":
+                    budgetItem = BudgetItem.Income;
+                    break;
+
+                case "Expense":
+                    budgetItem = BudgetItem.Expense;
+                    break;
+
+                case "Debt":
+                    budgetItem = BudgetItem.Debt;
+                    break;
+
+                case "Saving":
+                    budgetItem = BudgetItem.Saving;
+                    break;
+
+                default:
+                    budgetItem = BudgetItem.Undefined;
+                    break;
+            }
+
+            return budgetItem;
+        }
+    }
+}
 }
